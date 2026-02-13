@@ -27,6 +27,7 @@ export interface AboutData {
     education: Education[];
     location: string;
     interests: string[];
+    socialLinks?: SocialLink[];
 }
 
 export interface Education {
@@ -78,6 +79,12 @@ export interface ContactData {
     personalEmail: string;
     cta: string;
     secondaryCta: string;
+}
+
+export interface SocialLink {
+    platform: 'linkedin' | 'github' | 'twitter' | 'instagram' | 'other';
+    url: string;
+    label?: string;
 }
 
 export interface NavbarData {

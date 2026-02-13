@@ -3,20 +3,30 @@
 import { motion } from "framer-motion";
 import { Section, Typography } from "@/components/ui/layout";
 // import { portfolioData } from "@/lib/data";
-import { Code2, Layout, Maximize2, MapPin } from "lucide-react";
+import { Code2, Layout, Maximize2, MapPin, Github, Linkedin, Twitter, Globe } from "lucide-react";
 import { PortfolioContent } from "@/hooks/usePortfolio";
 
 interface AboutProps {
     about: PortfolioContent['about'];
     expertise: PortfolioContent['expertise'];
+    contact: PortfolioContent['contact'];
 }
 
-export function About({ about, expertise }: AboutProps) {
+export function About({ about, expertise, contact }: AboutProps) {
 
     const icons = {
         immersive: <Code2 className="w-6 h-6 text-accent" />,
         motion: <Maximize2 className="w-6 h-6 text-accent" />,
         visual: <Layout className="w-6 h-6 text-accent" />
+    };
+
+    const getSocialIcon = (platform: string) => {
+        switch (platform.toLowerCase()) {
+            case 'github': return <Github className="w-5 h-5" />;
+            case 'linkedin': return <Linkedin className="w-5 h-5" />;
+            case 'twitter': return <Twitter className="w-5 h-5" />;
+            default: return <Globe className="w-5 h-5" />;
+        }
     };
 
     return (
@@ -43,6 +53,24 @@ export function About({ about, expertise }: AboutProps) {
                         <Typography className="text-lg text-muted-foreground leading-relaxed">
                             {about.biography}
                         </Typography>
+
+                        {/* Social Links Provision */}
+                        <div className="flex flex-wrap gap-4 pt-4">
+                            {about.socialLinks && about.socialLinks.length > 0 && (
+                                about.socialLinks.map((link) => (
+                                    <a
+                                        key={link.url}
+                                        href={link.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center gap-2 px-4 py-2 rounded-xl bg-foreground/5 border border-foreground/10 text-foreground hover:bg-accent/10 hover:border-accent/30 transition-all group"
+                                    >
+                                        {getSocialIcon(link.platform)}
+                                        <span className="text-xs font-bold uppercase tracking-wider">{link.platform}</span>
+                                    </a>
+                                ))
+                            )}
+                        </div>
                     </div>
 
                     <div className="space-y-6">

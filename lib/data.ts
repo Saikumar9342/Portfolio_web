@@ -101,7 +101,11 @@ export const portfolioData = {
             }
         ],
         location: "Vizag, Andhra Pradesh",
-        interests: ["3D Web Development", "Fintech Innovations", "Open Source", "UI/UX Research"]
+        interests: ["3D Web Development", "Fintech Innovations", "Open Source", "UI/UX Research"],
+        socialLinks: [
+            { platform: 'github', url: 'https://github.com/saikumarpasumarthi' },
+            { platform: 'linkedin', url: 'https://linkedin.com/in/saikumar-pasumarthi' }
+        ]
     },
     contact: {
         title: "LET'S BUILD THE FUTURE.",

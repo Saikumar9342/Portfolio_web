@@ -5,16 +5,17 @@ import { cn } from "@/lib/utils";
 // import { portfolioData } from "@/lib/data";
 import { Button } from "../ui/button";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
-import { Menu, X } from "lucide-react";
-import { NavbarData } from "@/types";
+import { Menu, X, Github, Linkedin } from "lucide-react";
+import { NavbarData, ContactData } from "@/types";
 
 interface NavbarProps {
     name: string;
     data: NavbarData;
+    contact: ContactData;
     loading?: boolean;
 }
 
-export function Navbar({ name, data, loading }: NavbarProps) {
+export function Navbar({ name, data, contact, loading }: NavbarProps) {
     const [isScrolled, setIsScrolled] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -27,7 +28,7 @@ export function Navbar({ name, data, loading }: NavbarProps) {
     }, []);
 
     const navItems = data?.items || [
-        { label: "Projects", href: "/projects" },
+        { label: "Projects", href: "/#projects" },
         { label: "About", href: "/#about" },
         { label: "Skills", href: "/#skills" }
     ];

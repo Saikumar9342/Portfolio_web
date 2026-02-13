@@ -70,7 +70,15 @@ export function usePortfolio() {
                 } else if (id === 'hero') {
                     newContent[id] = { ...emptyData.hero, ...data };
                 } else if (id === 'contact') {
-                    newContent[id] = { ...emptyData.contact, ...data };
+                    const d = data;
+                    newContent[id] = {
+                        title: d.title || emptyData.contact.title,
+                        description: d.description || emptyData.contact.description,
+                        email: d.email || emptyData.contact.email,
+                        personalEmail: d.personalEmail || emptyData.contact.personalEmail,
+                        cta: d.cta || emptyData.contact.cta,
+                        secondaryCta: d.secondaryCta || emptyData.contact.secondaryCta,
+                    } as ContactData;
                 } else if (id === 'navbar') {
                     newContent[id] = { ...emptyData.navbar, ...data };
                 } else {
