@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import type { MouseEvent } from "react";
+import { Loader2 } from "lucide-react";
+import { useState, type MouseEvent } from "react";
 import { Typography } from "@/components/ui/layout";
 import { Button } from "@/components/ui/button";
 import { Github, Linkedin, Twitter, Globe } from "lucide-react";
@@ -16,6 +17,7 @@ interface FooterProps {
 }
 
 export function Footer({ contact, about, navbar, name }: FooterProps) {
+    const [isDownloadingResume, setIsDownloadingResume] = useState(false);
     const resumeUrl = contact.resumeUrl || "/Saikumar.p_FrontendDeveloper.pdf";
     const isCloudinary = resumeUrl.includes("res.cloudinary.com");
     
@@ -32,6 +34,8 @@ export function Footer({ contact, about, navbar, name }: FooterProps) {
 
     const handleResumeDownload = async (event: MouseEvent<HTMLAnchorElement>) => {
         event.preventDefault();
+        if (isDownloadingResume) return;
+        setIsDownloadingResume(true);
 
         try {
             const response = await fetch(resumeDownloadUrl, { method: "GET" });
@@ -52,6 +56,8 @@ export function Footer({ contact, about, navbar, name }: FooterProps) {
             window.URL.revokeObjectURL(blobUrl);
         } catch {
             window.location.href = resumeDownloadUrl;
+        } finally {
+            setIsDownloadingResume(false);
         }
     };
 
@@ -80,9 +86,15 @@ export function Footer({ contact, about, navbar, name }: FooterProps) {
                                 href={resumeDownloadUrl}
                                 onClick={handleResumeDownload}
                                 download="resume.pdf"
-                                className="rounded-2xl px-12 h-16 flex items-center justify-center text-sm font-black uppercase tracking-widest border border-foreground/10 hover:bg-foreground/10 text-foreground transition-all duration-300"
+                                aria-busy={isDownloadingResume}
+                                className={`rounded-2xl px-12 h-16 flex items-center justify-center gap-2 text-sm font-black uppercase tracking-widest border border-foreground/10 text-foreground transition-all duration-300 ${
+                                    isDownloadingResume
+                                        ? "opacity-80 cursor-not-allowed"
+                                        : "hover:bg-foreground/10"
+                                }`}
                             >
-                                {contact.secondaryCta}
+                                {isDownloadingResume && <Loader2 className="w-4 h-4 animate-spin" />}
+                                {isDownloadingResume ? "Processing..." : contact.secondaryCta}
                             </a>
                         </div>
                     </motion.div>
