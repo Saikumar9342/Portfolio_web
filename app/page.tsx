@@ -90,7 +90,7 @@ export default function Home() {
                                         <Typography element="h3" className="text-lg font-bold">Mobile Development</Typography>
                                         <div className="flex flex-wrap gap-2">
                                             {portfolioData.skills.mobile.map(m => (
-                                                <span key={m} className="px-3 py-1 text-xs rounded-lg bg-white/5 border border-white/10 text-foreground/80">
+                                                <span key={m} className="px-3 py-1 text-xs rounded-lg bg-foreground/[0.03] border border-foreground/10 text-foreground/80">
                                                     {m}
                                                 </span>
                                             ))}
@@ -101,7 +101,7 @@ export default function Home() {
                                         <Typography element="h3" className="text-lg font-bold">Cloud & Backend</Typography>
                                         <div className="flex flex-wrap gap-2">
                                             {portfolioData.skills.backend.map(b => (
-                                                <span key={b} className="px-3 py-1 text-xs rounded-lg bg-white/5 border border-white/10 text-foreground/80">
+                                                <span key={b} className="px-3 py-1 text-xs rounded-lg bg-foreground/[0.03] border border-foreground/10 text-foreground/80">
                                                     {b}
                                                 </span>
                                             ))}
@@ -121,7 +121,7 @@ export default function Home() {
                 </section>
 
                 {/* CALL TO ACTION */}
-                <section className="py-24 border-t border-border/50 bg-black/20">
+                <section className="py-24 border-t border-foreground/5 bg-foreground/[0.02]">
                     <div className="container px-6 mx-auto max-w-4xl text-center">
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
@@ -144,7 +144,7 @@ export default function Home() {
                                 <a
                                     href="/Saikumar.p_FrontendDeveloper.pdf"
                                     target="_blank"
-                                    className="rounded-full px-12 h-14 flex items-center justify-center font-semibold border border-white/10 hover:border-white/30 hover:bg-white/5 text-foreground transition-all duration-300"
+                                    className="rounded-full px-12 h-14 flex items-center justify-center font-semibold border border-foreground/10 hover:border-foreground/30 bg-foreground/[0.05] hover:bg-foreground/[0.08] text-foreground transition-all duration-300"
                                 >
                                     {portfolioData.contact.secondaryCta}
                                 </a>
@@ -154,7 +154,7 @@ export default function Home() {
                 </section>
 
                 {/* FOOTER */}
-                <footer className="py-12 border-t border-border/50 bg-muted/30">
+                <footer className="py-12 border-t border-foreground/5 bg-foreground/[0.01]">
                     <div className="container px-6 mx-auto max-w-6xl">
                         <div className="flex flex-col md:flex-row justify-between items-center gap-8">
                             <div className="flex flex-col items-center md:items-start gap-2">

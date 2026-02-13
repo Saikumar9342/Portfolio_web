@@ -12,7 +12,7 @@
 }
 
 :root {
-  --background: #fcfcfd;
+  --background: var(--dynamic-bg, #fcfcfd);
   --foreground: #0a0a0b;
   --accent: #171717;
   --accent-foreground: #ffffff;

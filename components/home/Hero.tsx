@@ -6,18 +6,14 @@ import { Button } from "../ui/button";
 import { Typography } from "../ui/layout";
 import { portfolioData } from "@/lib/data";
 import Link from "next/link";
+import { useDynamicColor } from "@/hooks/useDynamicColor";
 
 export function Hero() {
     const { hero } = portfolioData;
+    useDynamicColor("/pfp.jpeg");
 
     return (
-        <section className="relative min-h-screen w-full flex items-center pt-20 pb-20 px-4 md:px-8 overflow-hidden">
-            {/* Soft decorative blur backgrounds for sync */}
-            <div className="absolute top-0 left-0 w-full h-full -z-10 bg-background overflow-hidden pointer-events-none">
-                <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] bg-accent/5 rounded-full blur-[100px] animate-pulse" />
-                <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] bg-accent/5 rounded-full blur-[100px]" />
-            </div>
-
+        <section className="relative min-h-screen w-full flex items-center pt-20 pb-20 px-4 md:px-8 overflow-hidden bg-background transition-colors duration-1000">
             <div className="container mx-auto max-w-7xl relative z-10">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
 
@@ -78,7 +74,7 @@ export function Hero() {
                         transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
                         className="lg:col-span-6"
                     >
-                        <div className="relative aspect-[4/5] w-full max-w-xl mx-auto overflow-hidden rounded-[3.5rem] border border-border/50 shadow-2xl group">
+                        <div className="relative aspect-[3/4] md:aspect-[4/5] w-full max-w-2xl mx-auto overflow-hidden rounded-[4rem] border border-foreground/5 shadow-2xl group">
                             {/* Smooth hover zoom */}
                             <img
                                 src="/pfp.jpeg"
@@ -86,29 +82,30 @@ export function Hero() {
                                 className="w-full h-full object-cover object-center transition-transform duration-1000 group-hover:scale-105"
                             />
 
-                            {/* Subtle overlay to sync theme colors */}
-                            <div className="absolute inset-0 bg-accent/5 mix-blend-overlay pointer-events-none" />
+                            {/* Subtle vignettes to sync theme colors even more */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent pointer-events-none" />
+                            <div className="absolute inset-0 ring-1 ring-inset ring-foreground/5 rounded-[3.5rem]" />
 
                             {/* Detail Panel */}
                             <motion.div
-                                initial={{ opacity: 0, y: 20 }}
+                                initial={{ opacity: 0, y: 30 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 1 }}
-                                className="absolute bottom-8 left-8 right-8 p-6 glass-panel border-white/10 backdrop-blur-3xl shadow-2xl rounded-3xl hidden md:block"
+                                transition={{ delay: 1, duration: 0.8 }}
+                                className="absolute bottom-10 left-10 right-10 p-8 glass-panel border-foreground/5 bg-background/40 backdrop-blur-3xl shadow-2xl rounded-[2.5rem] hidden xl:block border border-foreground/10"
                             >
                                 <div className="flex justify-between items-center">
-                                    <div className="flex items-center gap-4">
-                                        <div className="w-12 h-12 rounded-2xl bg-accent flex items-center justify-center text-accent-foreground font-black text-xl shadow-lg">
+                                    <div className="flex items-center gap-5">
+                                        <div className="w-14 h-14 rounded-[1.25rem] bg-foreground text-background flex items-center justify-center font-black text-2xl shadow-xl">
                                             {portfolioData.name[0]}
                                         </div>
                                         <div className="space-y-0.5">
-                                            <Typography className="text-[10px] font-black tracking-widest text-accent uppercase opacity-60">Located in</Typography>
-                                            <Typography className="text-sm font-bold">{portfolioData.about.location}</Typography>
+                                            <Typography className="text-[10px] font-black tracking-[0.2em] text-foreground/40 uppercase">Studio Location</Typography>
+                                            <Typography className="text-base font-bold text-foreground">{portfolioData.about.location}</Typography>
                                         </div>
                                     </div>
-                                    <div className="flex items-center gap-2 px-4 py-2 bg-green-500/10 border border-green-500/20 rounded-full">
-                                        <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                                        <span className="text-[10px] font-black text-green-500 tracking-tighter uppercase">Active Now</span>
+                                    <div className="flex items-center gap-2.5 px-5 py-2.5 bg-foreground/5 border border-foreground/10 rounded-full">
+                                        <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.5)]" />
+                                        <span className="text-[10px] font-black text-foreground/80 tracking-widest uppercase">Now Available</span>
                                     </div>
                                 </div>
                             </motion.div>
