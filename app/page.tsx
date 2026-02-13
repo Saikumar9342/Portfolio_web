@@ -52,9 +52,8 @@ export default function Home() {
                 <About about={about} expertise={expertise} contact={contact} />
 
                 {/* SKILLS SECTION */}
-                {/* SKILLS SECTION */}
-                <Section id="skills" className="py-24 border-t border-border/50">
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                <Section id="skills" className="min-h-screen flex items-center py-24 border-t border-border/50">
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 w-full">
                         <GlassCard className="h-full p-8 flex flex-col justify-center space-y-6">
                             <Typography className="text-sm font-semibold text-accent tracking-widest uppercase">{skills.frameworksTitle || "Toolbox"}</Typography>
                             <Typography element="h2" className="text-4xl md:text-5xl font-bold text-foreground leading-tight">
@@ -134,53 +133,39 @@ export default function Home() {
                     </div>
                 </Section>
 
-                {/* CALL TO ACTION */}
-                <Section id="projects" className="py-24 border-t border-border/50">
-                    <div className="space-y-12">
-                        <Typography element="h2" className="text-4xl md:text-5xl font-bold text-foreground mb-12 text-center md:text-left">
-                            Featured Projects
-                        </Typography>
-                        <ProjectGrid projects={projects} loading={loading} />
-                    </div>
-                </Section>
-
-                {/* CALL TO ACTION */}
-                <section className="py-24 border-t border-foreground/10 bg-foreground/5">
-                    <div className="container px-6 mx-auto max-w-4xl text-center">
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            className="space-y-8"
-                        >
-                            <Typography element="h2" className="text-4xl md:text-5xl font-bold text-foreground">
-                                {contact.title}
-                            </Typography>
-
-                            <Typography className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                                {contact.description}
-                            </Typography>
-
-                            <div className="flex flex-col md:flex-row gap-4 justify-center pt-4">
-                                <Button size="lg" className="rounded-full px-12 h-14 text-base font-semibold shadow-lg shadow-accent/20">
-                                    {contact.cta}
-                                </Button>
-                                <a
-                                    href="/Saikumar.p_FrontendDeveloper.pdf"
-                                    target="_blank"
-                                    className="rounded-full px-12 h-14 flex items-center justify-center font-semibold border border-foreground/10 hover:border-foreground/30 bg-foreground/5 hover:bg-foreground/10 text-foreground transition-all duration-300"
-                                >
-                                    {contact.secondaryCta}
-                                </a>
-                            </div>
-                        </motion.div>
-                    </div>
-                </section>
-
-                {/* FOOTER */}
-                <footer className="py-20 border-t border-foreground/10 bg-background relative overflow-hidden">
+                {/* COMBINED CONTACT & FOOTER */}
+                <footer id="contact" className="py-24 border-t border-foreground/10 bg-foreground/5 relative overflow-hidden">
                     <div className="container px-6 mx-auto max-w-6xl relative z-10">
-                        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-20">
+                        {/* Contact CTA Section */}
+                        <div className="mb-24 text-center space-y-8 max-w-3xl mx-auto">
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                className="space-y-6"
+                            >
+                                <Typography element="h2" className="text-5xl md:text-6xl font-black uppercase tracking-tighter text-foreground">
+                                    {contact.title}
+                                </Typography>
+                                <Typography className="text-lg text-muted-foreground leading-relaxed">
+                                    {contact.description}
+                                </Typography>
+                                <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+                                    <Button size="lg" className="rounded-2xl px-12 h-16 text-sm font-black uppercase tracking-widest shadow-2xl shadow-accent/20">
+                                        {contact.cta}
+                                    </Button>
+                                    <a
+                                        href="/Saikumar.p_FrontendDeveloper.pdf"
+                                        target="_blank"
+                                        className="rounded-2xl px-12 h-16 flex items-center justify-center text-sm font-black uppercase tracking-widest border border-foreground/10 hover:bg-foreground/10 text-foreground transition-all duration-300"
+                                    >
+                                        {contact.secondaryCta}
+                                    </a>
+                                </div>
+                            </motion.div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-20 pt-20 border-t border-foreground/10">
                             {/* Brand Column */}
                             <div className="md:col-span-5 space-y-6">
                                 <Link href="/" className="flex items-center gap-3 group">
@@ -189,12 +174,12 @@ export default function Home() {
                                     </div>
                                     <span className="text-xl font-bold tracking-tighter text-foreground uppercase">{name}</span>
                                 </Link>
-                                <Typography className="text-muted-foreground leading-relaxed max-w-sm">
+                                <Typography className="text-muted-foreground leading-relaxed max-w-sm font-medium">
                                     Associate Software Engineer specializing in building resilient financial interfaces and cross-platform mobile experiences.
                                 </Typography>
-                                <div className="flex items-center gap-3 pt-4">
+                                <div className="flex items-center gap-4 pt-4">
                                     {about.socialLinks?.map((link) => (
-                                        <Link key={link.url} href={link.url} target="_blank" className="w-10 h-10 rounded-full bg-foreground/5 flex items-center justify-center text-muted-foreground hover:bg-accent/20 hover:text-accent transition-all duration-300">
+                                        <Link key={link.url} href={link.url} target="_blank" className="w-12 h-12 rounded-2xl bg-foreground/5 flex items-center justify-center text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-all duration-500 border border-foreground/5">
                                             {link.platform.toLowerCase() === 'github' && <Github className="w-5 h-5" />}
                                             {link.platform.toLowerCase() === 'linkedin' && <Linkedin className="w-5 h-5" />}
                                             {link.platform.toLowerCase() === 'twitter' && <Twitter className="w-5 h-5" />}
@@ -205,12 +190,12 @@ export default function Home() {
                             </div>
 
                             {/* Quick Links */}
-                            <div className="md:col-span-3 space-y-6">
-                                <Typography className="text-xs font-black uppercase tracking-[0.3em] text-accent">Navigation</Typography>
+                            <div className="md:col-span-3 space-y-8">
+                                <Typography className="text-xs font-black uppercase tracking-[0.3em] text-accent">Links</Typography>
                                 <ul className="space-y-4">
                                     {data.navbar.items.map((item: any) => (
                                         <li key={item.label}>
-                                            <Link href={item.href} className="text-sm text-foreground/60 hover:text-accent transition-colors font-medium">
+                                            <Link href={item.href} className="text-sm text-foreground/60 hover:text-accent transition-colors font-bold uppercase tracking-widest">
                                                 {item.label}
                                             </Link>
                                         </li>
@@ -219,17 +204,17 @@ export default function Home() {
                             </div>
 
                             {/* Contact Info */}
-                            <div className="md:col-span-4 space-y-6">
-                                <Typography className="text-xs font-black uppercase tracking-[0.3em] text-accent">Get in Touch</Typography>
-                                <div className="space-y-4">
-                                    <a href={`mailto:${contact.email}`} className="block text-sm text-foreground/80 hover:text-accent transition-colors font-medium">
+                            <div className="md:col-span-4 space-y-8">
+                                <Typography className="text-xs font-black uppercase tracking-[0.3em] text-accent">Contact</Typography>
+                                <div className="space-y-6">
+                                    <a href={`mailto:${contact.email}`} className="block text-xl font-black text-foreground hover:text-accent transition-colors tracking-tight">
                                         {contact.email}
                                     </a>
-                                    <Typography className="text-sm text-foreground/60 leading-relaxed">
+                                    <Typography className="text-sm text-foreground/60 leading-relaxed font-medium">
                                         {about.location}
                                     </Typography>
                                     <div className="pt-4">
-                                        <Button size="sm" className="rounded-full px-6 font-bold" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+                                        <Button size="sm" variant="outline" className="rounded-xl px-6 font-black uppercase tracking-widest text-[10px]" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
                                             Back to Top
                                         </Button>
                                     </div>
@@ -237,11 +222,11 @@ export default function Home() {
                             </div>
                         </div>
 
-                        <div className="mt-20 pt-8 border-t border-foreground/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                            <span>© {new Date().getFullYear()} {name}. Built for Performance.</span>
+                        <div className="mt-24 pt-8 border-t border-foreground/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em]">
+                            <span>© {new Date().getFullYear()} {name}. All Rights Reserved.</span>
                             <div className="flex gap-8">
-                                <span className="hover:text-foreground cursor-pointer transition-colors">Privacy Policy</span>
-                                <span className="hover:text-foreground cursor-pointer transition-colors">Terms of Service</span>
+                                <span className="hover:text-foreground cursor-pointer transition-colors">Privacy</span>
+                                <span className="hover:text-foreground cursor-pointer transition-colors">Terms</span>
                             </div>
                         </div>
                     </div>

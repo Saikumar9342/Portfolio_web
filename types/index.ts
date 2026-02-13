@@ -4,6 +4,8 @@ export interface Project {
     id: string;
     title: string;
     description: string;
+    fullDescription?: string;
+    role?: string;
     techStack: string[];
     imageUrl: string;
     liveLink?: string;

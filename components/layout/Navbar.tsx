@@ -27,8 +27,8 @@ export function Navbar({ name, data, contact, loading }: NavbarProps) {
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
-    const navItems = data?.items || [
-        { label: "Projects", href: "/#projects" },
+    const navItems = data?.items?.length > 0 ? data.items : [
+        { label: "Projects", href: "/projects" },
         { label: "About", href: "/#about" },
         { label: "Skills", href: "/#skills" }
     ];

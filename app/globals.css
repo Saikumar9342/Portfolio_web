@@ -14,7 +14,7 @@
 :root {
   --background: var(--dynamic-bg, #000000);
   --foreground: var(--dynamic-fg, #ffffff);
-  --accent: var(--dynamic-accent, #ff0000);
+  --accent: var(--dynamic-accent, #f59e0b);
   --accent-foreground: var(--dynamic-bg, #ffffff);
   --muted: var(--dynamic-muted, rgba(255, 255, 255, 0.05));
   --muted-foreground: var(--dynamic-muted-fg, rgba(255, 255, 255, 0.6));
