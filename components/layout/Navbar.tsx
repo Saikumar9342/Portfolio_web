@@ -76,7 +76,6 @@ export function Navbar({ name, data, contact, loading }: NavbarProps) {
                     </div>
 
                     <div className="flex items-center gap-3">
-                        <ThemeToggle />
                         <Button className="rounded-lg px-6" variant="default">
                             {ctaText}
                         </Button>
@@ -85,16 +84,15 @@ export function Navbar({ name, data, contact, loading }: NavbarProps) {
 
                 {/* Mobile Menu Button */}
                 <div className="md:hidden flex items-center gap-3">
-                    <ThemeToggle />
                     <motion.button
                         onClick={() => setMobileOpen(!mobileOpen)}
                         whileTap={{ scale: 0.95 }}
                         className="p-2 rounded-lg hover:bg-foreground/10 transition-colors"
                     >
                         {mobileOpen ? (
-                            <X className="w-5 h-5 text-foreground" />
+                            <X className="w-6 h-6 text-foreground" />
                         ) : (
-                            <Menu className="w-5 h-5 text-foreground" />
+                            <Menu className="w-6 h-6 text-foreground" />
                         )}
                     </motion.button>
                 </div>
@@ -124,6 +122,6 @@ export function Navbar({ name, data, contact, loading }: NavbarProps) {
                     <Button className="w-full rounded-lg mt-2">{ctaText}</Button>
                 </div>
             </motion.div>
-        </motion.nav>
+        </motion.nav >
     );
 }

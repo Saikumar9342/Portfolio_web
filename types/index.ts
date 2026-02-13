@@ -81,6 +81,7 @@ export interface ContactData {
     personalEmail: string;
     cta: string;
     secondaryCta: string;
+    resumeUrl?: string;
 }
 
 export interface SocialLink {

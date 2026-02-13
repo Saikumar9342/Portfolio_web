@@ -16,13 +16,10 @@ import { usePortfolio } from "@/hooks/usePortfolio";
 import { LoadingScreen } from "@/components/ui/LoadingScreen";
 import { useDynamicColor } from "@/hooks/useDynamicColor";
 
-export default function Home() {
-    const { data, loading } = usePortfolio();
+const PortfolioContent = ({ data }: { data: any }) => {
     const { contact, hero, about, expertise, skills, name, projects } = data;
 
     // Extract theme color from hero image or default profile
-    // This runs even during loading to try and set initial theme if possible, 
-    // or at least ensures it updates immediately when data arrives.
     useDynamicColor(hero?.imageUrl || "/pfp.jpeg");
 
     const containerRef = useRef<HTMLDivElement>(null);
@@ -38,12 +35,10 @@ export default function Home() {
         setCurrentProgress(latest);
     });
 
-    if (loading) return <LoadingScreen />;
-
     return (
         <main ref={containerRef} className="relative min-h-screen">
             <div className="relative z-10">
-                <Navbar name={name} data={data.navbar} contact={contact} loading={loading} />
+                <Navbar name={name} data={data.navbar} contact={contact} loading={false} />
 
                 {/* HERO */}
                 <Hero data={hero} role={data.role} name={name} location={about.location} />
@@ -134,10 +129,10 @@ export default function Home() {
                 </Section>
 
                 {/* COMBINED CONTACT & FOOTER */}
-                <footer id="contact" className="py-24 border-t border-foreground/10 bg-foreground/5 relative overflow-hidden">
-                    <div className="container px-6 mx-auto max-w-6xl relative z-10">
+                <footer id="contact" className="min-h-screen flex flex-col justify-center relative overflow-hidden border-t border-foreground/10 bg-foreground/5">
+                    <div className="container px-6 mx-auto max-w-6xl relative z-10 flex flex-col justify-center py-12 md:py-24">
                         {/* Contact CTA Section */}
-                        <div className="mb-24 text-center space-y-8 max-w-3xl mx-auto">
+                        <div className="mb-16 text-center space-y-8 max-w-3xl mx-auto">
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
@@ -155,7 +150,7 @@ export default function Home() {
                                         {contact.cta}
                                     </Button>
                                     <a
-                                        href="/Saikumar.p_FrontendDeveloper.pdf"
+                                        href={contact.resumeUrl || "/Saikumar.p_FrontendDeveloper.pdf"}
                                         target="_blank"
                                         className="rounded-2xl px-12 h-16 flex items-center justify-center text-sm font-black uppercase tracking-widest border border-foreground/10 hover:bg-foreground/10 text-foreground transition-all duration-300"
                                     >
@@ -165,37 +160,37 @@ export default function Home() {
                             </motion.div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-20 pt-20 border-t border-foreground/10">
+                        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 pt-8 border-t border-foreground/10">
                             {/* Brand Column */}
-                            <div className="md:col-span-5 space-y-6">
+                            <div className="md:col-span-5 space-y-4">
                                 <Link href="/" className="flex items-center gap-3 group">
-                                    <div className="w-12 h-12 rounded-2xl bg-accent flex items-center justify-center shadow-2xl shadow-accent/20">
-                                        <span className="text-accent-foreground font-black text-2xl">S</span>
+                                    <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center shadow-lg shadow-accent/10">
+                                        <span className="text-accent-foreground font-black text-xl">S</span>
                                     </div>
-                                    <span className="text-xl font-bold tracking-tighter text-foreground uppercase">{name}</span>
+                                    <span className="text-lg font-bold tracking-tighter text-foreground uppercase">{name}</span>
                                 </Link>
-                                <Typography className="text-muted-foreground leading-relaxed max-w-sm font-medium">
-                                    Associate Software Engineer specializing in building resilient financial interfaces and cross-platform mobile experiences.
+                                <Typography className="text-sm text-muted-foreground leading-relaxed max-w-sm font-medium">
+                                    {about.title}
                                 </Typography>
-                                <div className="flex items-center gap-4 pt-4">
-                                    {about.socialLinks?.map((link) => (
-                                        <Link key={link.url} href={link.url} target="_blank" className="w-12 h-12 rounded-2xl bg-foreground/5 flex items-center justify-center text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-all duration-500 border border-foreground/5">
-                                            {link.platform.toLowerCase() === 'github' && <Github className="w-5 h-5" />}
-                                            {link.platform.toLowerCase() === 'linkedin' && <Linkedin className="w-5 h-5" />}
-                                            {link.platform.toLowerCase() === 'twitter' && <Twitter className="w-5 h-5" />}
-                                            {['github', 'linkedin', 'twitter'].indexOf(link.platform.toLowerCase()) === -1 && <Globe className="w-5 h-5" />}
+                                <div className="flex items-center gap-3 pt-2">
+                                    {about.socialLinks?.map((link: any) => (
+                                        <Link key={link.url} href={link.url} target="_blank" className="w-10 h-10 rounded-xl bg-foreground/5 flex items-center justify-center text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-all duration-300 border border-foreground/5">
+                                            {link.platform.toLowerCase() === 'github' && <Github className="w-4 h-4" />}
+                                            {link.platform.toLowerCase() === 'linkedin' && <Linkedin className="w-4 h-4" />}
+                                            {link.platform.toLowerCase() === 'twitter' && <Twitter className="w-4 h-4" />}
+                                            {['github', 'linkedin', 'twitter'].indexOf(link.platform.toLowerCase()) === -1 && <Globe className="w-4 h-4" />}
                                         </Link>
                                     ))}
                                 </div>
                             </div>
 
                             {/* Quick Links */}
-                            <div className="md:col-span-3 space-y-8">
-                                <Typography className="text-xs font-black uppercase tracking-[0.3em] text-accent">Links</Typography>
-                                <ul className="space-y-4">
+                            <div className="md:col-span-3 space-y-6">
+                                <Typography className="text-[10px] font-black uppercase tracking-[0.2em] text-accent">Links</Typography>
+                                <ul className="space-y-3">
                                     {data.navbar.items.map((item: any) => (
                                         <li key={item.label}>
-                                            <Link href={item.href} className="text-sm text-foreground/60 hover:text-accent transition-colors font-bold uppercase tracking-widest">
+                                            <Link href={item.href} className="text-xs text-foreground/70 hover:text-accent transition-colors font-bold uppercase tracking-wider">
                                                 {item.label}
                                             </Link>
                                         </li>
@@ -204,17 +199,17 @@ export default function Home() {
                             </div>
 
                             {/* Contact Info */}
-                            <div className="md:col-span-4 space-y-8">
-                                <Typography className="text-xs font-black uppercase tracking-[0.3em] text-accent">Contact</Typography>
-                                <div className="space-y-6">
-                                    <a href={`mailto:${contact.email}`} className="block text-xl font-black text-foreground hover:text-accent transition-colors tracking-tight">
+                            <div className="md:col-span-4 space-y-6">
+                                <Typography className="text-[10px] font-black uppercase tracking-[0.2em] text-accent">Contact</Typography>
+                                <div className="space-y-4">
+                                    <a href={`mailto:${contact.email}`} className="block text-base font-bold text-foreground hover:text-accent transition-colors tracking-tight">
                                         {contact.email}
                                     </a>
-                                    <Typography className="text-sm text-foreground/60 leading-relaxed font-medium">
+                                    <Typography className="text-xs text-foreground/60 leading-relaxed font-medium">
                                         {about.location}
                                     </Typography>
-                                    <div className="pt-4">
-                                        <Button size="sm" variant="outline" className="rounded-xl px-6 font-black uppercase tracking-widest text-[10px]" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+                                    <div className="pt-2">
+                                        <Button size="sm" variant="outline" className="rounded-lg px-4 h-8 font-bold uppercase tracking-widest text-[10px]" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
                                             Back to Top
                                         </Button>
                                     </div>
@@ -222,9 +217,9 @@ export default function Home() {
                             </div>
                         </div>
 
-                        <div className="mt-24 pt-8 border-t border-foreground/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em]">
+                        <div className="mt-12 pt-6 border-t border-foreground/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
                             <span>© {new Date().getFullYear()} {name}. All Rights Reserved.</span>
-                            <div className="flex gap-8">
+                            <div className="flex gap-6">
                                 <span className="hover:text-foreground cursor-pointer transition-colors">Privacy</span>
                                 <span className="hover:text-foreground cursor-pointer transition-colors">Terms</span>
                             </div>
@@ -234,4 +229,12 @@ export default function Home() {
             </div>
         </main>
     );
+};
+
+export default function Home() {
+    const { data, loading } = usePortfolio();
+
+    if (loading) return <LoadingScreen />;
+
+    return <PortfolioContent data={data} />;
 }

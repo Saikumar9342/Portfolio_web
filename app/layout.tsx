@@ -26,7 +26,7 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en" className={`${inter.variable} scroll-smooth`}>
-            <body className="font-sans">
+            <body className="font-sans" suppressHydrationWarning>
                 <ThemeProvider>
                     <ToastProvider>
                         <CustomCursor />

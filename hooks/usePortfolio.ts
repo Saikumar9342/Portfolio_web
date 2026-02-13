@@ -78,6 +78,7 @@ export function usePortfolio() {
                         personalEmail: d.personalEmail || emptyData.contact.personalEmail,
                         cta: d.cta || emptyData.contact.cta,
                         secondaryCta: d.secondaryCta || emptyData.contact.secondaryCta,
+                        resumeUrl: d.resumeUrl || "",
                     } as ContactData;
                 } else if (id === 'navbar') {
                     newContent[id] = { ...emptyData.navbar, ...data };
