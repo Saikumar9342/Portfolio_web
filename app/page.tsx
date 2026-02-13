@@ -13,9 +13,18 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { usePortfolio } from "@/hooks/usePortfolio";
 
+import { LoadingScreen } from "@/components/ui/LoadingScreen";
+import { useDynamicColor } from "@/hooks/useDynamicColor";
+
 export default function Home() {
     const { data, loading } = usePortfolio();
     const { contact, hero, about, expertise, skills, name, projects } = data;
+
+    // Extract theme color from hero image or default profile
+    // This runs even during loading to try and set initial theme if possible, 
+    // or at least ensures it updates immediately when data arrives.
+    useDynamicColor(hero?.imageUrl || "/pfp.jpeg");
+
     const containerRef = useRef<HTMLDivElement>(null);
     const { scrollYProgress } = useScroll({
         target: containerRef,
@@ -29,16 +38,7 @@ export default function Home() {
         setCurrentProgress(latest);
     });
 
-    if (loading) {
-        return (
-            <div className="h-screen w-full flex items-center justify-center bg-background text-foreground">
-                <div className="flex flex-col items-center gap-4">
-                    <div className="w-12 h-12 border-4 border-accent border-t-transparent rounded-full animate-spin" />
-                    <Typography className="text-xl font-bold animate-pulse">Syncing Portfolio...</Typography>
-                </div>
-            </div>
-        );
-    }
+    if (loading) return <LoadingScreen />;
 
     return (
         <main ref={containerRef} className="relative min-h-screen">

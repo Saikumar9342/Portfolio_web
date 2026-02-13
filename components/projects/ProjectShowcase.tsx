@@ -58,12 +58,12 @@ export function ProjectShowcase({ projects, onProjectClick }: ProjectShowcasePro
                                 </span>
                             </motion.div>
 
-                            <Typography element="h3" className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight leading-tight text-foreground">
+                            <Typography element="h3" className="text-2xl md:text-3xl lg:text-4xl font-black tracking-tight leading-tight text-foreground">
                                 {project.title}
                             </Typography>
                         </div>
 
-                        <Typography className="text-base md:text-lg text-muted-foreground leading-relaxed font-medium line-clamp-4">
+                        <Typography className="text-sm md:text-base text-muted-foreground leading-relaxed font-medium line-clamp-4">
                             {project.description}
                         </Typography>
 
