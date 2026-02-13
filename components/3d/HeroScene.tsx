@@ -4,6 +4,7 @@ import { useRef, useMemo, Suspense } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Points, PointMaterial, Environment, Float, MeshDistortMaterial, Sphere, Plane } from "@react-three/drei";
 import * as THREE from "three";
+import { useTheme } from "@/hooks/useTheme";
 
 function MotionBackground() {
     const meshRef = useRef<THREE.Mesh>(null);
@@ -93,24 +94,34 @@ function Rig() {
 }
 
 export function HeroScene() {
+    const { resolvedTheme } = useTheme();
+    const isDark = resolvedTheme === "dark";
+    const bgColor = isDark ? "#020308" : "#ffffff";
+    const starColor = isDark ? "#60a5fa" : "#3b82f6";
+
     return (
         <div className="fixed inset-0 -z-10 w-full h-full bg-transparent">
             <Canvas camera={{ position: [0, 0, 10], fov: 60 }} dpr={[1, 2]}>
                 <Suspense fallback={null}>
-                    <ambientLight intensity={0.5} />
-                    <pointLight position={[10, 10, 10]} intensity={1} color="#60a5fa" />
+                    <ambientLight intensity={isDark ? 0.5 : 0.8} />
+                    <pointLight position={[10, 10, 10]} intensity={1} color={starColor} />
                     <spotLight position={[0, 10, 0]} intensity={1.2} color="#ffffff" angle={0.6} penumbra={0.8} />
 
                     <MotionBackground />
                     <StarField />
                     <Rig />
 
-                    <Environment preset="night" />
-                    <fog attach="fog" args={["#020308", 5, 25]} />
+                    <Environment preset={isDark ? "night" : "warehouse"} />
+                    <fog attach="fog" args={[bgColor, 5, 25]} />
                 </Suspense>
             </Canvas>
             {/* Subtle overlays */}
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_#020308_100%)] pointer-events-none opacity-60" />
+            <div
+                className="absolute inset-0 pointer-events-none opacity-60"
+                style={{
+                    background: `radial-gradient(circle_at_center, transparent 0%, ${bgColor} 100%)`
+                }}
+            />
             <div className="absolute inset-0 bg-grid opacity-[0.03] pointer-events-none" />
         </div>
     );
