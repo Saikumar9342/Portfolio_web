@@ -5,9 +5,9 @@ import { Typography } from "./layout";
 
 export function LoadingScreen() {
     return (
-        <div className="fixed inset-0 z-[500] bg-background flex flex-col items-center justify-center overflow-hidden">
+        <div className="fixed inset-0 z-[500] bg-black text-white flex flex-col items-center justify-center overflow-hidden">
             {/* Ambient Background Glow */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-accent/5 rounded-full blur-[120px]" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-white/5 rounded-full blur-[120px]" />
 
             <div className="relative flex flex-col items-center gap-12">
                 {/* Wave Loader */}
@@ -19,9 +19,9 @@ export function LoadingScreen() {
                             animate={{
                                 height: [8, 64, 8],
                                 backgroundColor: [
-                                    "color-mix(in srgb, var(--accent), transparent 80%)",
-                                    "var(--accent)",
-                                    "color-mix(in srgb, var(--accent), transparent 80%)"
+                                    "rgba(255,255,255,0.25)",
+                                    "#ffffff",
+                                    "rgba(255,255,255,0.25)"
                                 ]
                             }}
                             transition={{
@@ -42,7 +42,7 @@ export function LoadingScreen() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8 }}
                     >
-                        <Typography className="text-[10px] font-black uppercase tracking-[0.5em] text-foreground/40 text-center">
+                        <Typography className="text-[10px] font-black uppercase tracking-[0.5em] text-white/40 text-center">
                             Synchronizing Experience
                         </Typography>
                     </motion.div>
@@ -51,7 +51,7 @@ export function LoadingScreen() {
                         <motion.div
                             animate={{ opacity: [0.3, 1, 0.3] }}
                             transition={{ duration: 2, repeat: Infinity }}
-                            className="w-1 h-1 rounded-full bg-accent"
+                            className="w-1 h-1 rounded-full bg-white"
                         />
                         <Typography className="text-sm font-bold tracking-tighter text-foreground uppercase">
                             Preparing Narrative
@@ -59,15 +59,15 @@ export function LoadingScreen() {
                         <motion.div
                             animate={{ opacity: [0.3, 1, 0.3] }}
                             transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
-                            className="w-1 h-1 rounded-full bg-accent"
+                            className="w-1 h-1 rounded-full bg-white"
                         />
                     </div>
                 </div>
             </div>
 
             {/* Corner Accents */}
-            <div className="absolute top-12 left-12 w-12 h-12 border-t-2 border-l-2 border-accent/20 rounded-tl-3xl opacity-50" />
-            <div className="absolute bottom-12 right-12 w-12 h-12 border-b-2 border-r-2 border-accent/20 rounded-br-3xl opacity-50" />
+            <div className="absolute top-12 left-12 w-12 h-12 border-t-2 border-l-2 border-white/20 rounded-tl-3xl opacity-50" />
+            <div className="absolute bottom-12 right-12 w-12 h-12 border-b-2 border-r-2 border-white/20 rounded-br-3xl opacity-50" />
         </div>
     );
 }

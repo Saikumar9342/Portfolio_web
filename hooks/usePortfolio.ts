@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { collection, onSnapshot, query, orderBy, DocumentData } from "firebase/firestore";
+import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { Project, HeroData, AboutData, ExpertiseData, SkillsData, ContactData, NavbarData } from "@/types";
+import { Project, HeroData, AboutData, ExpertiseData, SkillsData, ContactData, NavbarData, SocialLink } from "@/types";
+import { portfolioData } from "@/lib/data";
 
 export interface PortfolioContent {
     hero: HeroData;
@@ -17,29 +18,79 @@ export interface PortfolioContent {
     role: string;
 }
 
+const allowedPlatforms = new Set<SocialLink["platform"]>([
+    "linkedin",
+    "github",
+    "twitter",
+    "instagram",
+    "other",
+]);
+
+function normalizeSocialLinks(input: any): SocialLink[] {
+    if (!Array.isArray(input)) return [];
+    return input
+        .map((item) => {
+            const platformRaw = String(item?.platform ?? "").toLowerCase();
+            const platform = allowedPlatforms.has(platformRaw as SocialLink["platform"])
+                ? (platformRaw as SocialLink["platform"])
+                : "other";
+            const url = String(item?.url ?? "").trim();
+            if (!url) return null;
+            return { platform, url } as SocialLink;
+        })
+        .filter(Boolean) as SocialLink[];
+}
+
 const emptyData: PortfolioContent = {
-    hero: { badge: "", title: "", subtitle: "", cta: "", secondaryCta: "", imageUrl: "" },
-    about: { title: "", biography: "", education: [], location: "", interests: [] },
-    expertise: { title: "", label: "", stats: [], services: [] },
+    hero: {
+        badge: portfolioData.hero.badge,
+        title: portfolioData.hero.title,
+        subtitle: portfolioData.hero.subtitle,
+        cta: portfolioData.hero.cta,
+        secondaryCta: portfolioData.hero.secondaryCta,
+        imageUrl: ""
+    },
+    about: {
+        title: portfolioData.about.title,
+        biography: portfolioData.about.biography,
+        education: portfolioData.about.education,
+        location: portfolioData.about.location,
+        interests: portfolioData.about.interests,
+        socialLinks: normalizeSocialLinks(portfolioData.about.socialLinks)
+    },
+    expertise: {
+        title: portfolioData.expertise.title,
+        label: portfolioData.expertise.label,
+        stats: portfolioData.expertise.stats,
+        services: portfolioData.expertise.services
+    },
     skills: {
-        frontendTitle: "Frontend Engineering",
-        mobileTitle: "Mobile Development",
-        backendTitle: "Cloud & Backend",
-        toolsTitle: "Workflow & Tools",
-        frameworksTitle: "Toolbox",
+        frontendTitle: portfolioData.skills.frontendTitle,
+        mobileTitle: portfolioData.skills.mobileTitle,
+        backendTitle: portfolioData.skills.backendTitle,
+        toolsTitle: portfolioData.skills.toolsTitle,
+        frameworksTitle: portfolioData.skills.frameworksTitle,
         title: "Technical Expertise",
         description: "A comprehensive suite of technologies I use to build robust, scalable, and secure digital products.",
-        frontend: [],
-        frameworks: [],
-        mobile: [],
-        backend: [],
-        tools: []
+        frontend: portfolioData.skills.frontend,
+        frameworks: portfolioData.skills.frameworks,
+        mobile: portfolioData.skills.mobile,
+        backend: portfolioData.skills.backend,
+        tools: portfolioData.skills.tools
     },
-    contact: { title: "", description: "", email: "", personalEmail: "", cta: "", secondaryCta: "" },
+    contact: {
+        title: portfolioData.contact.title,
+        description: portfolioData.contact.description,
+        email: portfolioData.contact.email,
+        personalEmail: portfolioData.contact.personalEmail,
+        cta: portfolioData.contact.cta,
+        secondaryCta: portfolioData.contact.secondaryCta,
+        resumeUrl: ""
+    },
     navbar: { logoText: "S", ctaText: "Hire Me", items: [] },
-    projects: [],
-    name: "",
-    role: ""
+    projects: portfolioData.projects as Project[],
+    name: portfolioData.name,
+    role: portfolioData.role
 };
 
 export function usePortfolio() {
@@ -60,19 +111,20 @@ export function usePortfolio() {
 
             const newContent: any = {};
             snapshot.forEach(doc => {
-                const data = doc.data();
+                const docData = doc.data();
                 const id = doc.id;
 
                 if (id === 'skills') {
-                    newContent[id] = { ...emptyData.skills, ...data };
+                    newContent[id] = { ...emptyData.skills, ...docData };
                 } else if (id === 'about') {
-                    newContent[id] = { ...emptyData.about, ...data };
+                    const socialLinks = normalizeSocialLinks(docData.socialLinks);
+                    newContent[id] = { ...emptyData.about, ...docData, socialLinks };
                 } else if (id === 'expertise') {
-                    newContent[id] = { ...emptyData.expertise, ...data };
+                    newContent[id] = { ...emptyData.expertise, ...docData };
                 } else if (id === 'hero') {
-                    newContent[id] = { ...emptyData.hero, ...data };
+                    newContent[id] = { ...emptyData.hero, ...docData };
                 } else if (id === 'contact') {
-                    const d = data;
+                    const d = docData;
                     newContent[id] = {
                         title: d.title || emptyData.contact.title,
                         description: d.description || emptyData.contact.description,
@@ -83,9 +135,12 @@ export function usePortfolio() {
                         resumeUrl: d.resumeUrl || "",
                     } as ContactData;
                 } else if (id === 'navbar') {
-                    newContent[id] = { ...emptyData.navbar, ...data };
+                    newContent[id] = { ...emptyData.navbar, ...docData };
+                } else if (id === 'personal') {
+                    newContent.name = docData.name || emptyData.name;
+                    newContent.role = docData.role || emptyData.role;
                 } else {
-                    newContent[id] = data;
+                    newContent[id] = docData;
                 }
             });
 
@@ -103,6 +158,7 @@ export function usePortfolio() {
         const q = query(collection(db, "projects"), orderBy("createdAt", "desc"));
         const projectsUnsub = onSnapshot(q, (snapshot) => {
             if (snapshot.empty) {
+                setData(prev => ({ ...prev, projects: [] }));
                 setProjectsLoaded(true);
                 return;
             }
@@ -119,6 +175,8 @@ export function usePortfolio() {
                     id: doc.id,
                     title: d.title,
                     description: d.description,
+                    fullDescription: d.fullDescription || "",
+                    role: d.role || "",
                     techStack: d.techStack || [],
                     imageUrl: d.imageUrl || "",
                     liveLink: d.liveLink || "",

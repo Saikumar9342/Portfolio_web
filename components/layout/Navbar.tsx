@@ -4,8 +4,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 // import { portfolioData } from "@/lib/data";
 import { Button } from "../ui/button";
-import { ThemeToggle } from "@/components/ui/ThemeToggle";
-import { Menu, X, Github, Linkedin } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { NavbarData, ContactData } from "@/types";
 
 interface NavbarProps {

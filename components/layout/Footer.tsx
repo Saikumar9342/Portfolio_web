@@ -105,7 +105,7 @@ export function Footer({ contact, about, navbar, name }: FooterProps) {
                 </div>
 
                 <div className="mt-12 pt-6 border-t border-foreground/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                    <span>© {new Date().getFullYear()} {name}. All Rights Reserved.</span>
+                    <span>(c) {new Date().getFullYear()} {name}. All Rights Reserved.</span>
                     <div className="flex gap-6">
                         <span className="hover:text-foreground cursor-pointer transition-colors">Privacy</span>
                         <span className="hover:text-foreground cursor-pointer transition-colors">Terms</span>

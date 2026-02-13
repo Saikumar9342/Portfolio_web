@@ -5,7 +5,7 @@
 :root {
   --background: var(--dynamic-bg, #000000);
   --foreground: var(--dynamic-fg, #ffffff);
-  --accent: var(--dynamic-accent, #f59e0b);
+  --accent: var(--dynamic-accent, #000000);
   --accent-foreground: var(--dynamic-bg, #ffffff);
   --muted: var(--dynamic-muted, rgba(255, 255, 255, 0.05));
   --muted-foreground: var(--dynamic-muted-fg, rgba(255, 255, 255, 0.6));
@@ -31,9 +31,18 @@ html.light {
   --foreground: var(--dynamic-fg, #000000);
 }
 
+html.theme-loading {
+  --dynamic-accent: #ffffff;
+  --dynamic-fg: #ffffff;
+  --dynamic-muted-fg: rgba(255, 255, 255, 0.6);
+  --dynamic-border: rgba(255, 255, 255, 0.1);
+  --dynamic-muted: rgba(255, 255, 255, 0.05);
+}
+
 @layer base {
   body {
     @apply bg-background text-foreground antialiased;
+    transition: background-color 300ms ease, color 300ms ease;
     font-feature-settings: normal;
   }
 }

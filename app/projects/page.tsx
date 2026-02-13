@@ -5,12 +5,9 @@ import { motion } from "framer-motion";
 import { ProjectShowcase } from "@/components/projects/ProjectShowcase";
 import { ProjectModal } from "@/components/projects/ProjectModal";
 import { Navbar } from "@/components/layout/Navbar";
-import { Typography, Section } from "@/components/ui/layout";
+import { Typography } from "@/components/ui/layout";
 import { usePortfolio } from "@/hooks/usePortfolio";
 import { Project } from "@/types";
-import { Github, Linkedin, Globe, Twitter } from "lucide-react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { useDynamicColor } from "@/hooks/useDynamicColor";
 import { Footer } from "@/components/layout/Footer";
 

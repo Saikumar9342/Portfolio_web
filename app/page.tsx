@@ -1,16 +1,11 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { motion, useScroll, useTransform, useMotionValueEvent } from "framer-motion";
+import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { Section, Typography, GlassCard } from "@/components/ui/layout";
 import { Hero } from "@/components/home/Hero";
 import { About } from "@/components/home/About";
-import { ProjectGrid } from "@/components/projects/ProjectGrid";
 import { Navbar } from "@/components/layout/Navbar";
-import { Github, Linkedin, Twitter, Globe, ArrowUp, Mail, MapPin } from "lucide-react";
-import Link from "next/link";
-
-import { Button } from "@/components/ui/button";
 import { usePortfolio } from "@/hooks/usePortfolio";
 import { Footer } from "@/components/layout/Footer";
 
@@ -30,7 +25,7 @@ const PortfolioContent = ({ data }: { data: any }) => {
         layoutEffect: false
     });
 
-    const [currentProgress, setCurrentProgress] = useState(0);
+    const [, setCurrentProgress] = useState(0);
 
     useMotionValueEvent(scrollYProgress, "change", (latest: number) => {
         setCurrentProgress(latest);
@@ -50,7 +45,7 @@ const PortfolioContent = ({ data }: { data: any }) => {
                 {/* SKILLS SECTION */}
                 <Section id="skills" className="min-h-screen flex items-center py-24 border-t border-border/50">
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 w-full">
-                        <GlassCard className="h-full p-8 flex flex-col justify-center space-y-6">
+                        <GlassCard className="p-8 space-y-6 self-start">
                             <Typography className="text-sm font-semibold text-accent tracking-widest uppercase">{skills.frameworksTitle || "Toolbox"}</Typography>
                             <Typography element="h2" className="text-4xl md:text-5xl font-bold text-foreground leading-tight">
                                 {skills.title || "Technical Expertise"}
@@ -67,9 +62,9 @@ const PortfolioContent = ({ data }: { data: any }) => {
                             </div>
                         </GlassCard>
 
-                        <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="lg:col-span-2 md:columns-2 md:[column-gap:1rem]">
                             {/* Frontend Skill Card */}
-                            <GlassCard className="p-6 space-y-4 hover:border-accent/40 transition-all duration-500">
+                            <GlassCard className="p-6 space-y-4 hover:border-accent/40 transition-all duration-500 break-inside-avoid mb-4">
                                 <Typography element="h3" className="text-xl font-bold flex items-center gap-2">
                                     <div className="w-2 h-2 rounded-full bg-accent" />
                                     {skills.frontendTitle || "Frontend Engineering"}
@@ -96,7 +91,7 @@ const PortfolioContent = ({ data }: { data: any }) => {
 
                             <div className="space-y-4">
                                 {/* Mobile & Backend Cards */}
-                                <GlassCard className="p-6 space-y-3">
+                                <GlassCard className="p-6 space-y-3 break-inside-avoid mb-4">
                                     <Typography element="h3" className="text-lg font-bold">{skills.mobileTitle || "Mobile Development"}</Typography>
                                     <div className="flex flex-wrap gap-2">
                                         {skills.mobile?.map((m: string) => (
@@ -107,7 +102,7 @@ const PortfolioContent = ({ data }: { data: any }) => {
                                     </div>
                                 </GlassCard>
 
-                                <GlassCard className="p-6 space-y-3">
+                                <GlassCard className="p-6 space-y-3 break-inside-avoid mb-4">
                                     <Typography element="h3" className="text-lg font-bold">{skills.backendTitle || "Cloud & Backend"}</Typography>
                                     <div className="flex flex-wrap gap-2">
                                         {skills.backend?.map((b: string) => (
@@ -118,12 +113,80 @@ const PortfolioContent = ({ data }: { data: any }) => {
                                     </div>
                                 </GlassCard>
 
-                                <GlassCard className="p-6 space-y-3">
+                                <GlassCard className="p-6 space-y-3 break-inside-avoid mb-4">
                                     <Typography element="h3" className="text-lg font-bold">{skills.toolsTitle || "Workflow & Tools"}</Typography>
                                     <div className="flex flex-wrap gap-2 text-xs text-foreground/60">
-                                        {skills.tools?.join(" • ")}
+                                        {skills.tools?.join(" | ")}
                                     </div>
                                 </GlassCard>
+
+                                {/* Extra Skill Sections (e.g., DevOps) */}
+                                {(() => {
+                                    if (!skills) return null;
+                                    const knownKeys = new Set([
+                                        "frontend",
+                                        "mobile",
+                                        "backend",
+                                        "tools",
+                                        "frameworks",
+                                        "frontendTitle",
+                                        "mobileTitle",
+                                        "backendTitle",
+                                        "toolsTitle",
+                                        "frameworksTitle",
+                                        "title",
+                                        "description",
+                                    ]);
+
+                                    return Object.entries(skills)
+                                        .filter(([key, value]) => {
+                                            if (knownKeys.has(key)) return false;
+                                            if (key.endsWith("Title")) return false;
+                                            if (!Array.isArray(value) || value.length === 0) return false;
+                                            const titleKey = `${key}Title`;
+                                            return typeof (skills as any)[titleKey] === "string";
+                                        })
+                                        .map(([key, value]) => {
+                                            const titleKey = `${key}Title`;
+                                            const title = (skills as any)[titleKey] || key;
+                                            const list = value as any[];
+                                            const isObjectList = typeof list[0] === "object";
+
+                                            return (
+                                                <GlassCard key={key} className="p-6 space-y-3 break-inside-avoid mb-4">
+                                                    <Typography element="h3" className="text-lg font-bold">{title}</Typography>
+                                                    {isObjectList ? (
+                                                        <div className="space-y-3">
+                                                            {list.map((item: any) => (
+                                                                <div key={item.name} className="space-y-1">
+                                                                    <div className="flex justify-between text-xs font-medium uppercase tracking-wider text-foreground/60">
+                                                                        <span>{item.name}</span>
+                                                                        {item.level !== undefined && <span>{item.level}%</span>}
+                                                                    </div>
+                                                                    <div className="h-1 w-full bg-accent/5 rounded-full overflow-hidden">
+                                                                        <motion.div
+                                                                            initial={{ width: 0 }}
+                                                                            whileInView={{ width: `${item.level ?? 0}%` }}
+                                                                            transition={{ duration: 1, delay: 0.2 }}
+                                                                            className="h-full bg-accent"
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    ) : (
+                                                        <div className="flex flex-wrap gap-2">
+                                                            {list.map((item) => (
+                                                                <span key={String(item)} className="px-3 py-1 text-xs rounded-lg bg-foreground/5 border border-foreground/10 text-foreground/80">
+                                                                    {String(item)}
+                                                                </span>
+                                                            ))}
+                                                        </div>
+                                                    )}
+                                                </GlassCard>
+                                            );
+                                        });
+                                })()}
                             </div>
                         </div>
                     </div>

@@ -2,11 +2,21 @@
 
 import { useState, useEffect } from "react";
 
-export function useDynamicColor(imageSrc: string) {
+export function useDynamicColor(imageSrc: string, options?: { lockBackground?: boolean }) {
     const [color, setColor] = useState<string>("transparent");
+    const lockBackground = options?.lockBackground ?? false;
 
     useEffect(() => {
-        if (!imageSrc) return;
+        const root = document.documentElement;
+        // Use a temporary class to avoid flash while the image loads
+        if (!lockBackground) {
+            root.classList.add('theme-loading');
+        }
+
+        if (!imageSrc) {
+            root.classList.remove('theme-loading');
+            return;
+        }
 
         const img = new Image();
         img.crossOrigin = "Anonymous"; // Capital A for consistency, though 'anonymous' works too
@@ -71,22 +81,28 @@ export function useDynamicColor(imageSrc: string) {
                 const accentHex = rgbToHex(accR, accG, accB);
 
                 // 3. APPLY TO CSS VARIABLES
-                const root = document.documentElement;
-                root.style.setProperty('--dynamic-bg', bgHex);
-                root.style.setProperty('--dynamic-accent', accentHex);
+                if (!lockBackground) {
+                    root.style.setProperty('--dynamic-bg', bgHex);
+                    root.style.setProperty('--dynamic-accent', accentHex);
 
-                // Contrast handling for Foreground (Text)
-                const bgBrightness = (bgR * 299 + bgG * 587 + bgB * 114) / 1000;
-                const isDarkBg = bgBrightness < 150;
+                    // Contrast handling for Foreground (Text)
+                    const bgBrightness = (bgR * 299 + bgG * 587 + bgB * 114) / 1000;
+                    const isDarkBg = bgBrightness < 150;
 
-                root.style.setProperty('--dynamic-fg', isDarkBg ? '#ffffff' : '#0a0a0b');
-                root.style.setProperty('--dynamic-muted-fg', isDarkBg ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)');
-                root.style.setProperty('--dynamic-border', isDarkBg ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)');
-                root.style.setProperty('--dynamic-muted', isDarkBg ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)');
+                    root.style.setProperty('--dynamic-fg', isDarkBg ? '#ffffff' : '#0a0a0b');
+                    root.style.setProperty('--dynamic-muted-fg', isDarkBg ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)');
+                    root.style.setProperty('--dynamic-border', isDarkBg ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)');
+                    root.style.setProperty('--dynamic-muted', isDarkBg ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)');
+                } else {
+                    // Only update the accent, keep background/foreground stable
+                    root.style.setProperty('--dynamic-accent', accentHex);
+                }
 
                 setColor(accentHex);
+                root.classList.remove('theme-loading');
             } catch (e) {
                 console.warn("Failed to extract colors from image:", e);
+                root.classList.remove('theme-loading');
             }
         };
 

@@ -18,7 +18,7 @@ export function useProjects() {
             q,
             (snapshot) => {
                 if (!snapshot.size) {
-                    // No data in Firestore yet — keep default portfolio data
+                    // No data in Firestore yet - keep default portfolio data
                     setLoading(false);
                     return;
                 }
@@ -34,10 +34,13 @@ export function useProjects() {
                         id: doc.id,
                         title: data.title,
                         description: data.description,
+                        fullDescription: data.fullDescription ?? "",
+                        role: data.role ?? "",
                         techStack: data.techStack ?? [],
                         imageUrl: data.imageUrl ?? "",
                         liveLink: data.liveLink ?? "",
                         githubLink: data.githubLink ?? "",
+                        category: data.category ?? "",
                         createdAt,
                     };
                     return p;
