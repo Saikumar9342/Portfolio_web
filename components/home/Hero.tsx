@@ -18,11 +18,11 @@ interface HeroProps {
 
 export function Hero({ data, role, name, location }: HeroProps) {
     const hero = data;
-    useDynamicColor("/pfp.jpeg");
+    useDynamicColor(hero.imageUrl || "/pfp.jpeg");
 
     return (
         <section className="relative h-[100dvh] w-full flex items-center pt-24 pb-12 px-4 md:px-8 overflow-hidden bg-background transition-colors duration-1000">
-            <div className="container mx-auto max-w-7xl h-full relative z-10 flex items-center">
+            <div className="container mx-auto max-w-6xl h-full relative z-10 flex items-center px-6 md:px-12">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center w-full">
 
                     {/* Text Content */}
@@ -44,7 +44,7 @@ export function Hero({ data, role, name, location }: HeroProps) {
                             </motion.div>
 
                             <Typography element="h1" className="text-5xl md:text-6xl lg:text-7xl font-black leading-[0.9] text-foreground tracking-tighter uppercase">
-                                {hero.title.split(" ").map((word, i) => (
+                                {hero?.title?.split(" ").map((word, i) => (
                                     <span key={i} className="block">{word}</span>
                                 ))}
                             </Typography>
@@ -86,7 +86,7 @@ export function Hero({ data, role, name, location }: HeroProps) {
                             {/* Smooth hover zoom */}
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
-                                src="/pfp.jpeg"
+                                src={hero.imageUrl || "/pfp.jpeg"}
                                 alt={name}
                                 className="w-full h-full object-cover object-center transition-transform duration-1000 group-hover:scale-105"
                             />

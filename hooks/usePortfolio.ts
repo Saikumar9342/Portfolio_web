@@ -11,13 +11,14 @@ export interface PortfolioContent {
     expertise: ExpertiseData;
     skills: SkillsData;
     contact: ContactData;
+    navbar: NavbarData;
     projects: Project[];
     name: string;
     role: string;
 }
 
 const emptyData: PortfolioContent = {
-    hero: { badge: "", title: "", subtitle: "", cta: "", secondaryCta: "" },
+    hero: { badge: "", title: "", subtitle: "", cta: "", secondaryCta: "", imageUrl: "" },
     about: { title: "", biography: "", education: [], location: "", interests: [] },
     expertise: { title: "", label: "", stats: [], services: [] },
     skills: {
@@ -33,6 +34,7 @@ const emptyData: PortfolioContent = {
         tools: []
     },
     contact: { title: "", description: "", email: "", personalEmail: "", cta: "", secondaryCta: "" },
+    navbar: { logoText: "S", ctaText: "Hire Me", items: [] },
     projects: [],
     name: "",
     role: ""
@@ -56,7 +58,24 @@ export function usePortfolio() {
 
             const newContent: any = {};
             snapshot.forEach(doc => {
-                newContent[doc.id] = doc.data();
+                const data = doc.data();
+                const id = doc.id;
+
+                if (id === 'skills') {
+                    newContent[id] = { ...emptyData.skills, ...data };
+                } else if (id === 'about') {
+                    newContent[id] = { ...emptyData.about, ...data };
+                } else if (id === 'expertise') {
+                    newContent[id] = { ...emptyData.expertise, ...data };
+                } else if (id === 'hero') {
+                    newContent[id] = { ...emptyData.hero, ...data };
+                } else if (id === 'contact') {
+                    newContent[id] = { ...emptyData.contact, ...data };
+                } else if (id === 'navbar') {
+                    newContent[id] = { ...emptyData.navbar, ...data };
+                } else {
+                    newContent[id] = data;
+                }
             });
 
             setData(prev => ({

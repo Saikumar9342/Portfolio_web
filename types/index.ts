@@ -18,6 +18,7 @@ export interface HeroData {
     subtitle: string;
     cta: string;
     secondaryCta: string;
+    imageUrl?: string;
 }
 
 export interface AboutData {

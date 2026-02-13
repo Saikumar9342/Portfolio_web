@@ -22,7 +22,7 @@ export function ProjectGrid({ projects, loading }: ProjectGridProps) {
                     <div key={i} className="aspect-video w-full rounded-3xl bg-white/5 animate-pulse border border-white/10" />
                 ))
             ) : (
-                projects.map((project, index) => (
+                projects?.map((project, index) => (
                     <ProjectCard
                         key={project.id}
                         project={project}

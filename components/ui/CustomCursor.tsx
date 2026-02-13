@@ -52,7 +52,8 @@ export function CustomCursor() {
                 }}
                 animate={{
                     scale: isHovering ? 2 : 1,
-                    backgroundColor: isHovering ? "color-mix(in srgb, var(--accent), transparent 70%)" : "transparent",
+                    opacity: isHovering ? 1 : 0,
+                    backgroundColor: "var(--muted)",
                 }}
             />
             <motion.div

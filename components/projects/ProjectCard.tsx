@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Project } from "@/types";
 import { motion } from "framer-motion";
 import { ExternalLink, Github, ArrowRight } from "lucide-react";
@@ -14,6 +15,8 @@ interface ProjectCardProps {
 }
 
 export function ProjectCard({ project, index }: ProjectCardProps) {
+    const [imgSrc, setImgSrc] = useState(project.imageUrl || "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1000&auto=format&fit=crop");
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -25,14 +28,13 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
             <div className="space-y-6">
                 {/* Image Container */}
                 <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-foreground/5 mb-6">
-                    {project.imageUrl && (
-                        <Image
-                            src={project.imageUrl}
-                            alt={project.title}
-                            fill
-                            className="object-cover transition-all duration-1000 grayscale group-hover:grayscale-0 group-hover:scale-105"
-                        />
-                    )}
+                    <Image
+                        src={imgSrc}
+                        alt={project.title}
+                        fill
+                        className="object-cover transition-all duration-1000 grayscale group-hover:grayscale-0 group-hover:scale-105"
+                        onError={() => setImgSrc("https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1000&auto=format&fit=crop")}
+                    />
 
                     {/* Category Pill */}
                     <div className="absolute top-4 left-4">
@@ -52,9 +54,6 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
                             {project.description}
                         </Typography>
                     </div>
-
-                    {/* Index */}
-                    <span className="text-xs font-mono text-muted-foreground whitespace-nowrap">{project.id}</span>
                 </div>
             </div>
 

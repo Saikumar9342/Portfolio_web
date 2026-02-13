@@ -42,7 +42,7 @@ export function About({ about, expertise }: AboutProps) {
                             Education
                         </Typography>
                         <div className="space-y-4">
-                            {about.education.map((edu) => (
+                            {about.education?.map((edu) => (
                                 <div key={edu.institution} className="p-6 rounded-2xl border border-foreground/10 bg-foreground/5 group hover:bg-foreground/10 transition-colors">
                                     <Typography className="text-lg font-bold text-foreground mb-1">{edu.degree}</Typography>
                                     <div className="flex justify-between items-center text-sm text-muted-foreground">
@@ -62,7 +62,7 @@ export function About({ about, expertise }: AboutProps) {
                             What I Do
                         </Typography>
                         <div className="grid gap-8">
-                            {expertise.services.map((service, i) => (
+                            {expertise.services?.map((service, i) => (
                                 <motion.div
                                     key={service.id}
                                     initial={{ opacity: 0, y: 20 }}
@@ -87,7 +87,7 @@ export function About({ about, expertise }: AboutProps) {
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
-                        {expertise.stats.map((stat, i) => (
+                        {expertise.stats?.map((stat, i) => (
                             <motion.div
                                 key={stat.label}
                                 initial={{ opacity: 0, scale: 0.95 }}

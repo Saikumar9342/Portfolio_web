@@ -28,7 +28,7 @@ export function Section({ children, className, id, grid = false, container = tru
                     <div className="architect-corner bottom-0 right-0 border-r border-b opacity-40" />
                 </>
             )}
-            <div className={cn(container && "container mx-auto px-4 md:px-8 relative z-10")}>
+            <div className={cn(container && "container mx-auto max-w-6xl px-6 md:px-12 relative z-10")}>
                 {children}
             </div>
         </section>

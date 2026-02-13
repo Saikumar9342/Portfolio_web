@@ -9,7 +9,7 @@ export function useDynamicColor(imageSrc: string) {
         if (!imageSrc) return;
 
         const img = new Image();
-        img.crossOrigin = "anonymous";
+        img.crossOrigin = "Anonymous"; // Capital A for consistency, though 'anonymous' works too
         img.src = imageSrc;
 
         const applyTheme = () => {
