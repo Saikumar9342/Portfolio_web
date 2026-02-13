@@ -10,7 +10,7 @@ import { useDynamicColor } from "@/hooks/useDynamicColor";
 
 export function Hero() {
     const { hero } = portfolioData;
-    useDynamicColor("/pfp.png");
+    useDynamicColor("/pfp.jpeg");
 
     return (
         <section className="relative h-[100dvh] w-full flex items-center pt-24 pb-12 px-4 md:px-8 overflow-hidden bg-background transition-colors duration-1000">
@@ -78,7 +78,7 @@ export function Hero() {
                             {/* Smooth hover zoom */}
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
-                                src="/pfp.png"
+                                src="/pfp.jpeg"
                                 alt={portfolioData.name}
                                 className="w-full h-full object-cover object-center transition-transform duration-1000 group-hover:scale-105"
                             />
