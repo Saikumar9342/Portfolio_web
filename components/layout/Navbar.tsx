@@ -1,18 +1,22 @@
-"use client";
-
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { portfolioData } from "@/lib/data";
+// import { portfolioData } from "@/lib/data";
 import { Button } from "../ui/button";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { Menu, X } from "lucide-react";
+import { NavbarData } from "@/types";
 
-export function Navbar() {
+interface NavbarProps {
+    name: string;
+    data: NavbarData;
+    loading?: boolean;
+}
+
+export function Navbar({ name, data, loading }: NavbarProps) {
     const [isScrolled, setIsScrolled] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
-    const { name } = portfolioData;
 
     useEffect(() => {
         const handleScroll = () => {
@@ -21,6 +25,15 @@ export function Navbar() {
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
+
+    const navItems = data?.items || [
+        { label: "Projects", href: "/projects" },
+        { label: "About", href: "/#about" },
+        { label: "Skills", href: "/#skills" }
+    ];
+
+    const ctaText = data?.ctaText || "Hire Me";
+    const logoText = data?.logoText || "S";
 
     return (
         <motion.nav
@@ -40,7 +53,7 @@ export function Navbar() {
                         whileHover={{ scale: 1.05 }}
                         className="w-11 h-11 rounded-xl bg-accent flex items-center justify-center shadow-lg"
                     >
-                        <span className="text-accent-foreground font-black text-xl">S</span>
+                        <span className="text-accent-foreground font-black text-xl">{logoText}</span>
                     </motion.div>
                     <div className="hidden sm:flex flex-col">
                         <span className="text-sm font-black tracking-tight text-foreground">{name}</span>
@@ -50,21 +63,21 @@ export function Navbar() {
                 {/* Desktop Nav */}
                 <div className="hidden md:flex items-center gap-8">
                     <div className="flex gap-6 text-sm font-medium">
-                        <Link href="/projects" className="text-muted-foreground hover:text-foreground transition-colors">
-                            Projects
-                        </Link>
-                        <Link href="/#about" className="text-muted-foreground hover:text-foreground transition-colors">
-                            About
-                        </Link>
-                        <Link href="/#skills" className="text-muted-foreground hover:text-foreground transition-colors">
-                            Skills
-                        </Link>
+                        {navItems.map((item) => (
+                            <Link
+                                key={item.label}
+                                href={item.href}
+                                className="text-muted-foreground hover:text-foreground transition-colors"
+                            >
+                                {item.label}
+                            </Link>
+                        ))}
                     </div>
 
                     <div className="flex items-center gap-3">
                         <ThemeToggle />
                         <Button className="rounded-lg px-6" variant="default">
-                            Hire Me
+                            {ctaText}
                         </Button>
                     </div>
                 </div>
@@ -97,28 +110,17 @@ export function Navbar() {
                 className="md:hidden overflow-hidden bg-background border-b border-foreground/10"
             >
                 <div className="px-4 py-4 space-y-3">
-                    <Link
-                        href="/projects"
-                        className="block text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-                        onClick={() => setMobileOpen(false)}
-                    >
-                        Projects
-                    </Link>
-                    <Link
-                        href="/#about"
-                        className="block text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-                        onClick={() => setMobileOpen(false)}
-                    >
-                        About
-                    </Link>
-                    <Link
-                        href="/#skills"
-                        className="block text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-                        onClick={() => setMobileOpen(false)}
-                    >
-                        Skills
-                    </Link>
-                    <Button className="w-full rounded-lg mt-2">Hire Me</Button>
+                    {navItems.map((item) => (
+                        <Link
+                            key={item.label}
+                            href={item.href}
+                            className="block text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                            onClick={() => setMobileOpen(false)}
+                        >
+                            {item.label}
+                        </Link>
+                    ))}
+                    <Button className="w-full rounded-lg mt-2">{ctaText}</Button>
                 </div>
             </motion.div>
         </motion.nav>

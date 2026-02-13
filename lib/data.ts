@@ -70,6 +70,11 @@ export const portfolioData = {
         ]
     },
     skills: {
+        frontendTitle: "Frontend Engineering",
+        mobileTitle: "Mobile Development",
+        backendTitle: "Cloud & Backend",
+        toolsTitle: "Workflow & Tools",
+        frameworksTitle: "Toolbox",
         frontend: [
             { name: "Angular", level: 90 },
             { name: "ReactJS", level: 85 },

@@ -2,11 +2,16 @@
 
 import { motion } from "framer-motion";
 import { Section, Typography } from "@/components/ui/layout";
-import { portfolioData } from "@/lib/data";
+// import { portfolioData } from "@/lib/data";
 import { Code2, Layout, Maximize2 } from "lucide-react";
+import { PortfolioContent } from "@/hooks/usePortfolio";
 
-export function About() {
-    const { expertise, about } = portfolioData;
+interface AboutProps {
+    about: PortfolioContent['about'];
+    expertise: PortfolioContent['expertise'];
+}
+
+export function About({ about, expertise }: AboutProps) {
 
     const icons = {
         immersive: <Code2 className="w-6 h-6 text-accent" />,

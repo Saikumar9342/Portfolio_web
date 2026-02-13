@@ -37,7 +37,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
                     {/* Category Pill */}
                     <div className="absolute top-4 left-4">
                         <div className="px-3 py-1 rounded-full bg-background/80 text-foreground text-xs font-semibold shadow-md border border-foreground/10 backdrop-blur-md">
-                            {(project as any).category || "Featured"}
+                            {project.category || "Featured"}
                         </div>
                     </div>
                 </div>

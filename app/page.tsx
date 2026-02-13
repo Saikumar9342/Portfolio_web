@@ -7,12 +7,13 @@ import { Hero } from "@/components/home/Hero";
 import { About } from "@/components/home/About";
 import { ProjectGrid } from "@/components/projects/ProjectGrid";
 import { Navbar } from "@/components/layout/Navbar";
-import dynamic from 'next/dynamic';
+
 import { Button } from "@/components/ui/button";
-import { portfolioData } from "@/lib/data";
+import { usePortfolio } from "@/hooks/usePortfolio";
 
 export default function Home() {
-    const { contact } = portfolioData;
+    const { data, loading } = usePortfolio();
+    const { contact, hero, about, expertise, skills, name, projects } = data;
     const containerRef = useRef<HTMLDivElement>(null);
     const { scrollYProgress } = useScroll({
         target: containerRef,
@@ -25,23 +26,34 @@ export default function Home() {
         setCurrentProgress(latest);
     });
 
+    if (loading) {
+        return (
+            <div className="h-screen w-full flex items-center justify-center bg-background text-foreground">
+                <div className="flex flex-col items-center gap-4">
+                    <div className="w-12 h-12 border-4 border-accent border-t-transparent rounded-full animate-spin" />
+                    <Typography className="text-xl font-bold animate-pulse">Syncing Portfolio...</Typography>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <main ref={containerRef} className="relative min-h-screen">
             <div className="relative z-10">
-                <Navbar />
+                <Navbar name={name} data={data.navbar} loading={loading} />
 
                 {/* HERO */}
-                <Hero />
+                <Hero data={hero} role={data.role} name={name} location={about.location} />
 
                 {/* ABOUT SECTION (REPLACING PREVIOUS ABOUT) */}
-                <About />
+                <About about={about} expertise={expertise} />
 
                 {/* SKILLS SECTION */}
                 <section id="skills" className="py-24 border-t border-border/50">
                     <div className="container px-6 md:px-12 mx-auto max-w-7xl">
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
                             <div className="space-y-6">
-                                <Typography className="text-sm font-semibold text-accent tracking-widest uppercase">Toolbox</Typography>
+                                <Typography className="text-sm font-semibold text-accent tracking-widest uppercase">{skills.frameworksTitle || "Toolbox"}</Typography>
                                 <Typography element="h2" className="text-4xl md:text-5xl font-bold text-foreground leading-tight">
                                     Technical Expertise
                                 </Typography>
@@ -49,7 +61,7 @@ export default function Home() {
                                     A comprehensive suite of technologies I use to build robust, scalable, and secure digital products.
                                 </Typography>
                                 <div className="pt-4 flex flex-wrap gap-2">
-                                    {portfolioData.skills.frameworks.map(f => (
+                                    {skills.frameworks.map((f: string) => (
                                         <span key={f} className="px-3 py-1 text-xs font-medium rounded-full bg-accent/10 text-accent border border-accent/20">
                                             {f}
                                         </span>
@@ -62,10 +74,10 @@ export default function Home() {
                                 <GlassCard className="p-6 space-y-4 hover:border-accent/40 transition-all duration-500">
                                     <Typography element="h3" className="text-xl font-bold flex items-center gap-2">
                                         <div className="w-2 h-2 rounded-full bg-accent" />
-                                        Frontend Engineering
+                                        {skills.frontendTitle || "Frontend Engineering"}
                                     </Typography>
                                     <div className="space-y-3">
-                                        {portfolioData.skills.frontend.map(skill => (
+                                        {skills.frontend.map((skill: any) => (
                                             <div key={skill.name} className="space-y-1">
                                                 <div className="flex justify-between text-xs font-medium uppercase tracking-wider text-foreground/60">
                                                     <span>{skill.name}</span>
@@ -87,9 +99,9 @@ export default function Home() {
                                 <div className="space-y-4">
                                     {/* Mobile & Backend Cards */}
                                     <GlassCard className="p-6 space-y-3">
-                                        <Typography element="h3" className="text-lg font-bold">Mobile Development</Typography>
+                                        <Typography element="h3" className="text-lg font-bold">{skills.mobileTitle || "Mobile Development"}</Typography>
                                         <div className="flex flex-wrap gap-2">
-                                            {portfolioData.skills.mobile.map(m => (
+                                            {skills.mobile.map((m: string) => (
                                                 <span key={m} className="px-3 py-1 text-xs rounded-lg bg-foreground/5 border border-foreground/10 text-foreground/80">
                                                     {m}
                                                 </span>
@@ -98,9 +110,9 @@ export default function Home() {
                                     </GlassCard>
 
                                     <GlassCard className="p-6 space-y-3">
-                                        <Typography element="h3" className="text-lg font-bold">Cloud & Backend</Typography>
+                                        <Typography element="h3" className="text-lg font-bold">{skills.backendTitle || "Cloud & Backend"}</Typography>
                                         <div className="flex flex-wrap gap-2">
-                                            {portfolioData.skills.backend.map(b => (
+                                            {skills.backend.map((b: string) => (
                                                 <span key={b} className="px-3 py-1 text-xs rounded-lg bg-foreground/5 border border-foreground/10 text-foreground/80">
                                                     {b}
                                                 </span>
@@ -109,9 +121,9 @@ export default function Home() {
                                     </GlassCard>
 
                                     <GlassCard className="p-6 space-y-3">
-                                        <Typography element="h3" className="text-lg font-bold">Workflow & Tools</Typography>
+                                        <Typography element="h3" className="text-lg font-bold">{skills.toolsTitle || "Workflow & Tools"}</Typography>
                                         <div className="flex flex-wrap gap-2 text-xs text-foreground/60">
-                                            {portfolioData.skills.tools.join(" • ")}
+                                            {skills.tools.join(" • ")}
                                         </div>
                                     </GlassCard>
                                 </div>
@@ -130,23 +142,29 @@ export default function Home() {
                             className="space-y-8"
                         >
                             <Typography element="h2" className="text-4xl md:text-5xl font-bold text-foreground">
-                                {portfolioData.contact.title}
+                                {contact.title}
                             </Typography>
+                            <section className="container mx-auto max-w-7xl px-6 md:px-12 py-24 border-t border-border/50">
+                                <Typography element="h2" className="text-4xl md:text-5xl font-bold text-foreground mb-12">
+                                    Featured Projects
+                                </Typography>
+                                <ProjectGrid projects={projects} loading={loading} />
+                            </section>
 
                             <Typography className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                                {portfolioData.contact.description}
+                                {contact.description}
                             </Typography>
 
                             <div className="flex flex-col md:flex-row gap-4 justify-center pt-4">
                                 <Button size="lg" className="rounded-full px-12 h-14 text-base font-semibold shadow-lg shadow-accent/20">
-                                    {portfolioData.contact.cta}
+                                    {contact.cta}
                                 </Button>
                                 <a
                                     href="/Saikumar.p_FrontendDeveloper.pdf"
                                     target="_blank"
                                     className="rounded-full px-12 h-14 flex items-center justify-center font-semibold border border-foreground/10 hover:border-foreground/30 bg-foreground/5 hover:bg-foreground/10 text-foreground transition-all duration-300"
                                 >
-                                    {portfolioData.contact.secondaryCta}
+                                    {contact.secondaryCta}
                                 </a>
                             </div>
                         </motion.div>
@@ -158,16 +176,16 @@ export default function Home() {
                     <div className="container px-6 mx-auto max-w-6xl">
                         <div className="flex flex-col md:flex-row justify-between items-center gap-8">
                             <div className="flex flex-col items-center md:items-start gap-2">
-                                <a href={`mailto:${portfolioData.contact.email}`} className="text-sm font-semibold text-foreground hover:text-accent transition-colors">
-                                    {portfolioData.contact.email}
+                                <a href={`mailto:${contact.email}`} className="text-sm font-semibold text-foreground hover:text-accent transition-colors">
+                                    {contact.email}
                                 </a>
                                 <Typography className="text-xs text-muted-foreground">
-                                    {portfolioData.about.location}
+                                    {about.location}
                                 </Typography>
                             </div>
 
                             <Typography className="text-xs text-muted-foreground">
-                                © 2024 {portfolioData.name}. All rights reserved.
+                                © 2024 {name}. All rights reserved.
                             </Typography>
                         </div>
                     </div>

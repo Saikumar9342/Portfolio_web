@@ -4,12 +4,20 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Button } from "../ui/button";
 import { Typography } from "../ui/layout";
-import { portfolioData } from "@/lib/data";
 import Link from "next/link";
 import { useDynamicColor } from "@/hooks/useDynamicColor";
+// import { portfolioData } from "@/lib/data";
+import { PortfolioContent } from "@/hooks/usePortfolio";
 
-export function Hero() {
-    const { hero } = portfolioData;
+interface HeroProps {
+    data: PortfolioContent['hero'];
+    role: string;
+    name: string;
+    location: string;
+}
+
+export function Hero({ data, role, name, location }: HeroProps) {
+    const hero = data;
     useDynamicColor("/pfp.jpeg");
 
     return (
@@ -31,7 +39,7 @@ export function Hero() {
                                 transition={{ duration: 0.6, delay: 0.2 }}
                             >
                                 <Typography className="text-[10px] md:text-xs font-black text-accent tracking-[0.4em] uppercase py-1 px-3 border border-accent/20 rounded-full inline-block">
-                                    {portfolioData.role}
+                                    {role}
                                 </Typography>
                             </motion.div>
 
@@ -79,7 +87,7 @@ export function Hero() {
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                                 src="/pfp.jpeg"
-                                alt={portfolioData.name}
+                                alt={name}
                                 className="w-full h-full object-cover object-center transition-transform duration-1000 group-hover:scale-105"
                             />
 
@@ -96,11 +104,11 @@ export function Hero() {
                                 <div className="flex justify-between items-center">
                                     <div className="flex items-center gap-4">
                                         <div className="w-12 h-12 rounded-[1rem] bg-foreground text-background flex items-center justify-center font-black text-xl shadow-xl">
-                                            {portfolioData.name[0]}
+                                            {name[0]}
                                         </div>
                                         <div className="space-y-0.5">
                                             <Typography className="text-[9px] font-black tracking-[0.2em] text-foreground/40 uppercase">Location</Typography>
-                                            <Typography className="text-sm font-bold text-foreground">{portfolioData.about.location}</Typography>
+                                            <Typography className="text-sm font-bold text-foreground">{location}</Typography>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-2 px-4 py-2 bg-foreground/5 border border-foreground/10 rounded-full">
