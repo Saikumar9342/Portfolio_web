@@ -27,6 +27,8 @@ const emptyData: PortfolioContent = {
         backendTitle: "Cloud & Backend",
         toolsTitle: "Workflow & Tools",
         frameworksTitle: "Toolbox",
+        title: "Technical Expertise",
+        description: "A comprehensive suite of technologies I use to build robust, scalable, and secure digital products.",
         frontend: [],
         frameworks: [],
         mobile: [],

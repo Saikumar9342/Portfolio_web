@@ -62,6 +62,8 @@ export interface SkillsData {
     backendTitle?: string;
     toolsTitle?: string;
     frameworksTitle?: string; // For "Toolbox"
+    title?: string;
+    description?: string;
     frontend: Skill[];
     frameworks: string[];
     mobile: string[];
