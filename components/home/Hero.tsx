@@ -74,7 +74,7 @@ export function Hero() {
                         transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
                         className="lg:col-span-6"
                     >
-                        <div className="relative aspect-[3/4] md:aspect-[4/5] w-full max-w-2xl mx-auto overflow-hidden rounded-[4rem] border border-foreground/5 shadow-2xl group">
+                        <div className="relative aspect-[3/4] md:aspect-[4/5] w-full max-w-2xl mx-auto overflow-hidden rounded-[4rem] shadow-2xl group transition-all duration-1000">
                             {/* Smooth hover zoom */}
                             <img
                                 src="/pfp.png"
@@ -82,9 +82,8 @@ export function Hero() {
                                 className="w-full h-full object-cover object-center transition-transform duration-1000 group-hover:scale-105"
                             />
 
-                            {/* Subtle vignettes to sync theme colors even more */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent pointer-events-none" />
-                            <div className="absolute inset-0 ring-1 ring-inset ring-foreground/5 rounded-[3.5rem]" />
+                            {/* Seamless mix: No border, no hard overlay */}
+                            <div className="absolute inset-0 ring-1 ring-inset ring-white/5 rounded-[4rem]" />
 
                             {/* Detail Panel */}
                             <motion.div

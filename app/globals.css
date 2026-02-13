@@ -12,13 +12,13 @@
 }
 
 :root {
-  --background: var(--dynamic-bg, #050000);
+  --background: var(--dynamic-bg, #000000);
   --foreground: var(--dynamic-fg, #ffffff);
   --accent: var(--dynamic-accent, #ff0000);
   --accent-foreground: var(--dynamic-bg, #ffffff);
-  --muted: var(--dynamic-muted, rgba(255, 0, 0, 0.1));
+  --muted: var(--dynamic-muted, rgba(255, 255, 255, 0.05));
   --muted-foreground: var(--dynamic-muted-fg, rgba(255, 255, 255, 0.6));
-  --border: var(--dynamic-border, rgba(255, 0, 0, 0.2));
+  --border: var(--dynamic-border, rgba(255, 255, 255, 0.1));
   --glass: rgba(0, 0, 0, 0.3);
   --glass-border: rgba(255, 255, 255, 0.1);
 }
@@ -27,20 +27,17 @@
   :root {
     --background: var(--dynamic-bg, #000000);
     --foreground: var(--dynamic-fg, #ffffff);
-    --accent: var(--dynamic-accent, #ff0000);
   }
 }
 
 html.dark {
   --background: var(--dynamic-bg, #000000);
   --foreground: var(--dynamic-fg, #ffffff);
-  --accent: var(--dynamic-accent, #ff0000);
 }
 
 html.light {
   --background: var(--dynamic-bg, #ffffff);
   --foreground: var(--dynamic-fg, #000000);
-  --accent: var(--dynamic-accent, #ff0000);
 }
 
 @layer base {

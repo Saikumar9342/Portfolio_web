@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 
 export function useDynamicColor(imageSrc: string) {
-    const [color, setColor] = useState<string>("#ff0000"); // Default to Red
+    const [color, setColor] = useState<string>("transparent");
 
     useEffect(() => {
         if (!imageSrc) return;
@@ -21,62 +21,67 @@ export function useDynamicColor(imageSrc: string) {
             canvas.height = img.height;
             ctx.drawImage(img, 0, 0);
 
+            // 1. EXTRACT BACKGROUND COLOR (Sample the corners)
+            const cornerSamples = [
+                ctx.getImageData(5, 5, 1, 1).data,
+                ctx.getImageData(img.width - 5, 5, 1, 1).data,
+                ctx.getImageData(5, img.height - 5, 1, 1).data,
+                ctx.getImageData(img.width - 5, img.height - 5, 1, 1).data
+            ];
+
+            const bgR = Math.round(cornerSamples.reduce((a, b) => a + b[0], 0) / 4);
+            const bgG = Math.round(cornerSamples.reduce((a, b) => a + b[1], 0) / 4);
+            const bgB = Math.round(cornerSamples.reduce((a, b) => a + b[2], 0) / 4);
+
+            const rgbToHex = (r: number, g: number, b: number) =>
+                `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
+
+            const bgHex = rgbToHex(bgR, bgG, bgB);
+
+            // 2. EXTRACT ACCENT COLOR (Find the most vibrant color in the whole image)
             const samples: Uint8ClampedArray[] = [];
-            const step = 15; // More samples
+            const step = 20;
             for (let y = 0; y < img.height; y += step) {
                 for (let x = 0; x < img.width; x += step) {
                     samples.push(ctx.getImageData(x, y, 1, 1).data);
                 }
             }
 
-            let bestColor = [255, 0, 0, 255]; // Fallback to Red
-            let maxScore = -1;
+            let accentColor: Uint8ClampedArray = cornerSamples[0];
+            let maxVibrancy = -1;
 
             samples.forEach(s => {
                 const r = s[0], g = s[1], b = s[2], a = s[3];
-                if (a < 200) return;
+                if (a < 128) return; // Skip transparent
 
                 const max = Math.max(r, g, b);
                 const min = Math.min(r, g, b);
                 const saturation = max === 0 ? 0 : (max - min) / max;
                 const brightness = max / 255;
+                const vibrancy = saturation * brightness;
 
-                // Extremely heavy bias towards red/vibrant colors
-                const redBias = (r > g * 1.2 && r > b * 1.2) ? 4.0 : 1.0;
-                const score = saturation * brightness * redBias;
-
-                if (score > maxScore) {
-                    maxScore = score;
-                    bestColor = [r, g, b, a];
+                if (vibrancy > maxVibrancy) {
+                    maxVibrancy = vibrancy;
+                    accentColor = s;
                 }
             });
 
-            // If we didn't find a very strong color, force any noticeable red
-            if (maxScore < 0.2) {
-                samples.forEach(s => {
-                    const r = s[0], g = s[1], b = s[2];
-                    if (r > 150 && r > g * 2 && r > b * 2) {
-                        bestColor = [r, g, b, 255];
-                    }
-                });
-            }
+            const accR = accentColor[0], accG = accentColor[1], accB = accentColor[2];
+            const accentHex = rgbToHex(accR, accG, accB);
 
-            const r = bestColor[0], g = bestColor[1], b = bestColor[2];
-            const rgbToHex = (r: number, g: number, b: number) =>
-                `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
-
-            const accentHex = rgbToHex(r, g, b);
-
-            // Background is deep version of the color
-            const bgHex = rgbToHex(Math.round(r * 0.04), Math.round(g * 0.04), Math.round(b * 0.04));
-
+            // 3. APPLY TO CSS VARIABLES
             const root = document.documentElement;
             root.style.setProperty('--dynamic-bg', bgHex);
             root.style.setProperty('--dynamic-accent', accentHex);
-            root.style.setProperty('--dynamic-fg', '#ffffff');
-            root.style.setProperty('--dynamic-muted', `rgba(${r}, ${g}, ${b}, 0.1)`);
-            root.style.setProperty('--dynamic-muted-fg', `rgba(255, 255, 255, 0.6)`);
-            root.style.setProperty('--dynamic-border', `rgba(${r}, ${g}, ${b}, 0.2)`);
+
+            // Contrast handling for Foreground (Text)
+            const bgBrightness = (bgR * 299 + bgG * 587 + bgB * 114) / 1000;
+            const isDarkBg = bgBrightness < 150;
+
+            root.style.setProperty('--dynamic-fg', isDarkBg ? '#ffffff' : '#0a0a0b');
+            root.style.setProperty('--dynamic-muted-fg', isDarkBg ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)');
+            root.style.setProperty('--dynamic-border', isDarkBg ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)');
+            root.style.setProperty('--dynamic-muted', isDarkBg ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)');
 
             setColor(accentHex);
         };
