@@ -4,7 +4,6 @@ import { useRef, useState } from "react";
 import { motion, useScroll, useTransform, useMotionValueEvent } from "framer-motion";
 import { Section, Typography, GlassCard } from "@/components/ui/layout";
 import { Hero } from "@/components/home/Hero";
-import { HeroScene } from "@/components/3d/HeroScene";
 import { About } from "@/components/home/About";
 import { ProjectGrid } from "@/components/projects/ProjectGrid";
 import { Navbar } from "@/components/layout/Navbar";
@@ -28,7 +27,6 @@ export default function Home() {
 
     return (
         <main ref={containerRef} className="relative min-h-screen">
-            <HeroScene />
             <div className="relative z-10">
                 <Navbar />
 
