@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import type { MouseEvent } from "react";
 import { Typography } from "@/components/ui/layout";
 import { Button } from "@/components/ui/button";
 import { Github, Linkedin, Twitter, Globe } from "lucide-react";
@@ -15,6 +16,45 @@ interface FooterProps {
 }
 
 export function Footer({ contact, about, navbar, name }: FooterProps) {
+    const resumeUrl = contact.resumeUrl || "/Saikumar.p_FrontendDeveloper.pdf";
+    const isCloudinary = resumeUrl.includes("res.cloudinary.com");
+    
+    // Use API proxy for Cloudinary, direct for others
+    const resumeDownloadUrl = isCloudinary
+        ? `/api/resume?url=${encodeURIComponent(resumeUrl)}`
+        : resumeUrl;
+
+    const getFileNameFromDisposition = (value: string | null) => {
+        if (!value) return null;
+        const match = value.match(/filename\*?=(?:UTF-8''|")?([^\";]+)/i);
+        return match ? decodeURIComponent(match[1]) : null;
+    };
+
+    const handleResumeDownload = async (event: MouseEvent<HTMLAnchorElement>) => {
+        event.preventDefault();
+
+        try {
+            const response = await fetch(resumeDownloadUrl, { method: "GET" });
+            if (!response.ok) throw new Error("Resume download failed");
+
+            const blob = await response.blob();
+            const fileName =
+                getFileNameFromDisposition(response.headers.get("content-disposition")) ||
+                "resume.pdf";
+
+            const blobUrl = window.URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = blobUrl;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            window.URL.revokeObjectURL(blobUrl);
+        } catch {
+            window.location.href = resumeDownloadUrl;
+        }
+    };
+
     return (
         <footer id="contact" className="min-h-screen flex flex-col justify-center relative overflow-hidden border-t border-foreground/10 bg-foreground/5">
             <div className="container px-6 mx-auto max-w-6xl relative z-10 flex flex-col justify-center py-12 md:py-24">
@@ -37,8 +77,9 @@ export function Footer({ contact, about, navbar, name }: FooterProps) {
                                 {contact.cta}
                             </Button>
                             <a
-                                href={contact.resumeUrl || "/Saikumar.p_FrontendDeveloper.pdf"}
-                                target="_blank"
+                                href={resumeDownloadUrl}
+                                onClick={handleResumeDownload}
+                                download="resume.pdf"
                                 className="rounded-2xl px-12 h-16 flex items-center justify-center text-sm font-black uppercase tracking-widest border border-foreground/10 hover:bg-foreground/10 text-foreground transition-all duration-300"
                             >
                                 {contact.secondaryCta}
