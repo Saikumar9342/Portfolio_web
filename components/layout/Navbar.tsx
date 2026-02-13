@@ -51,14 +51,14 @@ export function Navbar() {
                 {/* Desktop Nav */}
                 <div className="hidden md:flex items-center gap-8">
                     <div className="flex gap-6 text-sm font-medium">
-                        <Link href="#projects" className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors">
+                        <Link href="/projects" className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors">
                             Projects
                         </Link>
-                        <Link href="#about" className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors">
+                        <Link href="/#about" className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors">
                             About
                         </Link>
-                        <Link href="#contact" className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors">
-                            Contact
+                        <Link href="/#skills" className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors">
+                            Skills
                         </Link>
                     </div>
 
@@ -99,25 +99,25 @@ export function Navbar() {
             >
                 <div className="px-4 py-4 space-y-3">
                     <Link
-                        href="#projects"
+                        href="/projects"
                         className="block text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors"
                         onClick={() => setMobileOpen(false)}
                     >
                         Projects
                     </Link>
                     <Link
-                        href="#about"
+                        href="/#about"
                         className="block text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors"
                         onClick={() => setMobileOpen(false)}
                     >
                         About
                     </Link>
                     <Link
-                        href="#contact"
+                        href="/#skills"
                         className="block text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors"
                         onClick={() => setMobileOpen(false)}
                     >
-                        Contact
+                        Skills
                     </Link>
                     <Button className="w-full rounded-lg mt-2">Hire Me</Button>
                 </div>

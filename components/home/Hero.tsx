@@ -5,6 +5,7 @@ import { ArrowRight } from "lucide-react";
 import { Button } from "../ui/button";
 import { Typography } from "../ui/layout";
 import { portfolioData } from "@/lib/data";
+import Link from "next/link";
 
 export function Hero() {
     const { hero } = portfolioData;
@@ -40,13 +41,17 @@ export function Hero() {
                         transition={{ duration: 0.6, delay: 0.2 }}
                         className="flex flex-wrap gap-4 pt-8"
                     >
-                        <Button size="lg" className="rounded-lg px-8 h-12 font-semibold flex items-center gap-2">
-                            {hero.cta}
-                            <ArrowRight className="w-4 h-4" />
-                        </Button>
-                        <Button size="lg" className="rounded-lg px-8 h-12 font-semibold" variant="outline">
-                            {hero.secondaryCta}
-                        </Button>
+                        <Link href="/projects">
+                            <Button size="lg" className="rounded-full px-10 h-14 text-base font-semibold flex items-center gap-3 bg-accent hover:bg-accent/90 shadow-xl shadow-accent/20 transition-all active:scale-95 group">
+                                {hero.cta}
+                                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                            </Button>
+                        </Link>
+                        <Link href="/#about">
+                            <Button size="lg" className="rounded-full px-10 h-14 text-base font-semibold border-white/10 hover:border-white/30 hover:bg-white/5" variant="outline">
+                                About Me
+                            </Button>
+                        </Link>
                     </motion.div>
                 </motion.div>
             </div>

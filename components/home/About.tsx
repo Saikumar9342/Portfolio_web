@@ -1,79 +1,99 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Section, Typography, GlassCard } from "@/components/ui/layout";
+import { Section, Typography } from "@/components/ui/layout";
 import { portfolioData } from "@/lib/data";
-import { Code2, Cpu, Layout, Maximize2 } from "lucide-react";
+import { Code2, Layout, Maximize2 } from "lucide-react";
 
 export function About() {
-    const { expertise } = portfolioData;
+    const { expertise, about } = portfolioData;
 
     const icons = {
-        immersive: <Code2 className="w-5 h-5 text-sky-500" />,
-        motion: <Maximize2 className="w-5 h-5 text-sky-500" />,
-        visual: <Layout className="w-5 h-5 text-sky-500" />
+        immersive: <Code2 className="w-6 h-6 text-accent" />,
+        motion: <Maximize2 className="w-6 h-6 text-accent" />,
+        visual: <Layout className="w-6 h-6 text-accent" />
     };
 
     return (
-        <Section id="about" className="py-24">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <Section id="about" className="py-24 bg-white/5 backdrop-blur-sm">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
 
-                {/* Left: Services List */}
-                <div className="space-y-8">
-                    <Typography element="h2" className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white tracking-tight mb-4">
-                        Elevating Digital Presence
-                    </Typography>
+                {/* Left Side: Biography & Education */}
+                <div className="space-y-12">
+                    <div className="space-y-6">
+                        <Typography className="text-sm font-semibold text-accent tracking-widest uppercase">
+                            Biography
+                        </Typography>
+                        <Typography element="h2" className="text-4xl md:text-5xl font-bold text-foreground leading-tight">
+                            {about.title}
+                        </Typography>
+                        <Typography className="text-lg text-muted-foreground leading-relaxed">
+                            {about.biography}
+                        </Typography>
+                    </div>
 
                     <div className="space-y-6">
-                        {expertise.services.map((service, i) => (
-                            <motion.div
-                                key={service.id}
-                                initial={{ opacity: 0, x: -20 }}
-                                whileInView={{ opacity: 1, x: 0 }}
-                                transition={{ delay: i * 0.1 }}
-                                className="flex gap-6 group"
-                            >
-                                <div className="mt-1 transition-transform group-hover:scale-110 duration-300">
-                                    {(icons as any)[service.id]}
+                        <Typography className="text-sm font-semibold text-accent tracking-widest uppercase">
+                            Education
+                        </Typography>
+                        <div className="space-y-4">
+                            {about.education.map((edu) => (
+                                <div key={edu.institution} className="p-6 rounded-2xl border border-white/10 bg-white/5 group hover:bg-white/[0.08] transition-colors">
+                                    <Typography className="text-lg font-bold text-foreground mb-1">{edu.degree}</Typography>
+                                    <div className="flex justify-between items-center text-sm text-muted-foreground">
+                                        <span>{edu.institution}</span>
+                                        <span className="font-mono">{edu.year}</span>
+                                    </div>
                                 </div>
-                                <div className="space-y-1">
-                                    <Typography element="h3" className="text-lg font-semibold text-slate-900 dark:text-white">
-                                        {service.title}
-                                    </Typography>
-                                    <Typography className="text-sm max-w-md text-slate-600 dark:text-slate-400 leading-relaxed">
-                                        {service.description}
-                                    </Typography>
-                                </div>
-                            </motion.div>
-                        ))}
+                            ))}
+                        </div>
                     </div>
                 </div>
 
-                {/* Right: Text + Stats */}
-                <div className="space-y-8">
-                    <div className="space-y-2">
-                        <Typography className="text-sky-600 dark:text-sky-400 font-semibold text-xs tracking-widest uppercase">
-                            {expertise.label}
+                {/* Right Side: Services & Stats */}
+                <div className="space-y-16">
+                    <div className="space-y-8">
+                        <Typography className="text-sm font-semibold text-accent tracking-widest uppercase">
+                            What I Do
                         </Typography>
-                        <Typography element="h2" className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white leading-snug">
-                            {expertise.title}
-                        </Typography>
+                        <div className="grid gap-8">
+                            {expertise.services.map((service, i) => (
+                                <motion.div
+                                    key={service.id}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: i * 0.1 }}
+                                    className="flex gap-6 items-start group"
+                                >
+                                    <div className="p-3 rounded-xl bg-accent/10 border border-accent/20 transition-transform group-hover:scale-110 duration-300">
+                                        {(icons as any)[service.id]}
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Typography element="h3" className="text-xl font-bold text-foreground">
+                                            {service.title}
+                                        </Typography>
+                                        <Typography className="text-muted-foreground leading-relaxed">
+                                            {service.description}
+                                        </Typography>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                         {expertise.stats.map((stat, i) => (
                             <motion.div
                                 key={stat.label}
-                                initial={{ opacity: 0, scale: 0.98 }}
+                                initial={{ opacity: 0, scale: 0.95 }}
                                 whileInView={{ opacity: 1, scale: 1 }}
-                                transition={{ delay: i * 0.08 }}
+                                transition={{ delay: i * 0.1 }}
+                                className="p-8 rounded-2xl bg-black/40 border border-white/5 text-center"
                             >
-                                <div className="p-6 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
-                                    <Typography className="text-xl font-bold text-slate-900 dark:text-white mb-1">{stat.value}</Typography>
-                                    <Typography className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-widest">
-                                        {stat.label}
-                                    </Typography>
-                                </div>
+                                <Typography className="text-3xl font-bold text-accent mb-2">{stat.value}</Typography>
+                                <Typography className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">
+                                    {stat.label}
+                                </Typography>
                             </motion.div>
                         ))}
                     </div>
