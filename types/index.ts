@@ -69,6 +69,7 @@ export interface SkillsData {
     mobile: string[];
     backend: string[];
     tools: string[];
+    [key: string]: string | string[] | Skill[] | undefined | number; // Allow dynamic skill categories
 }
 
 export interface Skill {

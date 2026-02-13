@@ -143,14 +143,17 @@ const PortfolioContent = ({ data }: { data: any }) => {
                                             if (knownKeys.has(key)) return false;
                                             if (key.endsWith("Title")) return false;
                                             if (!Array.isArray(value) || value.length === 0) return false;
+
+                                            // Check if corresponding title exists
                                             const titleKey = `${key}Title`;
-                                            return typeof (skills as any)[titleKey] === "string";
+                                            const titleCandidate = skills[titleKey];
+                                            return typeof titleCandidate === "string";
                                         })
                                         .map(([key, value]) => {
                                             const titleKey = `${key}Title`;
-                                            const title = (skills as any)[titleKey] || key;
-                                            const list = value as any[];
-                                            const isObjectList = typeof list[0] === "object";
+                                            const title = (skills[titleKey] as string) || key;
+                                            const list = value as any[]; // Still need cast for array content if mixed
+                                            const isObjectList = typeof list[0] === "object" && list[0] !== null && 'name' in list[0];
 
                                             return (
                                                 <GlassCard key={key} className="p-6 space-y-3 break-inside-avoid mb-4">
