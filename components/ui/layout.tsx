@@ -61,7 +61,7 @@ export function GlassCard({ children, className, hover = true }: { children: Rea
     return (
         <div className={cn(
             "glass-panel rounded-3xl p-8",
-            hover && "hover:border-white/20 hover:bg-white/5",
+            hover && "hover:border-foreground/20 hover:bg-foreground/[0.05]",
             className
         )}>
             {children}

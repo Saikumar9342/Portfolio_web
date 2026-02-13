@@ -90,7 +90,7 @@ export function Hero() {
                                 initial={{ opacity: 0, y: 30 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 1, duration: 0.8 }}
-                                className="absolute bottom-10 left-10 right-10 p-8 glass-panel border-foreground/5 bg-background/40 backdrop-blur-3xl shadow-2xl rounded-[2.5rem] hidden xl:block border border-foreground/10"
+                                className="absolute bottom-10 left-10 right-10 p-8 glass-panel shadow-2xl rounded-[2.5rem] hidden xl:block"
                             >
                                 <div className="flex justify-between items-center">
                                     <div className="flex items-center gap-5">

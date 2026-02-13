@@ -49,11 +49,11 @@ html.light {
 
 @layer components {
   .glass-panel {
-    @apply bg-white shadow-sm rounded-2xl border border-solid transition-all duration-300;
+    @apply bg-foreground/[0.03] shadow-sm rounded-2xl border border-solid border-foreground/5 backdrop-blur-xl transition-all duration-300;
   }
 
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-600;
+    @apply bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/50;
   }
 
   .architect-corner {
