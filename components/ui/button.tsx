@@ -12,11 +12,11 @@ const buttonVariants = cva(
                 default:
                     "bg-accent text-accent-foreground hover:bg-accent/90 shadow-lg",
                 glass:
-                    "bg-white/60 text-slate-900 border border-solid shadow-sm dark:bg-slate-800/60 dark:text-white dark:border-slate-700",
+                    "glass-panel text-foreground",
                 outline:
-                    "border border-slate-200 bg-transparent text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800",
-                ghost: "bg-transparent text-slate-700 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800",
-                link: "text-sky-600 underline-offset-4 hover:underline dark:text-sky-400 dark:hover:text-sky-300",
+                    "border border-foreground/10 bg-transparent text-foreground hover:bg-foreground/5",
+                ghost: "bg-transparent text-foreground hover:bg-foreground/5",
+                link: "text-accent underline-offset-4 hover:underline",
             },
             size: {
                 default: "h-10 px-6",

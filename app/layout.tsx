@@ -19,15 +19,15 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en" className="scroll-smooth">
-                        <body>
-                                <ThemeProvider>
-                                    <ToastProvider>
-                                        <CustomCursor />
-                                        <ScrollToTop />
-                                        {children}
-                                    </ToastProvider>
-                                </ThemeProvider>
-                        </body>
+            <body>
+                <ThemeProvider>
+                    <ToastProvider>
+                        <CustomCursor />
+                        <ScrollToTop />
+                        {children}
+                    </ToastProvider>
+                </ThemeProvider>
+            </body>
         </html>
     )
 }

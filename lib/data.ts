@@ -95,7 +95,7 @@ export const portfolioData = {
                 year: "2018 - 2022"
             }
         ],
-        location: "Kakinada, Andhra Pradesh",
+        location: "Vizag, Andhra Pradesh",
         interests: ["3D Web Development", "Fintech Innovations", "Open Source", "UI/UX Research"]
     },
     contact: {

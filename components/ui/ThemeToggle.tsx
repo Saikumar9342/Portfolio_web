@@ -18,7 +18,7 @@ export function ThemeToggle() {
       onClick={() => setTheme(nextTheme())}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
-      className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+      className="p-2 rounded-full hover:bg-foreground/10 transition-colors"
       aria-label="Toggle theme"
     >
       <motion.div
@@ -27,9 +27,9 @@ export function ThemeToggle() {
         transition={{ duration: 0.3 }}
       >
         {resolvedTheme === "light" ? (
-          <Moon className="w-5 h-5 text-slate-600" />
+          <Moon className="w-5 h-5 text-muted-foreground" />
         ) : (
-          <Sun className="w-5 h-5 text-slate-400" />
+          <Sun className="w-5 h-5 text-foreground" />
         )}
       </motion.div>
     </motion.button>

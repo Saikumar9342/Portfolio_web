@@ -56,10 +56,12 @@ html.light {
   }
 
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/50;
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(to bottom, var(--foreground), color-mix(in srgb, var(--foreground), transparent 50%));
   }
 
   .architect-corner {
-    @apply absolute w-10 h-10 border-blue-500/20;
+    @apply absolute w-10 h-10;
+    border-color: color-mix(in srgb, var(--accent), transparent 80%);
   }
 }

@@ -24,7 +24,7 @@ export default function ProjectsPage() {
                                 Selected Projects
                             </Typography>
                             <Typography className="text-lg text-muted-foreground max-w-2xl leading-relaxed">
-                                A collection of enterprise banking portals, internal tools, and mobile applications I've built using modern web and mobile technologies.
+                                A collection of enterprise banking portals, internal tools, and mobile applications I&apos;ve built using modern web and mobile technologies.
                             </Typography>
                         </motion.div>
 

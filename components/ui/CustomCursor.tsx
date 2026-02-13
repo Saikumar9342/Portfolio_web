@@ -42,25 +42,27 @@ export function CustomCursor() {
     return (
         <>
             <motion.div
-                className="fixed top-0 left-0 w-8 h-8 rounded-full border border-blue-500 pointer-events-none z-[9999] mix-blend-difference flex items-center justify-center"
+                className="fixed top-0 left-0 w-8 h-8 rounded-full border border-accent pointer-events-none z-[9999] mix-blend-difference flex items-center justify-center"
                 style={{
                     x: cursorX,
                     y: cursorY,
                     translateX: "-50%",
                     translateY: "-50%",
+                    borderColor: "var(--accent)",
                 }}
                 animate={{
                     scale: isHovering ? 2 : 1,
-                    backgroundColor: isHovering ? "rgba(59, 130, 246, 0.3)" : "rgba(59, 130, 246, 0)",
+                    backgroundColor: isHovering ? "color-mix(in srgb, var(--accent), transparent 70%)" : "transparent",
                 }}
             />
             <motion.div
-                className="fixed top-0 left-0 w-1.5 h-1.5 bg-blue-500 rounded-full pointer-events-none z-[9999]"
+                className="fixed top-0 left-0 w-1.5 h-1.5 bg-accent rounded-full pointer-events-none z-[9999]"
                 style={{
                     x: cursorX,
                     y: cursorY,
                     translateX: "-50%",
                     translateY: "-50%",
+                    backgroundColor: "var(--accent)",
                 }}
             />
         </>

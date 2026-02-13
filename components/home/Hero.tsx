@@ -76,6 +76,7 @@ export function Hero() {
                     >
                         <div className="relative aspect-[3/4] md:aspect-[4/5] w-full max-w-2xl mx-auto overflow-hidden rounded-[4rem] shadow-2xl group transition-all duration-1000">
                             {/* Smooth hover zoom */}
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                                 src="/pfp.png"
                                 alt={portfolioData.name}
@@ -98,7 +99,7 @@ export function Hero() {
                                             {portfolioData.name[0]}
                                         </div>
                                         <div className="space-y-0.5">
-                                            <Typography className="text-[10px] font-black tracking-[0.2em] text-foreground/40 uppercase">Studio Location</Typography>
+                                            <Typography className="text-[10px] font-black tracking-[0.2em] text-foreground/40 uppercase">Location</Typography>
                                             <Typography className="text-base font-bold text-foreground">{portfolioData.about.location}</Typography>
                                         </div>
                                     </div>
