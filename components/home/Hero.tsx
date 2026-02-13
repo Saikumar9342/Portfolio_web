@@ -33,16 +33,6 @@ export function Hero({ data, role, name, location }: HeroProps) {
                         className="lg:col-span-6 space-y-6"
                     >
                         <div className="space-y-4">
-                            <motion.div
-                                initial={{ opacity: 0, x: -20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ duration: 0.6, delay: 0.2 }}
-                            >
-                                <Typography className="text-[10px] md:text-xs font-black text-accent tracking-[0.4em] uppercase py-1 px-3 border border-accent/20 rounded-full inline-block">
-                                    {role}
-                                </Typography>
-                            </motion.div>
-
                             <Typography element="h1" className="text-5xl md:text-6xl lg:text-7xl font-black leading-[0.9] text-foreground tracking-tighter uppercase">
                                 {hero?.title?.split(" ").map((word, i) => (
                                     <span key={i} className="block">{word}</span>
@@ -93,30 +83,6 @@ export function Hero({ data, role, name, location }: HeroProps) {
 
                             {/* Seamless mix: No border, no hard overlay */}
                             <div className="absolute inset-0 ring-1 ring-inset ring-white/5 rounded-[3rem] pointer-events-none" />
-
-                            {/* Detail Panel */}
-                            <motion.div
-                                initial={{ opacity: 0, y: 30 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 1, duration: 0.8 }}
-                                className="absolute bottom-6 left-6 right-6 p-6 glass-panel shadow-2xl rounded-[2rem] hidden xl:block"
-                            >
-                                <div className="flex justify-between items-center">
-                                    <div className="flex items-center gap-4">
-                                        <div className="w-12 h-12 rounded-[1rem] bg-foreground text-background flex items-center justify-center font-black text-xl shadow-xl">
-                                            {name[0]}
-                                        </div>
-                                        <div className="space-y-0.5">
-                                            <Typography className="text-[9px] font-black tracking-[0.2em] text-foreground/40 uppercase">Location</Typography>
-                                            <Typography className="text-sm font-bold text-foreground">{location}</Typography>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center gap-2 px-4 py-2 bg-foreground/5 border border-foreground/10 rounded-full">
-                                        <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.5)]" />
-                                        <span className="text-[9px] font-black text-foreground/80 tracking-widest uppercase">Now Available</span>
-                                    </div>
-                                </div>
-                            </motion.div>
                         </div>
                     </motion.div>
                 </div>

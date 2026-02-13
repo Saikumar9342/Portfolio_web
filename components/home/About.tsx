@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { Section, Typography } from "@/components/ui/layout";
 // import { portfolioData } from "@/lib/data";
-import { Code2, Layout, Maximize2 } from "lucide-react";
+import { Code2, Layout, Maximize2, MapPin } from "lucide-react";
 import { PortfolioContent } from "@/hooks/usePortfolio";
 
 interface AboutProps {
@@ -26,9 +26,17 @@ export function About({ about, expertise }: AboutProps) {
                 {/* Left Side: Biography & Education */}
                 <div className="space-y-12">
                     <div className="space-y-6">
-                        <Typography className="text-sm font-semibold text-accent tracking-widest uppercase">
-                            Biography
-                        </Typography>
+                        <div className="flex justify-between items-center">
+                            <Typography className="text-sm font-semibold text-accent tracking-widest uppercase">
+                                Biography
+                            </Typography>
+                            {about.location && (
+                                <div className="flex items-center gap-2 text-muted-foreground">
+                                    <MapPin className="w-4 h-4 text-accent" />
+                                    <span className="text-xs font-medium uppercase tracking-wider">{about.location}</span>
+                                </div>
+                            )}
+                        </div>
                         <Typography element="h2" className="text-4xl md:text-5xl font-bold text-foreground leading-tight">
                             {about.title}
                         </Typography>
