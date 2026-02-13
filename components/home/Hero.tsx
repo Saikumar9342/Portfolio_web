@@ -10,7 +10,7 @@ import { useDynamicColor } from "@/hooks/useDynamicColor";
 
 export function Hero() {
     const { hero } = portfolioData;
-    useDynamicColor("/pfp.jpeg");
+    useDynamicColor("/pfp.png");
 
     return (
         <section className="relative min-h-screen w-full flex items-center pt-20 pb-20 px-4 md:px-8 overflow-hidden bg-background transition-colors duration-1000">
@@ -54,7 +54,7 @@ export function Hero() {
                             className="flex flex-wrap gap-5 pt-4"
                         >
                             <Link href="/projects">
-                                <Button size="lg" className="rounded-full px-12 h-16 text-base font-bold flex items-center gap-3 bg-accent text-accent-foreground hover:scale-[1.02] transition-all active:scale-95 group shadow-2xl shadow-accent/20">
+                                <Button size="lg" className="rounded-full px-12 h-16 text-base font-bold flex items-center gap-3 hover:scale-[1.02] transition-all active:scale-95 group shadow-2xl shadow-accent/20">
                                     {hero.cta}
                                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                                 </Button>
@@ -77,7 +77,7 @@ export function Hero() {
                         <div className="relative aspect-[3/4] md:aspect-[4/5] w-full max-w-2xl mx-auto overflow-hidden rounded-[4rem] border border-foreground/5 shadow-2xl group">
                             {/* Smooth hover zoom */}
                             <img
-                                src="/pfp.jpeg"
+                                src="/pfp.png"
                                 alt={portfolioData.name}
                                 className="w-full h-full object-cover object-center transition-transform duration-1000 group-hover:scale-105"
                             />

@@ -3,16 +3,16 @@
 import { useState, useEffect } from "react";
 
 export function useDynamicColor(imageSrc: string) {
-    const [color, setColor] = useState<string>("transparent");
+    const [color, setColor] = useState<string>("#ff0000"); // Default to Red
 
     useEffect(() => {
         if (!imageSrc) return;
 
         const img = new Image();
-        img.crossOrigin = "Anonymous";
+        img.crossOrigin = "anonymous";
         img.src = imageSrc;
 
-        img.onload = () => {
+        const applyTheme = () => {
             const canvas = document.createElement("canvas");
             const ctx = canvas.getContext("2d");
             if (!ctx) return;
@@ -21,34 +21,68 @@ export function useDynamicColor(imageSrc: string) {
             canvas.height = img.height;
             ctx.drawImage(img, 0, 0);
 
-            // Sample multiple points from the corners to get the best background match
-            const samples = [
-                ctx.getImageData(5, 5, 1, 1).data,
-                ctx.getImageData(img.width - 5, 5, 1, 1).data,
-                ctx.getImageData(5, img.height - 5, 1, 1).data,
-                ctx.getImageData(img.width - 5, img.height - 5, 1, 1).data
-            ];
+            const samples: Uint8ClampedArray[] = [];
+            const step = 15; // More samples
+            for (let y = 0; y < img.height; y += step) {
+                for (let x = 0; x < img.width; x += step) {
+                    samples.push(ctx.getImageData(x, y, 1, 1).data);
+                }
+            }
 
-            const r = Math.round(samples.reduce((a, b) => a + b[0], 0) / samples.length);
-            const g = Math.round(samples.reduce((a, b) => a + b[1], 0) / samples.length);
-            const b = Math.round(samples.reduce((a, b) => a + b[2], 0) / samples.length);
+            let bestColor = [255, 0, 0, 255]; // Fallback to Red
+            let maxScore = -1;
 
-            // Set the background color
-            const hex = `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
-            setColor(hex);
+            samples.forEach(s => {
+                const r = s[0], g = s[1], b = s[2], a = s[3];
+                if (a < 200) return;
 
-            // Sync with root variables
+                const max = Math.max(r, g, b);
+                const min = Math.min(r, g, b);
+                const saturation = max === 0 ? 0 : (max - min) / max;
+                const brightness = max / 255;
+
+                // Extremely heavy bias towards red/vibrant colors
+                const redBias = (r > g * 1.2 && r > b * 1.2) ? 4.0 : 1.0;
+                const score = saturation * brightness * redBias;
+
+                if (score > maxScore) {
+                    maxScore = score;
+                    bestColor = [r, g, b, a];
+                }
+            });
+
+            // If we didn't find a very strong color, force any noticeable red
+            if (maxScore < 0.2) {
+                samples.forEach(s => {
+                    const r = s[0], g = s[1], b = s[2];
+                    if (r > 150 && r > g * 2 && r > b * 2) {
+                        bestColor = [r, g, b, 255];
+                    }
+                });
+            }
+
+            const r = bestColor[0], g = bestColor[1], b = bestColor[2];
+            const rgbToHex = (r: number, g: number, b: number) =>
+                `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
+
+            const accentHex = rgbToHex(r, g, b);
+
+            // Background is deep version of the color
+            const bgHex = rgbToHex(Math.round(r * 0.04), Math.round(g * 0.04), Math.round(b * 0.04));
+
             const root = document.documentElement;
-            root.style.setProperty('--dynamic-bg', hex);
+            root.style.setProperty('--dynamic-bg', bgHex);
+            root.style.setProperty('--dynamic-accent', accentHex);
+            root.style.setProperty('--dynamic-fg', '#ffffff');
+            root.style.setProperty('--dynamic-muted', `rgba(${r}, ${g}, ${b}, 0.1)`);
+            root.style.setProperty('--dynamic-muted-fg', `rgba(255, 255, 255, 0.6)`);
+            root.style.setProperty('--dynamic-border', `rgba(${r}, ${g}, ${b}, 0.2)`);
 
-            // Auto-adjust foreground based on extracted background brightness
-            const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-            const isDark = brightness < 128;
-            root.style.setProperty('--foreground', isDark ? '#ffffff' : '#0a0a0b');
-            root.style.setProperty('--muted-foreground', isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)');
-            root.style.setProperty('--border', isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)');
-            root.style.setProperty('--accent', isDark ? '#ffffff' : '#171717');
+            setColor(accentHex);
         };
+
+        img.onload = applyTheme;
+        if (img.complete) applyTheme();
     }, [imageSrc]);
 
     return color;

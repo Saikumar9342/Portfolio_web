@@ -12,53 +12,35 @@
 }
 
 :root {
-  --background: var(--dynamic-bg, #fcfcfd);
-  --foreground: #0a0a0b;
-  --accent: #171717;
-  --accent-foreground: #ffffff;
-  --muted: #f4f4f5;
-  --muted-foreground: #71717a;
-  --border: #e4e4e7;
-  --glass: rgba(255, 255, 255, 0.8);
-  --glass-border: rgba(0, 0, 0, 0.05);
+  --background: var(--dynamic-bg, #050000);
+  --foreground: var(--dynamic-fg, #ffffff);
+  --accent: var(--dynamic-accent, #ff0000);
+  --accent-foreground: var(--dynamic-bg, #ffffff);
+  --muted: var(--dynamic-muted, rgba(255, 0, 0, 0.1));
+  --muted-foreground: var(--dynamic-muted-fg, rgba(255, 255, 255, 0.6));
+  --border: var(--dynamic-border, rgba(255, 0, 0, 0.2));
+  --glass: rgba(0, 0, 0, 0.3);
+  --glass-border: rgba(255, 255, 255, 0.1);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #020202;
-    --foreground: #f8fafc;
-    --accent: #f8fafc;
-    --accent-foreground: #020202;
-    --muted: #0f172a;
-    --muted-foreground: #94a3b8;
-    --border: #1e293b;
-    --glass: rgba(15, 23, 42, 0.8);
-    --glass-border: rgba(255, 255, 255, 0.1);
+    --background: var(--dynamic-bg, #000000);
+    --foreground: var(--dynamic-fg, #ffffff);
+    --accent: var(--dynamic-accent, #ff0000);
   }
 }
 
 html.dark {
-  --background: #020202;
-  --foreground: #f8fafc;
-  --accent: #f8fafc;
-  --accent-foreground: #020202;
-  --muted: #0f172a;
-  --muted-foreground: #94a3b8;
-  --border: #1e293b;
-  --glass: rgba(15, 23, 42, 0.8);
-  --glass-border: rgba(255, 255, 255, 0.1);
+  --background: var(--dynamic-bg, #000000);
+  --foreground: var(--dynamic-fg, #ffffff);
+  --accent: var(--dynamic-accent, #ff0000);
 }
 
 html.light {
-  --background: #f8fafc;
-  --foreground: #0f172a;
-  --accent: #2563eb;
-  --accent-foreground: #ffffff;
-  --muted: #f1f5f9;
-  --muted-foreground: #64748b;
-  --border: #e2e8f0;
-  --glass: rgba(255, 255, 255, 0.9);
-  --glass-border: rgba(0, 0, 0, 0.05);
+  --background: var(--dynamic-bg, #ffffff);
+  --foreground: var(--dynamic-fg, #000000);
+  --accent: var(--dynamic-accent, #ff0000);
 }
 
 @layer base {
