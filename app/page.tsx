@@ -8,8 +8,6 @@ import { About } from "@/components/home/About";
 import { ProjectGrid } from "@/components/projects/ProjectGrid";
 import { Navbar } from "@/components/layout/Navbar";
 import dynamic from 'next/dynamic';
-const HeroScene = dynamic(() => import('@/components/3d/HeroScene').then(m => m.HeroScene), { ssr: false });
-const PanoramaScene = dynamic(() => import('@/components/3d/PanoramaScene').then(m => m.PanoramaScene), { ssr: false });
 import { Button } from "@/components/ui/button";
 import { portfolioData } from "@/lib/data";
 
@@ -29,7 +27,6 @@ export default function Home() {
 
     return (
         <main ref={containerRef} className="relative min-h-screen">
-            <HeroScene />
             <div className="relative z-10">
                 <Navbar />
 

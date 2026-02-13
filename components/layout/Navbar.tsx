@@ -35,16 +35,15 @@ export function Navbar() {
         >
             <div className="max-w-6xl mx-auto px-4 md:px-6 flex justify-between items-center">
                 {/* Logo */}
-                <Link href="/" className="flex items-center gap-2 group">
+                <Link href="/" className="flex items-center gap-3 group">
                     <motion.div
                         whileHover={{ scale: 1.05 }}
-                        className="w-10 h-10 rounded-lg bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center"
+                        className="w-11 h-11 rounded-xl bg-accent flex items-center justify-center shadow-lg"
                     >
-                        <span className="text-white font-bold text-lg">S</span>
+                        <span className="text-accent-foreground font-black text-xl">S</span>
                     </motion.div>
                     <div className="hidden sm:flex flex-col">
-                        <span className="text-sm font-bold text-slate-900 dark:text-white">{name}</span>
-                        <span className="text-xs text-slate-500 dark:text-slate-400">Frontend Engineer</span>
+                        <span className="text-sm font-black tracking-tight text-foreground">{name}</span>
                     </div>
                 </Link>
 

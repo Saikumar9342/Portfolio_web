@@ -5,12 +5,10 @@ import { ProjectGrid } from "@/components/projects/ProjectGrid";
 import { Navbar } from "@/components/layout/Navbar";
 import { Typography, Section } from "@/components/ui/layout";
 import dynamic from 'next/dynamic';
-const HeroScene = dynamic(() => import('@/components/3d/HeroScene').then(m => m.HeroScene), { ssr: false });
 
 export default function ProjectsPage() {
     return (
         <main className="relative min-h-screen">
-            <HeroScene />
             <div className="relative z-10">
                 <Navbar />
 
