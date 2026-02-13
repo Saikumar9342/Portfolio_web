@@ -15,7 +15,7 @@ export function About() {
     };
 
     return (
-        <Section id="about" className="py-24 bg-foreground/[0.02] backdrop-blur-sm border-t border-foreground/5">
+        <Section id="about" className="py-24 bg-foreground/5 backdrop-blur-sm border-t border-foreground/10">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
 
                 {/* Left Side: Biography & Education */}
@@ -38,7 +38,7 @@ export function About() {
                         </Typography>
                         <div className="space-y-4">
                             {about.education.map((edu) => (
-                                <div key={edu.institution} className="p-6 rounded-2xl border border-foreground/5 bg-foreground/[0.03] group hover:bg-foreground/[0.05] transition-colors">
+                                <div key={edu.institution} className="p-6 rounded-2xl border border-foreground/10 bg-foreground/5 group hover:bg-foreground/10 transition-colors">
                                     <Typography className="text-lg font-bold text-foreground mb-1">{edu.degree}</Typography>
                                     <div className="flex justify-between items-center text-sm text-muted-foreground">
                                         <span>{edu.institution}</span>
@@ -88,7 +88,7 @@ export function About() {
                                 initial={{ opacity: 0, scale: 0.95 }}
                                 whileInView={{ opacity: 1, scale: 1 }}
                                 transition={{ delay: i * 0.1 }}
-                                className="p-8 rounded-2xl bg-foreground/[0.03] border border-foreground/5 text-center"
+                                className="p-8 rounded-2xl bg-foreground/5 border border-foreground/10 text-center"
                             >
                                 <Typography className="text-3xl font-bold text-accent mb-2">{stat.value}</Typography>
                                 <Typography className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">

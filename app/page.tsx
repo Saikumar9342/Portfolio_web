@@ -61,13 +61,13 @@ export default function Home() {
                                 {/* Frontend Skill Card */}
                                 <GlassCard className="p-6 space-y-4 hover:border-accent/40 transition-all duration-500">
                                     <Typography element="h3" className="text-xl font-bold flex items-center gap-2">
-                                        <div className="w-2 h-2 rounded-full bg-blue-500" />
+                                        <div className="w-2 h-2 rounded-full bg-accent" />
                                         Frontend Engineering
                                     </Typography>
                                     <div className="space-y-3">
                                         {portfolioData.skills.frontend.map(skill => (
                                             <div key={skill.name} className="space-y-1">
-                                                <div className="flex justify-between text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                                                <div className="flex justify-between text-xs font-medium uppercase tracking-wider text-foreground/60">
                                                     <span>{skill.name}</span>
                                                     <span>{skill.level}%</span>
                                                 </div>
@@ -90,7 +90,7 @@ export default function Home() {
                                         <Typography element="h3" className="text-lg font-bold">Mobile Development</Typography>
                                         <div className="flex flex-wrap gap-2">
                                             {portfolioData.skills.mobile.map(m => (
-                                                <span key={m} className="px-3 py-1 text-xs rounded-lg bg-foreground/[0.03] border border-foreground/10 text-foreground/80">
+                                                <span key={m} className="px-3 py-1 text-xs rounded-lg bg-foreground/5 border border-foreground/10 text-foreground/80">
                                                     {m}
                                                 </span>
                                             ))}
@@ -101,7 +101,7 @@ export default function Home() {
                                         <Typography element="h3" className="text-lg font-bold">Cloud & Backend</Typography>
                                         <div className="flex flex-wrap gap-2">
                                             {portfolioData.skills.backend.map(b => (
-                                                <span key={b} className="px-3 py-1 text-xs rounded-lg bg-foreground/[0.03] border border-foreground/10 text-foreground/80">
+                                                <span key={b} className="px-3 py-1 text-xs rounded-lg bg-foreground/5 border border-foreground/10 text-foreground/80">
                                                     {b}
                                                 </span>
                                             ))}
@@ -110,7 +110,7 @@ export default function Home() {
 
                                     <GlassCard className="p-6 space-y-3">
                                         <Typography element="h3" className="text-lg font-bold">Workflow & Tools</Typography>
-                                        <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
+                                        <div className="flex flex-wrap gap-2 text-xs text-foreground/60">
                                             {portfolioData.skills.tools.join(" • ")}
                                         </div>
                                     </GlassCard>
@@ -121,7 +121,7 @@ export default function Home() {
                 </section>
 
                 {/* CALL TO ACTION */}
-                <section className="py-24 border-t border-foreground/5 bg-foreground/[0.02]">
+                <section className="py-24 border-t border-foreground/10 bg-foreground/5">
                     <div className="container px-6 mx-auto max-w-4xl text-center">
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
@@ -144,7 +144,7 @@ export default function Home() {
                                 <a
                                     href="/Saikumar.p_FrontendDeveloper.pdf"
                                     target="_blank"
-                                    className="rounded-full px-12 h-14 flex items-center justify-center font-semibold border border-foreground/10 hover:border-foreground/30 bg-foreground/[0.05] hover:bg-foreground/[0.08] text-foreground transition-all duration-300"
+                                    className="rounded-full px-12 h-14 flex items-center justify-center font-semibold border border-foreground/10 hover:border-foreground/30 bg-foreground/5 hover:bg-foreground/10 text-foreground transition-all duration-300"
                                 >
                                     {portfolioData.contact.secondaryCta}
                                 </a>
@@ -154,7 +154,7 @@ export default function Home() {
                 </section>
 
                 {/* FOOTER */}
-                <footer className="py-12 border-t border-foreground/5 bg-foreground/[0.01]">
+                <footer className="py-12 border-t border-foreground/10 bg-foreground/5">
                     <div className="container px-6 mx-auto max-w-6xl">
                         <div className="flex flex-col md:flex-row justify-between items-center gap-8">
                             <div className="flex flex-col items-center md:items-start gap-2">

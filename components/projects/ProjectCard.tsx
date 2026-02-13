@@ -24,7 +24,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
         >
             <div className="space-y-6">
                 {/* Image Container */}
-                <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-slate-100 dark:bg-slate-950">
+                <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-foreground/5 mb-6">
                     {project.imageUrl && (
                         <Image
                             src={project.imageUrl}
@@ -36,7 +36,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
 
                     {/* Category Pill */}
                     <div className="absolute top-4 left-4">
-                        <div className="px-3 py-1 rounded-full bg-white/90 dark:bg-black/90 text-slate-800 dark:text-white text-xs font-semibold shadow-md border border-white/40 dark:border-slate-800/40">
+                        <div className="px-3 py-1 rounded-full bg-background/80 text-foreground text-xs font-semibold shadow-md border border-foreground/10 backdrop-blur-md">
                             {(project as any).category || "Featured"}
                         </div>
                     </div>
@@ -45,16 +45,16 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
                 {/* Info Container */}
                 <div className="flex justify-between items-start gap-4">
                     <div className="space-y-2 flex-1">
-                        <Typography element="h3" className="text-lg font-bold text-slate-900 dark:text-white transition-colors">
+                        <Typography element="h3" className="text-lg font-bold text-foreground transition-colors">
                             {project.title}
                         </Typography>
-                        <Typography className="text-sm text-slate-600 dark:text-slate-400 max-w-lg leading-relaxed">
+                        <Typography className="text-sm text-muted-foreground max-w-lg leading-relaxed">
                             {project.description}
                         </Typography>
                     </div>
 
                     {/* Index */}
-                    <span className="text-xs font-mono text-slate-400 dark:text-slate-500 whitespace-nowrap">{project.id}</span>
+                    <span className="text-xs font-mono text-muted-foreground whitespace-nowrap">{project.id}</span>
                 </div>
             </div>
 
