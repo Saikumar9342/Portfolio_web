@@ -101,7 +101,7 @@ export function About({ about, expertise, contact }: AboutProps) {
                                     whileInView={{ opacity: 1, y: 0 }}
                                     viewport={{ once: true }}
                                     transition={{ delay: idx * 0.1 }}
-                                    className="p-6 rounded-2xl border border-accent/40 bg-foreground/5 group hover:bg-foreground/10 transition-colors"
+                                    className="p-6 rounded-xl border border-accent/40 bg-foreground/5 group hover:bg-foreground/10 transition-colors"
                                 >
                                     <Typography className="text-lg font-bold text-foreground mb-1">{edu.degree}</Typography>
                                     <div className="flex justify-between items-center text-sm text-muted-foreground">
@@ -159,7 +159,7 @@ export function About({ about, expertise, contact }: AboutProps) {
                                 initial={{ opacity: 0, scale: 0.95 }}
                                 whileInView={{ opacity: 1, scale: 1 }}
                                 transition={{ delay: i * 0.1 }}
-                                className="p-8 rounded-2xl bg-foreground/5 border border-accent/40 text-center"
+                                className="p-8 rounded-xl bg-foreground/5 border border-accent/40 text-center"
                             >
                                 <Typography className="text-3xl font-bold text-accent mb-2">{stat.value}</Typography>
                                 <Typography className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">

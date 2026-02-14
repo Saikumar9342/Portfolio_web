@@ -117,7 +117,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                                 </div>
 
                                 <div className="grid gap-5 md:grid-cols-2">
-                                    <div className="rounded-2xl border border-foreground/10 bg-foreground/[0.02] p-6 shadow-sm">
+                                    <div className="rounded-xl border border-foreground/10 bg-foreground/[0.02] p-6 shadow-sm">
                                         <Typography className="mb-2 text-[10px] font-black uppercase tracking-[0.22em] text-accent/80">
                                             Role
                                         </Typography>
@@ -125,7 +125,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                                             {project.role || "Software Engineer"}
                                         </Typography>
                                     </div>
-                                    <div className="rounded-2xl border border-foreground/10 bg-foreground/[0.02] p-6 shadow-sm">
+                                    <div className="rounded-xl border border-foreground/10 bg-foreground/[0.02] p-6 shadow-sm">
                                         <Typography className="mb-2 text-[10px] font-black uppercase tracking-[0.22em] text-accent/80">
                                             Category
                                         </Typography>
@@ -135,7 +135,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                                     </div>
                                 </div>
 
-                                <div className="rounded-2xl border border-foreground/10 bg-foreground/[0.02] p-8 shadow-sm">
+                                <div className="rounded-xl border border-foreground/10 bg-foreground/[0.02] p-8 shadow-sm">
                                     <Typography className="mb-4 text-[10px] font-black uppercase tracking-[0.22em] text-accent/80">
                                         Deep Dive
                                     </Typography>
@@ -147,7 +147,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                             </motion.section>
 
                             <motion.aside custom={1} variants={contentVariants} initial="hidden" animate="visible" className="space-y-6">
-                                <div className="rounded-2xl border border-foreground/10 bg-foreground/[0.02] p-8 shadow-sm">
+                                <div className="rounded-xl border border-foreground/10 bg-foreground/[0.02] p-8 shadow-sm">
                                     <Typography className="mb-6 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.22em] text-accent/80">
                                         <Globe className="h-4 w-4" />
                                         Tech Stack
@@ -159,7 +159,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                                                 initial={{ opacity: 0, scale: 0.92 }}
                                                 animate={{ opacity: 1, scale: 1 }}
                                                 transition={{ delay: 0.12 + index * 0.03, duration: 0.25 }}
-                                                className="rounded-lg border border-accent/20 bg-accent/5 px-4 py-2 text-[11px] font-black uppercase tracking-widest text-accent hover:bg-accent/10 transition-colors"
+                                                className="rounded-xl border border-accent/20 bg-accent/5 px-4 py-2 text-[11px] font-black uppercase tracking-widest text-accent hover:bg-accent/10 transition-colors"
                                             >
                                                 {tech}
                                             </motion.span>
@@ -167,7 +167,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                                     </div>
                                 </div>
 
-                                <div className="rounded-2xl border border-foreground/10 bg-foreground/[0.02] p-8 shadow-sm">
+                                <div className="rounded-xl border border-foreground/10 bg-foreground/[0.02] p-8 shadow-sm">
                                     <Typography className="mb-6 text-[10px] font-black uppercase tracking-[0.22em] text-accent/80">
                                         Actions
                                     </Typography>

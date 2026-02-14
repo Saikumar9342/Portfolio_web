@@ -54,7 +54,7 @@ export default function ProjectDetailPage() {
                     <Navbar name={data.name} data={data.navbar} contact={data.contact} loading={loading} />
 
                     {/* HERO SECTION - CINEMATIC FIRST IMPRESSION */}
-                    <section className="relative h-[85vh] w-full overflow-hidden flex items-center pt-24 pb-12">
+                    <section className="relative min-h-[85vh] w-full overflow-hidden flex flex-col justify-center pt-32 md:pt-48 pb-12">
                         <motion.div
                             style={{ opacity, scale, y }}
                             className="absolute inset-0 z-0"
@@ -81,7 +81,7 @@ export default function ProjectDetailPage() {
                                     onClick={() => router.back()}
                                     className="group flex items-center gap-3 text-foreground/50 hover:text-accent transition-all mb-12"
                                 >
-                                    <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:border-accent group-hover:bg-accent/10 transition-all backdrop-blur-sm">
+                                    <div className="w-12 h-12 rounded-xl border border-white/10 flex items-center justify-center group-hover:border-accent group-hover:bg-accent/10 transition-all backdrop-blur-sm">
                                         <ArrowLeft className="w-5 h-5 flex-shrink-0" />
                                     </div>
                                     <span className="text-[10px] font-bold uppercase tracking-[0.3em]">Return to Gallery</span>
@@ -172,7 +172,7 @@ export default function ProjectDetailPage() {
 
                                     <div className="flex flex-wrap gap-4">
                                         {project.techStack?.map((tech) => (
-                                            <GlassCard key={tech} className="px-6 py-4 border-white/5 hover:border-accent/40 transition-all duration-500 hover:bg-accent/5 cursor-default group">
+                                            <GlassCard key={tech} className="px-6 py-4 border-white/5 hover:border-accent/40 transition-all duration-500 hover:bg-accent/5 cursor-default group rounded-xl">
                                                 <span className="text-xs font-bold uppercase tracking-[0.2em] text-foreground/60 group-hover:text-accent transition-colors">{tech}</span>
                                             </GlassCard>
                                         ))}
@@ -189,7 +189,7 @@ export default function ProjectDetailPage() {
                                     viewport={{ once: true }}
                                     transition={{ duration: 0.8, delay: 0.2 }}
                                 >
-                                    <GlassCard className="p-8 space-y-8 border-accent/20 bg-accent/5 backdrop-blur-xl relative overflow-visible group rounded-none">
+                                    <GlassCard className="p-8 space-y-8 border-accent/20 bg-accent/5 backdrop-blur-xl relative overflow-visible group rounded-3xl">
                                         <div className="absolute -top-px -left-px w-10 h-10 border-t-2 border-l-2 border-accent z-20" />
                                         <div className="absolute -bottom-px -right-px w-10 h-10 border-b-2 border-r-2 border-accent z-20" />
                                         <div className="absolute top-0 right-0 w-32 h-32 bg-accent/10 rounded-full -mr-16 -mt-16 blur-3xl transition-all group-hover:bg-accent/20" />
@@ -205,7 +205,7 @@ export default function ProjectDetailPage() {
                                                     href={project.liveLink}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className="flex items-center justify-between p-5 rounded-2xl bg-accent text-accent-foreground hover:scale-[1.02] active:scale-[0.98] transition-all font-bold text-xs uppercase tracking-[0.2em] shadow-lg shadow-accent/20"
+                                                    className="flex items-center justify-between p-5 rounded-xl bg-accent text-accent-foreground hover:scale-[1.02] active:scale-[0.98] transition-all font-bold text-xs uppercase tracking-[0.2em] shadow-lg shadow-accent/20"
                                                 >
                                                     Explore Deployment
                                                     <ExternalLink className="w-5 h-5 flex-shrink-0" />
@@ -216,14 +216,14 @@ export default function ProjectDetailPage() {
                                                     href={project.githubLink}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className="flex items-center justify-between p-5 rounded-2xl border border-white/10 hover:bg-white/5 transition-all text-foreground font-bold text-xs uppercase tracking-[0.2em] backdrop-blur-sm"
+                                                    className="flex items-center justify-between p-5 rounded-xl border border-white/10 hover:bg-white/5 transition-all text-foreground font-bold text-xs uppercase tracking-[0.2em] backdrop-blur-sm"
                                                 >
                                                     View Repository
                                                     <Github className="w-5 h-5 flex-shrink-0" />
                                                 </a>
                                             )}
                                             {!project.liveLink && !project.githubLink && (
-                                                <div className="p-5 rounded-2xl bg-white/5 border border-white/5 text-muted-foreground text-xs font-medium italic leading-relaxed">
+                                                <div className="p-5 rounded-xl bg-white/5 border border-white/5 text-muted-foreground text-xs font-medium italic leading-relaxed">
                                                     Architecture and codebase are proprietary for enterprise confidentiality.
                                                 </div>
                                             )}
