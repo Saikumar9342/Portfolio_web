@@ -10,15 +10,18 @@ const inter = Inter({
 
 export const metadata: Metadata = {
     title: {
-        template: '%s | Portfolio',
-        default: 'Saikumar | Software Engineer', // Default title
+        template: '%s | ATOM',
+        default: 'ATOM | Portfolio Builder',
     },
-    description: 'Portfolio of Saikumar, an Associate Software Engineer specializing in scalable web and mobile applications.',
+    description: 'ATOM Portfolio Builder - Scalable web and mobile applications.',
+    icons: {
+        icon: '/favicon.svg',
+    },
     openGraph: {
         type: 'website',
         locale: 'en_US',
-        url: 'https://saikumar.dev', // Replace with actual domain if known, or generic placeholder
-        siteName: 'Saikumar Porfolio',
+        url: 'https://saikumar.dev',
+        siteName: 'ATOM Portfolio',
     }
 }
 

@@ -7,6 +7,7 @@ import { Typography } from "@/components/ui/layout";
 import { Button, buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
 import { ContactData, AboutData, NavbarData } from "@/types";
+import { BrandLogo } from "../ui/BrandLogo";
 
 interface FooterProps {
     contact: ContactData;
@@ -115,10 +116,10 @@ export function Footer({ contact, about, navbar, name }: FooterProps) {
                     {/* Brand Column */}
                     <div className="md:col-span-5 space-y-4">
                         <Link href="/" className="flex items-center gap-3 group">
-                            <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center shadow-lg shadow-accent/10">
-                                <span className="text-accent-foreground font-black text-xl">S</span>
+                            <div className="transition-transform group-hover:scale-105">
+                                <BrandLogo className="text-foreground" size={32} />
                             </div>
-                            <span className="text-lg font-bold tracking-tighter text-foreground uppercase">{name}</span>
+                            <span className="text-lg font-bold tracking-tighter text-foreground uppercase">ATOM</span>
                         </Link>
                         <Typography className="text-sm text-muted-foreground leading-relaxed max-w-sm font-medium">
                             {about.title}

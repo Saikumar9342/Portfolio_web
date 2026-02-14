@@ -2,10 +2,10 @@ import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-// import { portfolioData } from "@/lib/data";
 import { Button } from "../ui/button";
 import { Menu, X } from "lucide-react";
 import { NavbarData, ContactData } from "@/types";
+import { BrandLogo } from "../ui/BrandLogo";
 
 interface NavbarProps {
     name: string;
@@ -33,7 +33,6 @@ export function Navbar({ name, data, contact, loading }: NavbarProps) {
     ];
 
     const ctaText = data?.ctaText || "Hire Me";
-    const logoText = data?.logoText || "S";
 
     return (
         <motion.nav
@@ -51,12 +50,12 @@ export function Navbar({ name, data, contact, loading }: NavbarProps) {
                 <Link href="/" className="flex items-center gap-3 group">
                     <motion.div
                         whileHover={{ scale: 1.05 }}
-                        className="w-11 h-11 rounded-xl bg-accent flex items-center justify-center shadow-lg"
+                        className="flex items-center justify-center transition-transform"
                     >
-                        <span className="text-accent-foreground font-black text-xl">{logoText}</span>
+                        <BrandLogo className="text-foreground" size={36} />
                     </motion.div>
                     <div className="hidden sm:flex flex-col">
-                        <span className="text-sm font-black tracking-tight text-foreground">{name}</span>
+                        <span className="text-xl font-black tracking-tighter text-foreground uppercase">ATOM</span>
                     </div>
                 </Link>
 
@@ -75,7 +74,16 @@ export function Navbar({ name, data, contact, loading }: NavbarProps) {
                     </div>
 
                     <div className="flex items-center gap-3">
-                        <Button className="rounded-lg px-6" variant="default">
+                        <Button
+                            className="rounded-lg px-6"
+                            variant="default"
+                            onClick={() => {
+                                const contactSection = document.getElementById("contact");
+                                if (contactSection) {
+                                    contactSection.scrollIntoView({ behavior: "smooth" });
+                                }
+                            }}
+                        >
                             {ctaText}
                         </Button>
                     </div>
@@ -118,7 +126,18 @@ export function Navbar({ name, data, contact, loading }: NavbarProps) {
                             {item.label}
                         </Link>
                     ))}
-                    <Button className="w-full rounded-lg mt-2">{ctaText}</Button>
+                    <Button
+                        className="w-full rounded-lg mt-2"
+                        onClick={() => {
+                            setMobileOpen(false);
+                            const contactSection = document.getElementById("contact");
+                            if (contactSection) {
+                                contactSection.scrollIntoView({ behavior: "smooth" });
+                            }
+                        }}
+                    >
+                        {ctaText}
+                    </Button>
                 </div>
             </motion.div>
         </motion.nav >
