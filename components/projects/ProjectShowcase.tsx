@@ -22,22 +22,22 @@ export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: "-100px" }}
                     transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-                    className={`flex flex-col ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-12 lg:gap-24 items-center`}
+                    className={`group flex flex-col ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-12 lg:gap-24 items-center`}
                 >
                     {/* Image Section - The "Stage" */}
                     <Link
                         href={`/projects/${project.id}`}
-                        className="relative w-full lg:w-3/5 group cursor-pointer"
+                        className="relative w-full lg:w-3/5 cursor-pointer block"
                     >
                         {/* Glow effect */}
-                        <div className="absolute -inset-4 bg-accent/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+                        <div className="absolute -inset-4 bg-accent/20 rounded-[2.5rem] blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
 
-                        <div className="relative aspect-[16/10] overflow-hidden rounded-3xl border border-foreground/10 bg-foreground/5 transform transition-transform duration-1000 group-hover:scale-[0.99] shadow-2xl">
+                        <div className="relative aspect-[16/10] overflow-hidden rounded-3xl border border-foreground/10 bg-foreground/5 transform transition-all duration-700 group-hover:scale-[0.98] group-hover:shadow-2xl group-hover:border-accent/30">
                             <Image
                                 src={project.imageUrl || "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1000&auto=format&fit=crop"}
                                 alt={project.title}
                                 fill
-                                className="object-cover transition-transform duration-[2s] group-hover:scale-110"
+                                className="object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105"
                             />
                             {/* Sophisticated Overlay */}
                             <div className="absolute inset-0 bg-gradient-to-tr from-background/40 via-transparent to-transparent opacity-60" />
@@ -79,11 +79,11 @@ export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
                         <div className="pt-8">
                             <Link
                                 href={`/projects/${project.id}`}
-                                className="group flex items-center gap-4 text-sm font-black uppercase tracking-[0.3em] text-foreground hover:text-accent transition-colors"
+                                className="inline-flex items-center gap-4 text-sm font-bold uppercase tracking-[0.3em] text-foreground hover:text-accent transition-colors"
                             >
                                 <span>Explore Project</span>
-                                <div className="w-12 h-12 rounded-full border border-foreground/10 flex items-center justify-center group-hover:border-accent group-hover:bg-accent transition-all duration-500">
-                                    <ArrowUpRight className="w-5 h-5 group-hover:text-accent-foreground transition-colors" />
+                                <div className="w-12 h-12 rounded-full border border-foreground/10 flex items-center justify-center group-hover:border-accent group-hover:bg-accent transition-all duration-500 group-hover:scale-110">
+                                    <ArrowUpRight className="w-5 h-5 group-hover:text-accent-foreground transition-all duration-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                                 </div>
                             </Link>
                         </div>

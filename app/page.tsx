@@ -16,24 +16,30 @@ import { useDynamicColor } from "@/hooks/useDynamicColor";
 const PortfolioContent = ({ data }: { data: any }) => {
     const { contact, hero, about, expertise, skills, name, projects } = data;
 
+    const staggerContainer = {
+        hidden: {},
+        visible: {
+            transition: {
+                staggerChildren: 0.1,
+                delayChildren: 0.3
+            }
+        }
+    };
+
+    const fadeInUp = {
+        hidden: { opacity: 0, y: 10 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: { duration: 0.4 }
+        }
+    };
+
     // Extract theme color from hero image or default profile
     const { isLoading: themeLoading } = useDynamicColor(hero?.imageUrl || "/pfp.jpeg");
 
-    const containerRef = useRef<HTMLDivElement>(null);
-    const { scrollYProgress } = useScroll({
-        target: containerRef,
-        offset: ["start start", "end end"],
-        layoutEffect: false
-    });
-
-    const [, setCurrentProgress] = useState(0);
-
-    useMotionValueEvent(scrollYProgress, "change", (latest: number) => {
-        setCurrentProgress(latest);
-    });
-
     return (
-        <main ref={containerRef} className="relative min-h-screen">
+        <main className="relative min-h-screen">
             <div className="relative z-10">
                 <Navbar name={name} data={data.navbar} contact={contact} loading={false} />
 
@@ -49,7 +55,7 @@ const PortfolioContent = ({ data }: { data: any }) => {
                         <motion.div
                             initial={{ opacity: 0, x: -30 }}
                             whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
+                            viewport={{ once: true, margin: "-50px" }}
                             transition={{ duration: 0.8 }}
                         >
                             <GlassCard className="p-8 space-y-6 self-start">
@@ -60,13 +66,23 @@ const PortfolioContent = ({ data }: { data: any }) => {
                                 <Typography className="text-lg text-muted-foreground leading-relaxed">
                                     {skills.description || "A comprehensive suite of technologies I use to build robust, scalable, and secure digital products."}
                                 </Typography>
-                                <div className="pt-4 flex flex-wrap gap-2">
+                                <motion.div
+                                    variants={staggerContainer}
+                                    initial="hidden"
+                                    whileInView="visible"
+                                    viewport={{ once: true, margin: "-50px" }}
+                                    className="pt-4 flex flex-wrap gap-2"
+                                >
                                     {skills.frameworks?.map((f: string) => (
-                                        <span key={f} className="px-3 py-1 text-xs font-medium rounded-xl bg-accent/10 text-accent border border-accent/20">
+                                        <motion.span
+                                            key={f}
+                                            variants={fadeInUp}
+                                            className="inline-block px-3 py-1 text-xs font-medium rounded-xl bg-accent/10 text-accent border border-accent/20"
+                                        >
                                             {f}
-                                        </span>
+                                        </motion.span>
                                     ))}
-                                </div>
+                                </motion.div>
                             </GlassCard>
                         </motion.div>
 
@@ -75,7 +91,7 @@ const PortfolioContent = ({ data }: { data: any }) => {
                             <motion.div
                                 initial={{ opacity: 0, y: 30 }}
                                 whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
+                                viewport={{ once: true, margin: "-50px" }}
                                 transition={{ duration: 0.8, delay: 0.1 }}
                             >
                                 <GlassCard className="p-8 space-y-6 hover:border-accent/40 transition-all duration-500 break-inside-avoid mb-6">
@@ -83,11 +99,21 @@ const PortfolioContent = ({ data }: { data: any }) => {
                                         <div className="w-1.5 h-1.5 rounded-full bg-accent" />
                                         {skills.frontendTitle || "Frontend Engineering"}
                                     </Typography>
-                                    <div className="space-y-6">
+                                    <motion.div
+                                        variants={staggerContainer}
+                                        initial="hidden"
+                                        whileInView="visible"
+                                        viewport={{ once: true, margin: "-50px" }}
+                                        className="space-y-6"
+                                    >
                                         {skills.frontend?.map((skill: any) => {
                                             const IconComponent = (Icons as any)[skill.icon] || Icons.Circle;
                                             return (
-                                                <div key={skill.name} className="space-y-2">
+                                                <motion.div
+                                                    key={skill.name}
+                                                    variants={fadeInUp}
+                                                    className="space-y-2"
+                                                >
                                                     <div className="flex justify-between text-sm">
                                                         <span className="text-foreground font-medium flex items-center gap-2">
                                                             <IconComponent className="w-4 h-4 text-accent" />
@@ -104,10 +130,10 @@ const PortfolioContent = ({ data }: { data: any }) => {
                                                             className="h-full bg-accent"
                                                         />
                                                     </div>
-                                                </div>
+                                                </motion.div>
                                             );
                                         })}
-                                    </div>
+                                    </motion.div>
                                 </GlassCard>
                             </motion.div>
 
@@ -116,7 +142,7 @@ const PortfolioContent = ({ data }: { data: any }) => {
                                 <motion.div
                                     initial={{ opacity: 0, y: 20 }}
                                     whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
+                                    viewport={{ once: true, margin: "-50px" }}
                                     transition={{ duration: 0.6, delay: 0.2 }}
                                 >
                                     <GlassCard className="p-6 space-y-4 break-inside-avoid mb-6">
@@ -124,27 +150,37 @@ const PortfolioContent = ({ data }: { data: any }) => {
                                             <div className="w-1.5 h-1.5 rounded-full bg-accent" />
                                             {skills.mobileTitle || "Mobile Development"}
                                         </Typography>
-                                        <div className="flex flex-wrap gap-2">
+                                        <motion.div
+                                            variants={staggerContainer}
+                                            initial="hidden"
+                                            whileInView="visible"
+                                            viewport={{ once: true, margin: "-50px" }}
+                                            className="flex flex-wrap gap-2"
+                                        >
                                             {skills.mobile?.map((m: any) => {
                                                 const itemName = typeof m === 'string' ? m : m.name;
                                                 const itemIcon = typeof m === 'object' ? m.icon : null;
                                                 const IconComponent = itemIcon ? (Icons as any)[itemIcon] : null;
 
                                                 return (
-                                                    <span key={itemName} className="px-3 py-1 text-xs font-medium rounded-xl bg-foreground/5 border border-foreground/10 text-muted-foreground hover:bg-foreground/10 transition-colors flex items-center gap-1.5">
+                                                    <motion.span
+                                                        key={itemName}
+                                                        variants={fadeInUp}
+                                                        className="px-3 py-1 text-xs font-medium rounded-xl bg-foreground/5 border border-foreground/10 text-muted-foreground hover:bg-foreground/10 transition-colors flex items-center gap-1.5"
+                                                    >
                                                         {IconComponent && <IconComponent className="w-3 h-3 text-accent" />}
                                                         {itemName}
-                                                    </span>
+                                                    </motion.span>
                                                 );
                                             })}
-                                        </div>
+                                        </motion.div>
                                     </GlassCard>
                                 </motion.div>
 
                                 <motion.div
                                     initial={{ opacity: 0, y: 20 }}
                                     whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
+                                    viewport={{ once: true, margin: "-50px" }}
                                     transition={{ duration: 0.6, delay: 0.3 }}
                                 >
                                     <GlassCard className="p-6 space-y-4 break-inside-avoid mb-6">
@@ -152,27 +188,37 @@ const PortfolioContent = ({ data }: { data: any }) => {
                                             <div className="w-1.5 h-1.5 rounded-full bg-accent" />
                                             {skills.backendTitle || "Cloud & Backend"}
                                         </Typography>
-                                        <div className="flex flex-wrap gap-2">
+                                        <motion.div
+                                            variants={staggerContainer}
+                                            initial="hidden"
+                                            whileInView="visible"
+                                            viewport={{ once: true, margin: "-50px" }}
+                                            className="flex flex-wrap gap-2"
+                                        >
                                             {skills.backend?.map((b: any) => {
                                                 const itemName = typeof b === 'string' ? b : b.name;
                                                 const itemIcon = typeof b === 'object' ? b.icon : null;
                                                 const IconComponent = itemIcon ? (Icons as any)[itemIcon] : null;
 
                                                 return (
-                                                    <span key={itemName} className="px-3 py-1 text-xs font-medium rounded-xl bg-foreground/5 border border-foreground/10 text-muted-foreground hover:bg-foreground/10 transition-colors flex items-center gap-1.5">
+                                                    <motion.span
+                                                        key={itemName}
+                                                        variants={fadeInUp}
+                                                        className="px-3 py-1 text-xs font-medium rounded-xl bg-foreground/5 border border-foreground/10 text-muted-foreground hover:bg-foreground/10 transition-colors flex items-center gap-1.5"
+                                                    >
                                                         {IconComponent && <IconComponent className="w-3 h-3 text-accent" />}
                                                         {itemName}
-                                                    </span>
+                                                    </motion.span>
                                                 );
                                             })}
-                                        </div>
+                                        </motion.div>
                                     </GlassCard>
                                 </motion.div>
 
                                 <motion.div
                                     initial={{ opacity: 0, y: 20 }}
                                     whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
+                                    viewport={{ once: true, margin: "-50px" }}
                                     transition={{ duration: 0.6, delay: 0.4 }}
                                 >
                                     <GlassCard className="p-6 space-y-4 break-inside-avoid mb-6">
@@ -180,9 +226,17 @@ const PortfolioContent = ({ data }: { data: any }) => {
                                             <div className="w-1.5 h-1.5 rounded-full bg-accent" />
                                             {skills.toolsTitle || "Workflow & Tools"}
                                         </Typography>
-                                        <div className="flex flex-wrap gap-3 text-xs text-muted-foreground font-medium">
-                                            {skills.tools?.join(" • ")}
-                                        </div>
+                                        <motion.div
+                                            variants={staggerContainer}
+                                            initial="hidden"
+                                            whileInView="visible"
+                                            viewport={{ once: true, margin: "-50px" }}
+                                            className="flex flex-wrap gap-3 text-xs text-muted-foreground font-medium"
+                                        >
+                                            {skills.tools?.map((tool: string, i: number) => (
+                                                <motion.span key={i} variants={fadeInUp} className="inline-block">{tool} •</motion.span>
+                                            ))}
+                                        </motion.div>
                                     </GlassCard>
                                 </motion.div>
 
@@ -226,7 +280,7 @@ const PortfolioContent = ({ data }: { data: any }) => {
                                                     key={key}
                                                     initial={{ opacity: 0, y: 20 }}
                                                     whileInView={{ opacity: 1, y: 0 }}
-                                                    viewport={{ once: true }}
+                                                    viewport={{ once: true, margin: "-50px" }}
                                                     transition={{ duration: 0.6 }}
                                                 >
                                                     <GlassCard className="p-6 space-y-4 break-inside-avoid mb-6">

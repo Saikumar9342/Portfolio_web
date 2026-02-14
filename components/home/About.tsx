@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { Section, Typography } from "@/components/ui/layout";
 // import { portfolioData } from "@/lib/data";
 import * as Icons from "lucide-react";
@@ -28,12 +29,22 @@ export function About({ about, expertise, contact }: AboutProps) {
         }
     };
 
+    const containerRef = useRef<HTMLDivElement>(null);
+    const { scrollYProgress } = useScroll({
+        target: containerRef,
+        offset: ["start end", "end start"]
+    });
+
+    const elementY = useTransform(scrollYProgress, [0, 1], [100, -100]);
+    const reverseElementY = useTransform(scrollYProgress, [0, 1], [-100, 100]);
+
     return (
-        <Section id="about" className="py-24 bg-foreground/5 backdrop-blur-sm border-t border-accent/30">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
+        <Section id="about" className="py-24 bg-foreground/5 backdrop-blur-sm border-t border-accent/30 overflow-hidden">
+            <div ref={containerRef} className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
 
                 {/* Left Side: Biography & Education */}
                 <motion.div
+                    style={{ y: elementY }}
                     initial={{ opacity: 0, x: -50 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true, margin: "-100px" }}
@@ -105,6 +116,7 @@ export function About({ about, expertise, contact }: AboutProps) {
 
                 {/* Right Side: Services & Stats */}
                 <motion.div
+                    style={{ y: reverseElementY }}
                     initial={{ opacity: 0, x: 50 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true, margin: "-100px" }}

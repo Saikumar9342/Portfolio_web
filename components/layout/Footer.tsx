@@ -163,7 +163,7 @@ export function Footer({ contact, about, navbar, name }: FooterProps) {
                             className="space-y-8"
                         >
                             <div className="space-y-6">
-                                <Typography element="h2" className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tightest uppercase text-foreground leading-[1.1]">
+                                <Typography element="h2" className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight uppercase text-foreground leading-[1.1]">
                                     {contact.title}
                                 </Typography>
                                 <Typography className="text-lg text-muted-foreground leading-relaxed max-w-md font-medium">
@@ -171,25 +171,25 @@ export function Footer({ contact, about, navbar, name }: FooterProps) {
                                 </Typography>
                             </div>
 
-                            <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                            <div className="flex flex-col sm:flex-row gap-4 pt-8 w-full">
+                                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="w-full sm:w-auto">
                                     <a
                                         href={`mailto:${contact.email}?subject=Portfolio Inquiry`}
                                         className={buttonVariants({
                                             size: "lg",
-                                            className: "rounded-none px-12 h-16 text-sm font-bold uppercase tracking-widest shadow-2xl shadow-accent/10 hover:bg-accent hover:text-accent-foreground transition-all duration-300"
+                                            className: "w-full sm:w-auto rounded-none px-12 h-16 text-sm font-bold uppercase tracking-widest shadow-2xl shadow-accent/10 hover:bg-accent hover:text-accent-foreground transition-all duration-300"
                                         })}
                                     >
                                         {contact.cta}
                                     </a>
                                 </motion.div>
-                                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="w-full sm:w-auto">
                                     <a
                                         href={resumeDownloadUrl}
                                         onClick={handleResumeDownload}
                                         download="resume.pdf"
                                         aria-busy={isDownloadingResume}
-                                        className={`rounded-none px-12 h-16 flex items-center justify-center gap-2 text-sm font-bold uppercase tracking-widest border border-foreground/20 text-foreground transition-all duration-300 hover:bg-foreground/5 ${isDownloadingResume ? "opacity-80 cursor-not-allowed" : ""}`}
+                                        className={`w-full sm:w-auto rounded-none px-12 h-16 flex items-center justify-center gap-2 text-sm font-bold uppercase tracking-widest border border-foreground/20 text-foreground transition-all duration-300 hover:bg-foreground/5 ${isDownloadingResume ? "opacity-80 cursor-not-allowed" : ""}`}
                                     >
                                         {isDownloadingResume && <Loader2 className="w-4 h-4 animate-spin" />}
                                         {isDownloadingResume ? "Processing..." : contact.secondaryCta}
@@ -204,7 +204,7 @@ export function Footer({ contact, about, navbar, name }: FooterProps) {
                             viewport={{ once: true }}
                             transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
                         >
-                            <GlassCard className="form-glass p-8 md:p-12 border border-foreground/15 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] rounded-none relative bg-black/40 backdrop-blur-3xl overflow-visible">
+                            <GlassCard className="form-glass p-8 md:p-12 border border-accent/20 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] rounded-none relative bg-black/40 backdrop-blur-3xl overflow-visible">
                                 <div className="absolute -top-px -left-px w-12 h-12 border-t-2 border-l-2 border-accent z-20" />
                                 <div className="absolute -bottom-px -right-px w-12 h-12 border-b-2 border-r-2 border-accent z-20" />
 
