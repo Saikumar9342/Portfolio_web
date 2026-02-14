@@ -163,7 +163,7 @@ export function Footer({ contact, about, navbar, name }: FooterProps) {
                             className="space-y-8"
                         >
                             <div className="space-y-6">
-                                <Typography element="h2" className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tightest uppercase text-foreground leading-[1.1]">
+                                <Typography element="h2" className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tightest uppercase text-foreground leading-[1.1]">
                                     {contact.title}
                                 </Typography>
                                 <Typography className="text-lg text-muted-foreground leading-relaxed max-w-md font-medium">

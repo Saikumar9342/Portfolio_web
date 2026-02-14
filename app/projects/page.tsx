@@ -40,9 +40,9 @@ export default function ProjectsPage() {
                             >
                                 <div className="flex items-center gap-4">
                                     <span className="w-12 h-px bg-accent/50" />
-                                    <Typography className="text-[10px] font-black text-accent tracking-[0.5em] uppercase">{data.projectsPage.label || "Works Portfolio"}</Typography>
+                                    <Typography className="text-xs font-bold text-accent tracking-[0.5em] uppercase">{data.projectsPage.label || "Works Portfolio"}</Typography>
                                 </div>
-                                <Typography element="h1" className="text-6xl md:text-8xl lg:text-8xl font-black text-foreground leading-[0.9] uppercase tracking-tighter">
+                                <Typography element="h1" className="text-6xl md:text-8xl lg:text-8xl font-bold text-foreground leading-[0.9] uppercase tracking-tighter">
                                     {data.projectsPage.title || "Selected"}<br />
                                     <span className="text-transparent border-t-0 bg-clip-text bg-gradient-to-r from-foreground to-foreground/40">{data.projectsPage.titleHighlight || "Works"}</span>
                                 </Typography>

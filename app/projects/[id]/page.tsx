@@ -93,9 +93,14 @@ export default function ProjectDetailPage() {
                                         <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-accent">Project Case Study</span>
                                     </div>
 
-                                    <Typography element="h1" className="text-4xl md:text-6xl lg:text-7xl font-black text-foreground leading-[0.9] tracking-tightest uppercase font-sans">
+                                    <Typography element="h1" className="text-4xl md:text-6xl lg:text-7xl font-bold text-foreground leading-[0.9] tracking-tightest uppercase font-sans">
                                         {project.title}
                                     </Typography>
+
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+                                        <span className="text-[10px] font-bold uppercase tracking-widest text-accent">Status: Production Ready</span>
+                                    </div>
 
                                     <div className="flex flex-wrap gap-8 pt-6">
                                         <div className="space-y-2">
@@ -135,7 +140,7 @@ export default function ProjectDetailPage() {
                                 >
                                     <div className="space-y-4">
                                         <Typography className="text-[10px] font-bold text-accent uppercase tracking-widest">{data.skills?.frameworksTitle || "The Deep Dive"}</Typography>
-                                        <Typography element="h2" className="text-3xl md:text-4xl lg:text-5xl font-black text-foreground leading-[1.05] tracking-tight font-sans uppercase">
+                                        <Typography element="h2" className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-[1.05] tracking-tight font-sans uppercase">
                                             Engineering for the next dimension.
                                         </Typography>
                                     </div>
@@ -190,7 +195,7 @@ export default function ProjectDetailPage() {
                                         <div className="absolute top-0 right-0 w-32 h-32 bg-accent/10 rounded-full -mr-16 -mt-16 blur-3xl transition-all group-hover:bg-accent/20" />
 
                                         <div className="space-y-2">
-                                            <Typography className="text-[10px] font-black text-accent uppercase tracking-[0.5em]">Release Assets</Typography>
+                                            <Typography className="text-[10px] font-bold text-accent uppercase tracking-[0.5em]">Release Assets</Typography>
                                             <Typography element="h4" className="text-2xl font-bold">Project Access</Typography>
                                         </div>
 
@@ -253,13 +258,6 @@ export default function ProjectDetailPage() {
                                             <p className="font-bold text-base text-foreground tracking-tight">Active Production</p>
                                         </div>
                                     </div>
-
-                                    <GlassCard className="p-6 border-white/5 bg-accent/5">
-                                        <div className="flex items-center gap-4">
-                                            <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-                                            <span className="text-[10px] font-black uppercase tracking-widest text-accent">Status: Production Ready</span>
-                                        </div>
-                                    </GlassCard>
                                 </motion.div>
                             </div>
                         </div>
