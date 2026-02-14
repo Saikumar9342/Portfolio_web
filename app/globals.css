@@ -41,7 +41,10 @@ html.theme-loading {
 
 @layer base {
   body {
-    @apply bg-background text-foreground antialiased;
+    background-color: var(--background);
+    color: var(--foreground);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     transition: background-color 300ms ease, color 300ms ease;
     font-feature-settings: normal;
   }
@@ -52,16 +55,24 @@ html.theme-loading {
     background-color: color-mix(in srgb, var(--foreground), transparent 96%);
     backdrop-filter: blur(20px);
     border: 1px solid color-mix(in srgb, var(--foreground), transparent 92%);
-    @apply shadow-sm rounded-2xl transition-all duration-300;
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    border-radius: 1rem;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms;
   }
 
   .text-gradient {
-    @apply bg-clip-text text-transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
     background-image: linear-gradient(to bottom, var(--foreground), color-mix(in srgb, var(--foreground), transparent 50%));
   }
 
   .architect-corner {
-    @apply absolute w-10 h-10;
+    position: absolute;
+    width: 2.5rem;
+    height: 2.5rem;
     border-color: color-mix(in srgb, var(--accent), transparent 80%);
   }
 
