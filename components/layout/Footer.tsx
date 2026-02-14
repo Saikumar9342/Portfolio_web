@@ -230,7 +230,7 @@ export function Footer({ contact, about, navbar, name }: FooterProps) {
                                                 Message Received
                                             </Typography>
                                             <Typography className="text-sm text-muted-foreground max-w-[280px]">
-                                                Thank you for reaching out. I've received your inquiry and will get back to you shortly.
+                                                Thank you for reaching out. I&apos;ve received your inquiry and will get back to you shortly.
                                             </Typography>
                                             <Button
                                                 variant="outline"
