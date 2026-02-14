@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Project, HeroData, AboutData, ExpertiseData, SkillsData, ContactData, NavbarData, SocialLink } from "@/types";
 import { portfolioData } from "@/lib/data";
@@ -166,8 +166,7 @@ export function usePortfolio(userId?: string) {
         });
 
         // Listen to Projects
-        const q = query(projectsRef, orderBy("createdAt", "desc"));
-        const projectsUnsub = onSnapshot(q, (snapshot) => {
+        const projectsUnsub = onSnapshot(projectsRef, (snapshot) => {
             if (snapshot.empty) {
                 setData(prev => ({ ...prev, projects: [] }));
                 setProjectsLoaded(true);
@@ -195,6 +194,10 @@ export function usePortfolio(userId?: string) {
                     category: d.category || "",
                     createdAt
                 } as Project;
+            }).sort((a, b) => {
+                const aTime = a.createdAt instanceof Date ? a.createdAt.getTime() : 0;
+                const bTime = b.createdAt instanceof Date ? b.createdAt.getTime() : 0;
+                return bTime - aTime;
             });
 
             setData(prev => ({ ...prev, projects }));

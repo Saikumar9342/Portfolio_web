@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { collection, onSnapshot, query, orderBy, DocumentData } from "firebase/firestore";
+import { collection, onSnapshot, DocumentData } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Project } from "@/types";
 import { portfolioData } from "@/lib/data";
@@ -12,10 +12,10 @@ export function useProjects() {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        const q = query(collection(db, "projects"), orderBy("createdAt", "desc"));
+        const projectsRef = collection(db, "projects");
 
         const unsubscribe = onSnapshot(
-            q,
+            projectsRef,
             (snapshot) => {
                 if (!snapshot.size) {
                     // No data in Firestore yet - keep default portfolio data
@@ -44,6 +44,10 @@ export function useProjects() {
                         createdAt,
                     };
                     return p;
+                }).sort((a, b) => {
+                    const aTime = a.createdAt instanceof Date ? a.createdAt.getTime() : 0;
+                    const bTime = b.createdAt instanceof Date ? b.createdAt.getTime() : 0;
+                    return bTime - aTime;
                 }) as Project[];
 
                 setProjects(projectsData);

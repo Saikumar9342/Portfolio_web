@@ -2,25 +2,40 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.email == "pasumarthisaikumar6266@gmail.com";
+    }
+
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
     function isSignedIn() {
       return request.auth != null;
     }
 
-    // Content collection rules
+    // Global live portfolio (single public website entrypoint)
     match /content/{docId} {
-      // Anyone can read content
       allow read: if true;
-      // Only signed-in users can write
-      allow write: if isSignedIn();
+      allow write: if isAdmin();
     }
 
-    // Projects collection rules
+    // Global live projects
     match /projects/{projectId} {
-      // Anyone can read projects
       allow read: if true;
-      
-      // Only signed-in users can write/update/delete
-      allow write: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    // Multi-user portfolios
+    match /users/{userId}/content/{docId} {
+      allow read: if true;
+      allow write: if isOwner(userId) || isAdmin();
+    }
+
+    match /users/{userId}/projects/{projectId} {
+      allow read: if true;
+      allow write: if isOwner(userId) || isAdmin();
     }
   }
 }

@@ -94,7 +94,13 @@ export async function GET(request: Request) {
   }
 
   if (!resumeUrl.includes("res.cloudinary.com")) {
-    return NextResponse.redirect(resumeUrl, { status: 302 });
+    if (resumeUrl.startsWith("/") && !resumeUrl.startsWith("//")) {
+      return NextResponse.redirect(new URL(resumeUrl, requestUrl.origin), { status: 302 });
+    }
+    return NextResponse.json(
+      { ok: false, error: "Only Cloudinary or local relative resume URLs are allowed" },
+      { status: 400 }
+    );
   }
 
   const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
@@ -134,7 +140,7 @@ export async function GET(request: Request) {
   const finalPublicId = resolved.publicId;
   const finalFormat = publicIdIncludesExt ? undefined : resolved.format ?? parsed.ext;
 
-  const signedUrl = cloudinary.utils.private_download_url(finalPublicId, finalFormat, {
+  const signedUrl = cloudinary.utils.private_download_url(finalPublicId, finalFormat as string, {
     resource_type: resolved.resourceType,
     type: "upload",
   });
