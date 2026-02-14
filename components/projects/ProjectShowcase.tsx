@@ -82,7 +82,7 @@ export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
                                 className="inline-flex items-center gap-4 text-sm font-bold uppercase tracking-[0.3em] text-foreground hover:text-accent transition-colors"
                             >
                                 <span>Explore Project</span>
-                                <div className="w-12 h-12 rounded-full border border-foreground/10 flex items-center justify-center group-hover:border-accent group-hover:bg-accent transition-all duration-500 group-hover:scale-110">
+                                <div className="w-12 h-12 rounded-xl border border-foreground/10 flex items-center justify-center group-hover:border-accent group-hover:bg-accent transition-all duration-500 group-hover:scale-110">
                                     <ArrowUpRight className="w-5 h-5 group-hover:text-accent-foreground transition-all duration-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                                 </div>
                             </Link>

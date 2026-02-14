@@ -1,7 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { ArrowRight, ChevronDown } from "lucide-react";
 import { Button } from "../ui/button";
 import { Typography } from "../ui/layout";
 import Link from "next/link";
@@ -19,6 +19,8 @@ interface HeroProps {
 export function Hero({ data, role, name, location }: HeroProps) {
     const hero = data;
     useDynamicColor(hero.imageUrl || "/pfp.jpeg");
+    const { scrollY } = useScroll();
+    const scrollIndicatorOpacity = useTransform(scrollY, [0, 100], [1, 0]);
 
     return (
         <section className="relative min-h-[100dvh] w-full flex items-center pt-32 md:pt-24 pb-12 px-4 md:px-8 overflow-hidden bg-background transition-colors duration-1000">
@@ -27,15 +29,41 @@ export function Hero({ data, role, name, location }: HeroProps) {
 
                     {/* Text Content */}
                     <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                        initial="hidden"
+                        animate="visible"
+                        variants={{
+                            hidden: { opacity: 0 },
+                            visible: {
+                                opacity: 1,
+                                transition: {
+                                    staggerChildren: 0.1,
+                                    delayChildren: 0.2
+                                }
+                            }
+                        }}
                         className="lg:col-span-6 space-y-6"
                     >
                         <div className="space-y-4">
-                            <Typography element="h1" className="text-5xl md:text-6xl lg:text-7xl font-bold leading-[0.9] text-foreground tracking-tighter uppercase">
+                            <Typography element="h1" className="text-5xl md:text-6xl lg:text-7xl font-bold leading-[0.9] text-foreground tracking-tighter uppercase overflow-hidden">
                                 {hero?.title?.split(" ").map((word, i) => (
-                                    <span key={i} className="block">{word}</span>
+                                    <motion.span
+                                        key={i}
+                                        className="inline-block mr-4"
+                                        variants={{
+                                            hidden: { y: 100, opacity: 0 },
+                                            visible: {
+                                                y: 0,
+                                                opacity: 1,
+                                                transition: {
+                                                    type: "spring",
+                                                    damping: 12,
+                                                    stiffness: 100
+                                                }
+                                            }
+                                        }}
+                                    >
+                                        {word}
+                                    </motion.span>
                                 ))}
                             </Typography>
                         </div>
@@ -83,6 +111,27 @@ export function Hero({ data, role, name, location }: HeroProps) {
                     </motion.div>
                 </div>
             </div>
-        </section>
+
+            {/* Scroll Indicator */}
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                style={{ opacity: scrollIndicatorOpacity }}
+                transition={{ delay: 1.5, duration: 1 }}
+                className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-20 pointer-events-none"
+            >
+                <motion.div
+                    animate={{ y: [0, 8, 0] }}
+                    transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+                    className="text-foreground/50"
+                >
+                    <ChevronDown className="w-8 h-8" />
+                </motion.div>
+            </motion.div>
+
+            {/* Ambient Background Gradient */}
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-accent/5 rounded-full blur-[120px] pointer-events-none mix-blend-screen" />
+            <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-accent/5 rounded-full blur-[120px] pointer-events-none mix-blend-screen" />
+        </section >
     );
 }

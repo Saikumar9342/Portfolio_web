@@ -83,7 +83,7 @@ export function Navbar({ name, data, contact, loading }: NavbarProps) {
                             whileTap={{ scale: 0.95 }}
                         >
                             <Button
-                                className="rounded-lg px-8 py-6 font-bold text-xs uppercase tracking-widest shadow-xl shadow-accent/10 hover:shadow-accent/20 transition-all"
+                                className="rounded-xl px-8 py-6 font-bold text-xs uppercase tracking-widest shadow-xl shadow-accent/10 hover:shadow-accent/20 transition-all"
                                 variant="default"
                                 onClick={() => {
                                     const contactSection = document.getElementById("contact");
@@ -103,7 +103,7 @@ export function Navbar({ name, data, contact, loading }: NavbarProps) {
                     <motion.button
                         onClick={() => setMobileOpen(!mobileOpen)}
                         whileTap={{ scale: 0.95 }}
-                        className="p-2 rounded-lg hover:bg-foreground/10 transition-colors"
+                        className="p-2 rounded-xl hover:bg-foreground/10 transition-colors"
                     >
                         {mobileOpen ? (
                             <X className="w-6 h-6 text-foreground" />
@@ -136,7 +136,7 @@ export function Navbar({ name, data, contact, loading }: NavbarProps) {
                         </Link>
                     ))}
                     <Button
-                        className="w-full rounded-lg mt-2"
+                        className="w-full rounded-xl mt-2"
                         onClick={() => {
                             setMobileOpen(false);
                             const contactSection = document.getElementById("contact");

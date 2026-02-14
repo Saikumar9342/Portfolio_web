@@ -177,7 +177,7 @@ export function Footer({ contact, about, navbar, name }: FooterProps) {
                                         href={`mailto:${contact.email}?subject=Portfolio Inquiry`}
                                         className={buttonVariants({
                                             size: "lg",
-                                            className: "w-full sm:w-auto rounded-none px-12 h-16 text-sm font-bold uppercase tracking-widest shadow-2xl shadow-accent/10 hover:bg-accent hover:text-accent-foreground transition-all duration-300"
+                                            className: "w-full sm:w-auto rounded-xl px-12 h-16 text-sm font-bold uppercase tracking-widest shadow-2xl shadow-accent/10 hover:bg-accent hover:text-accent-foreground transition-all duration-300"
                                         })}
                                     >
                                         {contact.cta}
@@ -189,7 +189,7 @@ export function Footer({ contact, about, navbar, name }: FooterProps) {
                                         onClick={handleResumeDownload}
                                         download="resume.pdf"
                                         aria-busy={isDownloadingResume}
-                                        className={`w-full sm:w-auto rounded-none px-12 h-16 flex items-center justify-center gap-2 text-sm font-bold uppercase tracking-widest border border-foreground/20 text-foreground transition-all duration-300 hover:bg-foreground/5 ${isDownloadingResume ? "opacity-80 cursor-not-allowed" : ""}`}
+                                        className={`w-full sm:w-auto rounded-xl px-12 h-16 flex items-center justify-center gap-2 text-sm font-bold uppercase tracking-widest border border-foreground/20 text-foreground transition-all duration-300 hover:bg-foreground/5 ${isDownloadingResume ? "opacity-80 cursor-not-allowed" : ""}`}
                                     >
                                         {isDownloadingResume ? (
                                             <>
@@ -210,7 +210,7 @@ export function Footer({ contact, about, navbar, name }: FooterProps) {
                             viewport={{ once: true }}
                             transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
                         >
-                            <GlassCard className="form-glass p-8 md:p-12 border border-accent/20 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] rounded-none relative bg-black/40 backdrop-blur-3xl overflow-visible">
+                            <GlassCard className="form-glass p-8 md:p-12 border border-accent/20 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] rounded-3xl relative bg-black/40 backdrop-blur-3xl overflow-visible">
                                 <div className="absolute -top-px -left-px w-12 h-12 border-t-2 border-l-2 border-accent z-20" />
                                 <div className="absolute -bottom-px -right-px w-12 h-12 border-b-2 border-r-2 border-accent z-20" />
 
@@ -223,7 +223,7 @@ export function Footer({ contact, about, navbar, name }: FooterProps) {
                                             exit={{ opacity: 0, scale: 1.05 }}
                                             className="flex flex-col items-center justify-center py-12 text-center space-y-4"
                                         >
-                                            <div className="w-20 h-20 rounded-none border-2 border-accent flex items-center justify-center mb-4">
+                                            <div className="w-20 h-20 rounded-full border-2 border-accent flex items-center justify-center mb-4">
                                                 <Check className="w-10 h-10 text-accent" />
                                             </div>
                                             <Typography className="text-xl font-bold uppercase tracking-tight text-foreground">
@@ -234,7 +234,7 @@ export function Footer({ contact, about, navbar, name }: FooterProps) {
                                             </Typography>
                                             <Button
                                                 variant="outline"
-                                                className="mt-6 rounded-none uppercase tracking-[0.2em] text-[10px] font-bold"
+                                                className="mt-6 rounded-xl uppercase tracking-[0.2em] text-[10px] font-bold"
                                                 onClick={() => setSubmitSuccess(false)}
                                             >
                                                 Send Another
@@ -247,7 +247,7 @@ export function Footer({ contact, about, navbar, name }: FooterProps) {
                                                     <label className="text-[10px] font-black uppercase tracking-[0.2em] text-accent/80 px-1">{contact.formNameLabel || "Full Name"}</label>
                                                     <Input
                                                         placeholder={contact.formNamePlaceholder || "John Doe"}
-                                                        className={`h-14 !bg-black/20 border-foreground/10 rounded-none focus:ring-1 focus:ring-accent text-foreground transition-all placeholder:text-muted-foreground/30 ${errors.name ? 'border-red-500/50 ring-1 ring-red-500/20' : ''}`}
+                                                        className={`h-14 !bg-black/20 border-foreground/10 rounded-xl focus:ring-1 focus:ring-accent text-foreground transition-all placeholder:text-muted-foreground/30 ${errors.name ? 'border-red-500/50 ring-1 ring-red-500/20' : ''}`}
                                                         value={formData.name}
                                                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                                         required
@@ -259,7 +259,7 @@ export function Footer({ contact, about, navbar, name }: FooterProps) {
                                                     <Input
                                                         type="email"
                                                         placeholder={contact.formEmailPlaceholder || "john@example.com"}
-                                                        className={`h-14 !bg-black/20 border-foreground/10 rounded-none focus:ring-1 focus:ring-accent text-foreground transition-all placeholder:text-muted-foreground/30 ${errors.email ? 'border-red-500/50 ring-1 ring-red-500/20' : ''}`}
+                                                        className={`h-14 !bg-black/20 border-foreground/10 rounded-xl focus:ring-1 focus:ring-accent text-foreground transition-all placeholder:text-muted-foreground/30 ${errors.email ? 'border-red-500/50 ring-1 ring-red-500/20' : ''}`}
                                                         value={formData.email}
                                                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                                         required
@@ -271,7 +271,7 @@ export function Footer({ contact, about, navbar, name }: FooterProps) {
                                                 <label className="text-[10px] font-black uppercase tracking-[0.2em] text-accent/80 px-1">{contact.formSubjectLabel || "Subject (Optional)"}</label>
                                                 <Input
                                                     placeholder={contact.formSubjectPlaceholder || "Project Inquiry"}
-                                                    className="h-14 !bg-black/20 border-foreground/10 rounded-none focus:ring-1 focus:ring-accent text-foreground transition-all placeholder:text-muted-foreground/30"
+                                                    className="h-14 !bg-black/20 border-foreground/10 rounded-xl focus:ring-1 focus:ring-accent text-foreground transition-all placeholder:text-muted-foreground/30"
                                                     value={formData.subject}
                                                     onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                                                 />
@@ -280,7 +280,7 @@ export function Footer({ contact, about, navbar, name }: FooterProps) {
                                                 <label className="text-[10px] font-black uppercase tracking-[0.2em] text-accent/80 px-1">{contact.formMessageLabel || "Your Message"}</label>
                                                 <Textarea
                                                     placeholder={contact.formMessagePlaceholder || "How can I help you?"}
-                                                    className={`min-h-[140px] !bg-black/20 border-foreground/10 rounded-none focus:ring-1 focus:ring-accent text-foreground resize-none transition-all placeholder:text-muted-foreground/30 ${errors.message ? 'border-red-500/50 ring-1 ring-red-500/20' : ''}`}
+                                                    className={`min-h-[140px] !bg-black/20 border-foreground/10 rounded-xl focus:ring-1 focus:ring-accent text-foreground resize-none transition-all placeholder:text-muted-foreground/30 ${errors.message ? 'border-red-500/50 ring-1 ring-red-500/20' : ''}`}
                                                     value={formData.message}
                                                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                                                     required
@@ -290,7 +290,7 @@ export function Footer({ contact, about, navbar, name }: FooterProps) {
                                             <Button
                                                 type="submit"
                                                 disabled={isSubmitting}
-                                                className="w-full h-16 rounded-none text-sm font-bold uppercase tracking-[0.4em] shadow-xl shadow-accent/20 flex items-center justify-center gap-3 group bg-accent text-accent-foreground hover:bg-accent/90 transition-all active:scale-[0.98] border border-transparent"
+                                                className="w-full h-16 rounded-xl text-sm font-bold uppercase tracking-[0.4em] shadow-xl shadow-accent/20 flex items-center justify-center gap-3 group bg-accent text-accent-foreground hover:bg-accent/90 transition-all active:scale-[0.98] border border-transparent"
                                             >
                                                 {isSubmitting ? (
                                                     <div className="flex items-center gap-3">
@@ -409,7 +409,7 @@ export function Footer({ contact, about, navbar, name }: FooterProps) {
                                 {about.location}
                             </Typography>
                             <div className="pt-2">
-                                <Button size="sm" variant="outline" className="rounded-lg px-6 h-10 font-bold uppercase tracking-widest text-[10px] hover:bg-accent hover:text-accent-foreground border-foreground/10 transition-all" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+                                <Button size="sm" variant="outline" className="rounded-xl px-6 h-10 font-bold uppercase tracking-widest text-[10px] hover:bg-accent hover:text-accent-foreground border-foreground/10 transition-all" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
                                     Back to Top
                                 </Button>
                             </div>
