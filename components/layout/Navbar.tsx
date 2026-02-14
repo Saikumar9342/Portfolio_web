@@ -1,11 +1,13 @@
+"use client";
+
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { Button } from "../ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { NavbarData, ContactData } from "@/types";
-import { BrandLogo } from "../ui/BrandLogo";
+import { BrandLogo } from "@/components/ui/BrandLogo";
 
 interface NavbarProps {
     name: string;
@@ -55,7 +57,7 @@ export function Navbar({ name, data, contact, loading }: NavbarProps) {
                         <BrandLogo className="text-foreground" size={36} />
                     </motion.div>
                     <div className="hidden sm:flex flex-col">
-                        <span className="text-xl font-bold tracking-tighter text-foreground uppercase">{data?.logoText || name.charAt(0).toLowerCase()}</span>
+                        <span className="text-xl font-bold tracking-tighter text-foreground uppercase">{data?.logoText || (name ? name.charAt(0).toLowerCase() : "s")}</span>
                     </div>
                 </Link>
 
@@ -82,18 +84,15 @@ export function Navbar({ name, data, contact, loading }: NavbarProps) {
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                         >
-                            <Button
-                                className="rounded-xl px-8 py-6 font-bold text-xs uppercase tracking-widest shadow-xl shadow-accent/10 hover:shadow-accent/20 transition-all"
-                                variant="default"
-                                onClick={() => {
-                                    const contactSection = document.getElementById("contact");
-                                    if (contactSection) {
-                                        contactSection.scrollIntoView({ behavior: "smooth" });
-                                    }
-                                }}
+                            <a
+                                href={contact?.email ? `mailto:${contact.email}` : "#"}
+                                className={cn(
+                                    buttonVariants({ variant: "default" }),
+                                    "rounded-xl px-8 h-12 flex items-center justify-center font-bold text-xs uppercase tracking-widest shadow-xl shadow-accent/10 hover:shadow-accent/20 transition-all"
+                                )}
                             >
                                 {ctaText}
-                            </Button>
+                            </a>
                         </motion.div>
                     </div>
                 </div>
@@ -135,18 +134,21 @@ export function Navbar({ name, data, contact, loading }: NavbarProps) {
                             {item.label}
                         </Link>
                     ))}
-                    <Button
-                        className="w-full rounded-xl mt-2"
-                        onClick={() => {
-                            setMobileOpen(false);
-                            const contactSection = document.getElementById("contact");
-                            if (contactSection) {
-                                contactSection.scrollIntoView({ behavior: "smooth" });
-                            }
-                        }}
+                    <motion.div
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="pt-2"
                     >
-                        {ctaText}
-                    </Button>
+                        <a
+                            href={contact?.email ? `mailto:${contact.email}` : "#"}
+                            className={cn(
+                                buttonVariants({ variant: "default" }),
+                                "w-full rounded-xl h-12 flex items-center justify-center font-bold text-xs uppercase tracking-widest"
+                            )}
+                        >
+                            {ctaText}
+                        </a>
+                    </motion.div>
                 </div>
             </motion.div>
         </motion.nav >

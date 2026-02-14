@@ -5,6 +5,7 @@ import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Project, HeroData, AboutData, ExpertiseData, SkillsData, ContactData, NavbarData, SocialLink, ProjectsPageData } from "@/types";
 import { portfolioData } from "@/lib/data";
+import { useLanguage } from "@/context/LanguageContext";
 
 export interface PortfolioContent {
     hero: HeroData;
@@ -118,74 +119,97 @@ export function usePortfolio(userId?: string) {
     const [contentLoaded, setContentLoaded] = useState(false);
     const [projectsLoaded, setProjectsLoaded] = useState(false);
 
-    useEffect(() => {
-        // Determine collection references
-        const contentRef = userId
-            ? collection(db, "users", userId, "content")
-            : collection(db, "content");
+    const { currentLanguage } = useLanguage();
 
-        const projectsRef = userId
-            ? collection(db, "users", userId, "projects")
-            : collection(db, "projects");
+    useEffect(() => {
+        // Determine collection references based on language
+        let contentRef;
+        let projectsRef;
+
+        // Helper to construct path
+        const getPath = (base: string, lang: string, isDefault: boolean) => {
+            // If default (or 'en'), use the root collections 'content' and 'projects'
+            // If dynamic language, use 'languages/{code}/content' and 'languages/{code}/projects'
+            if (isDefault) return base;
+            return `languages/${lang}/${base}`;
+        };
+
+        if (userId) {
+            // User-specific paths
+            if (currentLanguage.isDefault) {
+                contentRef = collection(db, "users", userId, "content");
+                projectsRef = collection(db, "users", userId, "projects");
+            } else {
+                contentRef = collection(db, "users", userId, "languages", currentLanguage.code, "content");
+                projectsRef = collection(db, "users", userId, "languages", currentLanguage.code, "projects");
+            }
+        } else {
+            // Root paths (Single user / Default)
+            if (currentLanguage?.isDefault) {
+                contentRef = collection(db, "content");
+                projectsRef = collection(db, "projects");
+            } else {
+                contentRef = collection(db, "languages", currentLanguage.code, "content");
+                projectsRef = collection(db, "languages", currentLanguage.code, "projects");
+            }
+        }
 
         // Listen to Content
         const contentUnsub = onSnapshot(contentRef, (snapshot) => {
+            const newContent: any = {};
+
+            // If the whole collection is empty, we fall back to placeholders
             if (snapshot.empty) {
-                console.log("No content found in Firestore");
-                // If it's a specific user, maybe they haven't set up content yet.
-                // We could set some defaults or empty state, but keeping emptyData is fine for now.
+                console.log(`No content found in Firestore for language: ${currentLanguage.code}`);
+                setData(emptyData);
                 setContentLoaded(true);
                 return;
             }
 
-            const newContent: any = {};
+            // Helper to merge data with fallbacks for arrays/objects
+            const mergeData = (target: any, source: any) => {
+                const result = { ...target };
+                for (const key in source) {
+                    if (source[key] !== undefined && source[key] !== null) {
+                        // For arrays, only override if the source array is not empty
+                        if (Array.isArray(source[key])) {
+                            if (source[key].length > 0) {
+                                result[key] = source[key];
+                            }
+                        } else if (typeof source[key] === 'object' && !Array.isArray(source[key])) {
+                            // Recursively merge simple objects if needed, or just replace
+                            result[key] = { ...target[key], ...source[key] };
+                        } else {
+                            result[key] = source[key];
+                        }
+                    }
+                }
+                return result;
+            };
+
             snapshot.forEach(doc => {
                 const docData = doc.data();
                 const id = doc.id;
 
                 if (id === 'skills') {
-                    newContent[id] = { ...emptyData.skills, ...docData };
+                    newContent[id] = mergeData(emptyData.skills, docData);
                 } else if (id === 'about') {
                     const socialLinks = normalizeSocialLinks(docData.socialLinks);
+                    const baseAbout = mergeData(emptyData.about, docData);
                     newContent[id] = {
-                        ...emptyData.about,
-                        ...docData,
-                        biographyLabel: docData.biographyLabel || emptyData.about.biographyLabel,
-                        educationLabel: docData.educationLabel || emptyData.about.educationLabel,
-                        socialLinks
+                        ...baseAbout,
+                        socialLinks: socialLinks.length > 0 ? socialLinks : emptyData.about.socialLinks
                     };
                 } else if (id === 'expertise') {
-                    newContent[id] = { ...emptyData.expertise, ...docData };
+                    newContent[id] = mergeData(emptyData.expertise, docData);
                 } else if (id === 'hero') {
-                    newContent[id] = {
-                        ...emptyData.hero,
-                        ...docData,
-                        secondaryCtaHref: docData.secondaryCtaHref || emptyData.hero.secondaryCtaHref || ""
-                    };
+                    newContent[id] = mergeData(emptyData.hero, docData);
                 } else if (id === 'projects_page') {
-                    newContent.projectsPage = { ...emptyData.projectsPage, ...docData };
+                    newContent.projectsPage = mergeData(emptyData.projectsPage, docData);
                 } else if (id === 'contact') {
-                    const d = docData;
-                    newContent[id] = {
-                        title: d.title || emptyData.contact.title,
-                        description: d.description || emptyData.contact.description,
-                        email: d.email || emptyData.contact.email,
-                        personalEmail: d.personalEmail || emptyData.contact.personalEmail,
-                        cta: d.cta || emptyData.contact.cta,
-                        secondaryCta: d.secondaryCta || emptyData.contact.secondaryCta,
-                        resumeUrl: d.resumeUrl || "",
-                        formNameLabel: d.formNameLabel || emptyData.contact.formNameLabel,
-                        formNamePlaceholder: d.formNamePlaceholder || emptyData.contact.formNamePlaceholder,
-                        formEmailLabel: d.formEmailLabel || emptyData.contact.formEmailLabel,
-                        formEmailPlaceholder: d.formEmailPlaceholder || emptyData.contact.formEmailPlaceholder,
-                        formSubjectLabel: d.formSubjectLabel || emptyData.contact.formSubjectLabel,
-                        formSubjectPlaceholder: d.formSubjectPlaceholder || emptyData.contact.formSubjectPlaceholder,
-                        formMessageLabel: d.formMessageLabel || emptyData.contact.formMessageLabel,
-                        formMessagePlaceholder: d.formMessagePlaceholder || emptyData.contact.formMessagePlaceholder,
-                        formSubmitButton: d.formSubmitButton || emptyData.contact.formSubmitButton,
-                    } as ContactData;
+                    newContent[id] = mergeData(emptyData.contact, docData);
                 } else if (id === 'navbar') {
-                    newContent[id] = { ...emptyData.navbar, ...docData };
+                    newContent[id] = mergeData(emptyData.navbar, docData);
                 } else if (id === 'personal') {
                     newContent.name = docData.name || emptyData.name;
                     newContent.role = docData.role || emptyData.role;
@@ -201,7 +225,7 @@ export function usePortfolio(userId?: string) {
             setContentLoaded(true);
         }, (error) => {
             console.error("Error fetching content:", error);
-            setContentLoaded(true); // Stop loading on error
+            setContentLoaded(true);
         });
 
         // Listen to Projects
@@ -250,7 +274,7 @@ export function usePortfolio(userId?: string) {
             contentUnsub();
             projectsUnsub();
         };
-    }, [userId]); // Add userId to dependency array
+    }, [userId, currentLanguage]);
 
     const isLoading = !contentLoaded || !projectsLoaded;
 

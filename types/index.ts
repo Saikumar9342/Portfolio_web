@@ -123,3 +123,10 @@ export interface NavItem {
     label: string;
     href: string;
 }
+
+export interface Language {
+    code: string;
+    name: string;
+    flag?: string; // Emoji or url
+    isDefault?: boolean;
+}

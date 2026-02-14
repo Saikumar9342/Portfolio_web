@@ -1,6 +1,15 @@
 import type { Metadata } from 'next'
 import { Inter, Outfit } from 'next/font/google'
 import './globals.css'
+import { CustomCursor } from "@/components/ui/CustomCursor";
+import { ScrollProgress } from "@/components/ui/ScrollProgress";
+import dynamic from 'next/dynamic';
+const ScrollToTop = dynamic(() => import('@/components/ui/ScrollToTop').then((m) => m.ScrollToTop), { ssr: false });
+import { ToastProvider } from '@/components/ui/Toast';
+import { ThemeProvider } from '@/hooks/useTheme';
+import { PageTransition } from '@/components/ui/PageTransition';
+import { LanguageProvider } from '@/context/LanguageContext';
+import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher';
 
 const inter = Inter({
     subsets: ['latin'],
@@ -31,14 +40,6 @@ export const metadata: Metadata = {
     }
 }
 
-import { CustomCursor } from "@/components/ui/CustomCursor";
-import { ScrollProgress } from "@/components/ui/ScrollProgress";
-import dynamic from 'next/dynamic';
-const ScrollToTop = dynamic(() => import('@/components/ui/ScrollToTop').then((m) => m.ScrollToTop), { ssr: false });
-import { ToastProvider } from '@/components/ui/Toast';
-import { ThemeProvider } from '@/hooks/useTheme';
-import { PageTransition } from '@/components/ui/PageTransition';
-
 export default function RootLayout({
     children,
 }: {
@@ -49,14 +50,17 @@ export default function RootLayout({
             <body className="font-sans" suppressHydrationWarning>
                 <div className="noise" />
                 <ThemeProvider>
-                    <ToastProvider>
-                        <CustomCursor />
-                        <ScrollProgress />
-                        <ScrollToTop />
-                        <PageTransition>
-                            {children}
-                        </PageTransition>
-                    </ToastProvider>
+                    <LanguageProvider>
+                        <ToastProvider>
+                            <CustomCursor />
+                            <ScrollProgress />
+                            <ScrollToTop />
+                            <LanguageSwitcher />
+                            <PageTransition>
+                                {children}
+                            </PageTransition>
+                        </ToastProvider>
+                    </LanguageProvider>
                 </ThemeProvider>
             </body>
         </html>
