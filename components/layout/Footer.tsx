@@ -1,10 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Loader2, Github, Linkedin, Twitter, Globe } from "lucide-react";
+import { Loader2, Github, Linkedin, Twitter, Globe, Copy, Check } from "lucide-react";
 import { useState, type MouseEvent } from "react";
 import { Typography } from "@/components/ui/layout";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
 import { ContactData, AboutData, NavbarData } from "@/types";
 
@@ -17,9 +17,10 @@ interface FooterProps {
 
 export function Footer({ contact, about, navbar, name }: FooterProps) {
     const [isDownloadingResume, setIsDownloadingResume] = useState(false);
+    const [isCopied, setIsCopied] = useState(false);
     const resumeUrl = contact.resumeUrl || "/Saikumar.p_FrontendDeveloper.pdf";
     const isCloudinary = resumeUrl.includes("res.cloudinary.com");
-    
+
     // Use API proxy for Cloudinary, direct for others
     const resumeDownloadUrl = isCloudinary
         ? `/api/resume?url=${encodeURIComponent(resumeUrl)}`
@@ -60,6 +61,12 @@ export function Footer({ contact, about, navbar, name }: FooterProps) {
         }
     };
 
+    const handleCopyEmail = () => {
+        navigator.clipboard.writeText(contact.email);
+        setIsCopied(true);
+        setTimeout(() => setIsCopied(false), 2000);
+    };
+
     return (
         <footer id="contact" className="min-h-screen flex flex-col justify-center relative overflow-hidden border-t border-foreground/10 bg-foreground/5">
             <div className="container px-6 mx-auto max-w-6xl relative z-10 flex flex-col justify-center py-12 md:py-24">
@@ -78,19 +85,24 @@ export function Footer({ contact, about, navbar, name }: FooterProps) {
                             {contact.description}
                         </Typography>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-                            <Button size="lg" className="rounded-2xl px-12 h-16 text-sm font-black uppercase tracking-widest shadow-2xl shadow-accent/20">
+                            <a
+                                href={`mailto:${contact.email}?subject=Portfolio Inquiry`}
+                                className={buttonVariants({
+                                    size: "lg",
+                                    className: "rounded-2xl px-12 h-16 text-sm font-black uppercase tracking-widest shadow-2xl shadow-accent/20"
+                                })}
+                            >
                                 {contact.cta}
-                            </Button>
+                            </a>
                             <a
                                 href={resumeDownloadUrl}
                                 onClick={handleResumeDownload}
                                 download="resume.pdf"
                                 aria-busy={isDownloadingResume}
-                                className={`rounded-2xl px-12 h-16 flex items-center justify-center gap-2 text-sm font-black uppercase tracking-widest border border-foreground/10 text-foreground transition-all duration-300 ${
-                                    isDownloadingResume
-                                        ? "opacity-80 cursor-not-allowed"
-                                        : "hover:bg-foreground/10"
-                                }`}
+                                className={`rounded-2xl px-12 h-16 flex items-center justify-center gap-2 text-sm font-black uppercase tracking-widest border border-foreground/10 text-foreground transition-all duration-300 ${isDownloadingResume
+                                    ? "opacity-80 cursor-not-allowed"
+                                    : "hover:bg-foreground/10"
+                                    }`}
                             >
                                 {isDownloadingResume && <Loader2 className="w-4 h-4 animate-spin" />}
                                 {isDownloadingResume ? "Processing..." : contact.secondaryCta}
@@ -141,9 +153,22 @@ export function Footer({ contact, about, navbar, name }: FooterProps) {
                     <div className="md:col-span-4 space-y-6">
                         <Typography className="text-[10px] font-black uppercase tracking-[0.2em] text-accent">Contact</Typography>
                         <div className="space-y-4">
-                            <a href={`mailto:${contact.email}`} className="block text-base font-bold text-foreground hover:text-accent transition-colors tracking-tight">
-                                {contact.email}
-                            </a>
+                            <button
+                                onClick={handleCopyEmail}
+                                className="group flex items-center gap-2 text-left hover:bg-foreground/5 p-2 -ml-2 rounded-lg transition-colors"
+                                title="Click to copy email"
+                            >
+                                <div className="space-y-1">
+                                    <span className="block text-base font-bold text-foreground group-hover:text-accent transition-colors tracking-tight">
+                                        {contact.email}
+                                    </span>
+                                    {isCopied && <span className="text-[10px] text-accent font-bold uppercase tracking-wider">Copied to clipboard!</span>}
+                                </div>
+                                <div className="text-muted-foreground group-hover:text-accent transition-colors">
+                                    {isCopied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />}
+                                </div>
+                            </button>
+
                             <Typography className="text-xs text-foreground/60 leading-relaxed font-medium">
                                 {about.location}
                             </Typography>

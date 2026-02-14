@@ -93,7 +93,7 @@ const emptyData: PortfolioContent = {
     role: portfolioData.role
 };
 
-export function usePortfolio() {
+export function usePortfolio(userId?: string) {
     const [data, setData] = useState<PortfolioContent>(emptyData);
 
     // Track loading state for different parts
@@ -101,11 +101,22 @@ export function usePortfolio() {
     const [projectsLoaded, setProjectsLoaded] = useState(false);
 
     useEffect(() => {
-        // Listen to 'content' collection
-        const contentUnsub = onSnapshot(collection(db, "content"), (snapshot) => {
+        // Determine collection references
+        const contentRef = userId
+            ? collection(db, "users", userId, "content")
+            : collection(db, "content");
+
+        const projectsRef = userId
+            ? collection(db, "users", userId, "projects")
+            : collection(db, "projects");
+
+        // Listen to Content
+        const contentUnsub = onSnapshot(contentRef, (snapshot) => {
             if (snapshot.empty) {
                 console.log("No content found in Firestore");
-                setContentLoaded(true); // Treat as loaded even if empty
+                // If it's a specific user, maybe they haven't set up content yet.
+                // We could set some defaults or empty state, but keeping emptyData is fine for now.
+                setContentLoaded(true);
                 return;
             }
 
@@ -154,8 +165,8 @@ export function usePortfolio() {
             setContentLoaded(true); // Stop loading on error
         });
 
-        // Listen to 'projects' collection
-        const q = query(collection(db, "projects"), orderBy("createdAt", "desc"));
+        // Listen to Projects
+        const q = query(projectsRef, orderBy("createdAt", "desc"));
         const projectsUnsub = onSnapshot(q, (snapshot) => {
             if (snapshot.empty) {
                 setData(prev => ({ ...prev, projects: [] }));
@@ -197,7 +208,7 @@ export function usePortfolio() {
             contentUnsub();
             projectsUnsub();
         };
-    }, []);
+    }, [userId]); // Add userId to dependency array
 
     const isLoading = !contentLoaded || !projectsLoaded;
 
