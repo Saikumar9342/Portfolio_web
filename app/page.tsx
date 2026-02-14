@@ -47,7 +47,7 @@ const PortfolioContent = ({ data }: { data: any }) => {
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 w-full">
                         <GlassCard className="p-8 space-y-6 self-start">
                             <Typography className="text-sm font-semibold text-accent tracking-widest uppercase">{skills.frameworksTitle || "Toolbox"}</Typography>
-                            <Typography element="h2" className="text-4xl md:text-5xl font-bold text-foreground leading-tight">
+                            <Typography element="h2" className="text-4xl md:text-5xl lg:text-5xl font-bold text-foreground leading-tight">
                                 {skills.title || "Technical Expertise"}
                             </Typography>
                             <Typography className="text-lg text-muted-foreground leading-relaxed">
@@ -55,7 +55,7 @@ const PortfolioContent = ({ data }: { data: any }) => {
                             </Typography>
                             <div className="pt-4 flex flex-wrap gap-2">
                                 {skills.frameworks?.map((f: string) => (
-                                    <span key={f} className="px-3 py-1 text-xs font-medium rounded-full bg-accent/10 text-accent border border-accent/20">
+                                    <span key={f} className="px-3 py-1 text-xs font-medium rounded-xl bg-accent/10 text-accent border border-accent/20">
                                         {f}
                                     </span>
                                 ))}
@@ -64,19 +64,19 @@ const PortfolioContent = ({ data }: { data: any }) => {
 
                         <div className="lg:col-span-2 md:columns-2 md:[column-gap:1rem]">
                             {/* Frontend Skill Card */}
-                            <GlassCard className="p-6 space-y-4 hover:border-accent/40 transition-all duration-500 break-inside-avoid mb-4">
-                                <Typography element="h3" className="text-xl font-bold flex items-center gap-2">
-                                    <div className="w-2 h-2 rounded-full bg-accent" />
+                            <GlassCard className="p-8 space-y-6 hover:border-accent/40 transition-all duration-500 break-inside-avoid mb-6">
+                                <Typography element="h3" className="text-xl font-bold text-foreground flex items-center gap-3">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-accent" />
                                     {skills.frontendTitle || "Frontend Engineering"}
                                 </Typography>
-                                <div className="space-y-3">
+                                <div className="space-y-6">
                                     {skills.frontend?.map((skill: any) => (
-                                        <div key={skill.name} className="space-y-1">
-                                            <div className="flex justify-between text-xs font-medium uppercase tracking-wider text-foreground/60">
-                                                <span>{skill.name}</span>
-                                                <span>{skill.level}%</span>
+                                        <div key={skill.name} className="space-y-2">
+                                            <div className="flex justify-between text-sm">
+                                                <span className="text-foreground font-medium">{skill.name}</span>
+                                                <span className="text-muted-foreground font-mono">{skill.level}%</span>
                                             </div>
-                                            <div className="h-1 w-full bg-accent/5 rounded-full overflow-hidden">
+                                            <div className="h-2 w-full bg-foreground/5 rounded-full overflow-hidden">
                                                 <motion.div
                                                     initial={{ width: 0 }}
                                                     whileInView={{ width: `${skill.level}%` }}
@@ -91,32 +91,32 @@ const PortfolioContent = ({ data }: { data: any }) => {
 
                             <div className="space-y-4">
                                 {/* Mobile & Backend Cards */}
-                                <GlassCard className="p-6 space-y-3 break-inside-avoid mb-4">
-                                    <Typography element="h3" className="text-lg font-bold">{skills.mobileTitle || "Mobile Development"}</Typography>
+                                <GlassCard className="p-6 space-y-4 break-inside-avoid mb-6">
+                                    <Typography element="h3" className="text-sm font-semibold text-accent uppercase tracking-widest">{skills.mobileTitle || "Mobile Development"}</Typography>
                                     <div className="flex flex-wrap gap-2">
                                         {skills.mobile?.map((m: string) => (
-                                            <span key={m} className="px-3 py-1 text-xs rounded-lg bg-foreground/5 border border-foreground/10 text-foreground/80">
+                                            <span key={m} className="px-3 py-1 text-xs font-medium rounded-xl bg-foreground/5 border border-foreground/10 text-muted-foreground hover:bg-foreground/10 transition-colors">
                                                 {m}
                                             </span>
                                         ))}
                                     </div>
                                 </GlassCard>
 
-                                <GlassCard className="p-6 space-y-3 break-inside-avoid mb-4">
-                                    <Typography element="h3" className="text-lg font-bold">{skills.backendTitle || "Cloud & Backend"}</Typography>
+                                <GlassCard className="p-6 space-y-4 break-inside-avoid mb-6">
+                                    <Typography element="h3" className="text-sm font-semibold text-accent uppercase tracking-widest">{skills.backendTitle || "Cloud & Backend"}</Typography>
                                     <div className="flex flex-wrap gap-2">
                                         {skills.backend?.map((b: string) => (
-                                            <span key={b} className="px-3 py-1 text-xs rounded-lg bg-foreground/5 border border-foreground/10 text-foreground/80">
+                                            <span key={b} className="px-3 py-1 text-xs font-medium rounded-xl bg-foreground/5 border border-foreground/10 text-muted-foreground hover:bg-foreground/10 transition-colors">
                                                 {b}
                                             </span>
                                         ))}
                                     </div>
                                 </GlassCard>
 
-                                <GlassCard className="p-6 space-y-3 break-inside-avoid mb-4">
-                                    <Typography element="h3" className="text-lg font-bold">{skills.toolsTitle || "Workflow & Tools"}</Typography>
-                                    <div className="flex flex-wrap gap-2 text-xs text-foreground/60">
-                                        {skills.tools?.join(" | ")}
+                                <GlassCard className="p-6 space-y-4 break-inside-avoid mb-6">
+                                    <Typography element="h3" className="text-sm font-semibold text-accent uppercase tracking-widest">{skills.toolsTitle || "Workflow & Tools"}</Typography>
+                                    <div className="flex flex-wrap gap-3 text-xs text-muted-foreground font-medium">
+                                        {skills.tools?.join(" • ")}
                                     </div>
                                 </GlassCard>
 
@@ -156,17 +156,17 @@ const PortfolioContent = ({ data }: { data: any }) => {
                                             const isObjectList = typeof list[0] === "object" && list[0] !== null && 'name' in list[0];
 
                                             return (
-                                                <GlassCard key={key} className="p-6 space-y-3 break-inside-avoid mb-4">
-                                                    <Typography element="h3" className="text-lg font-bold">{title}</Typography>
+                                                <GlassCard key={key} className="p-6 space-y-4 break-inside-avoid mb-6">
+                                                    <Typography element="h3" className="text-sm font-semibold text-accent uppercase tracking-widest">{title}</Typography>
                                                     {isObjectList ? (
-                                                        <div className="space-y-3">
+                                                        <div className="space-y-4">
                                                             {list.map((item: any) => (
-                                                                <div key={item.name} className="space-y-1">
-                                                                    <div className="flex justify-between text-xs font-medium uppercase tracking-wider text-foreground/60">
-                                                                        <span>{item.name}</span>
-                                                                        {item.level !== undefined && <span>{item.level}%</span>}
+                                                                <div key={item.name} className="space-y-2">
+                                                                    <div className="flex justify-between text-sm">
+                                                                        <span className="text-foreground font-medium">{item.name}</span>
+                                                                        {item.level !== undefined && <span className="text-muted-foreground font-mono">{item.level}%</span>}
                                                                     </div>
-                                                                    <div className="h-1 w-full bg-accent/5 rounded-full overflow-hidden">
+                                                                    <div className="h-2 w-full bg-foreground/5 rounded-full overflow-hidden">
                                                                         <motion.div
                                                                             initial={{ width: 0 }}
                                                                             whileInView={{ width: `${item.level ?? 0}%` }}
@@ -180,7 +180,7 @@ const PortfolioContent = ({ data }: { data: any }) => {
                                                     ) : (
                                                         <div className="flex flex-wrap gap-2">
                                                             {list.map((item) => (
-                                                                <span key={String(item)} className="px-3 py-1 text-xs rounded-lg bg-foreground/5 border border-foreground/10 text-foreground/80">
+                                                                <span key={String(item)} className="px-3 py-1 text-xs font-medium rounded-xl bg-foreground/5 border border-foreground/10 text-muted-foreground hover:bg-foreground/10 transition-colors">
                                                                     {String(item)}
                                                                 </span>
                                                             ))}

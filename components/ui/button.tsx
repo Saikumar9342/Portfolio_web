@@ -10,19 +10,19 @@ const buttonVariants = cva(
         variants: {
             variant: {
                 default:
-                    "bg-accent text-accent-foreground hover:bg-accent/90 shadow-lg",
+                    "bg-accent text-accent-foreground hover:bg-accent/90 shadow-lg px-8",
                 glass:
-                    "glass-panel text-foreground",
+                    "glass-panel text-foreground px-8",
                 outline:
-                    "border border-foreground/10 bg-transparent text-foreground hover:bg-foreground/5",
+                    "border border-foreground/10 bg-transparent text-foreground hover:bg-foreground/5 px-8",
                 ghost: "bg-transparent text-foreground hover:bg-foreground/5",
                 link: "text-accent underline-offset-4 hover:underline",
             },
             size: {
                 default: "h-10 px-6",
-                sm: "h-8 rounded-md px-3 text-xs",
-                lg: "h-12 rounded-full px-10",
-                icon: "h-9 w-9",
+                sm: "h-8 px-3 text-xs",
+                lg: "h-14 px-12 text-base",
+                icon: "h-10 w-10",
             },
         },
         defaultVariants: {

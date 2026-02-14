@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { Project, HeroData, AboutData, ExpertiseData, SkillsData, ContactData, NavbarData, SocialLink } from "@/types";
+import { Project, HeroData, AboutData, ExpertiseData, SkillsData, ContactData, NavbarData, SocialLink, ProjectsPageData } from "@/types";
 import { portfolioData } from "@/lib/data";
 
 export interface PortfolioContent {
@@ -13,6 +13,7 @@ export interface PortfolioContent {
     skills: SkillsData;
     contact: ContactData;
     navbar: NavbarData;
+    projectsPage: ProjectsPageData;
     projects: Project[];
     name: string;
     role: string;
@@ -53,6 +54,8 @@ const emptyData: PortfolioContent = {
     about: {
         title: portfolioData.about.title,
         biography: portfolioData.about.biography,
+        biographyLabel: (portfolioData.about as any).biographyLabel || "Biography",
+        educationLabel: (portfolioData.about as any).educationLabel || "Education",
         education: portfolioData.about.education,
         location: portfolioData.about.location,
         interests: portfolioData.about.interests,
@@ -85,9 +88,24 @@ const emptyData: PortfolioContent = {
         personalEmail: portfolioData.contact.personalEmail,
         cta: portfolioData.contact.cta,
         secondaryCta: portfolioData.contact.secondaryCta,
-        resumeUrl: ""
+        resumeUrl: "",
+        formNameLabel: portfolioData.contact.formNameLabel,
+        formNamePlaceholder: portfolioData.contact.formNamePlaceholder,
+        formEmailLabel: portfolioData.contact.formEmailLabel,
+        formEmailPlaceholder: portfolioData.contact.formEmailPlaceholder,
+        formSubjectLabel: portfolioData.contact.formSubjectLabel,
+        formSubjectPlaceholder: portfolioData.contact.formSubjectPlaceholder,
+        formMessageLabel: portfolioData.contact.formMessageLabel,
+        formMessagePlaceholder: portfolioData.contact.formMessagePlaceholder,
+        formSubmitButton: portfolioData.contact.formSubmitButton,
     },
     navbar: { logoText: "S", ctaText: "Hire Me", items: [] },
+    projectsPage: (portfolioData as any).projectsPage || {
+        title: "Selected",
+        titleHighlight: "Works",
+        label: "Works Portfolio",
+        description: "A curated collection of digital experiences, focusing on high-performance interfaces and elegant mobile interactions."
+    },
     projects: portfolioData.projects as Project[],
     name: portfolioData.name,
     role: portfolioData.role
@@ -129,11 +147,23 @@ export function usePortfolio(userId?: string) {
                     newContent[id] = { ...emptyData.skills, ...docData };
                 } else if (id === 'about') {
                     const socialLinks = normalizeSocialLinks(docData.socialLinks);
-                    newContent[id] = { ...emptyData.about, ...docData, socialLinks };
+                    newContent[id] = {
+                        ...emptyData.about,
+                        ...docData,
+                        biographyLabel: docData.biographyLabel || emptyData.about.biographyLabel,
+                        educationLabel: docData.educationLabel || emptyData.about.educationLabel,
+                        socialLinks
+                    };
                 } else if (id === 'expertise') {
                     newContent[id] = { ...emptyData.expertise, ...docData };
                 } else if (id === 'hero') {
-                    newContent[id] = { ...emptyData.hero, ...docData };
+                    newContent[id] = {
+                        ...emptyData.hero,
+                        ...docData,
+                        secondaryCtaHref: docData.secondaryCtaHref || emptyData.hero.secondaryCtaHref || ""
+                    };
+                } else if (id === 'projects_page') {
+                    newContent.projectsPage = { ...emptyData.projectsPage, ...docData };
                 } else if (id === 'contact') {
                     const d = docData;
                     newContent[id] = {
@@ -144,6 +174,15 @@ export function usePortfolio(userId?: string) {
                         cta: d.cta || emptyData.contact.cta,
                         secondaryCta: d.secondaryCta || emptyData.contact.secondaryCta,
                         resumeUrl: d.resumeUrl || "",
+                        formNameLabel: d.formNameLabel || emptyData.contact.formNameLabel,
+                        formNamePlaceholder: d.formNamePlaceholder || emptyData.contact.formNamePlaceholder,
+                        formEmailLabel: d.formEmailLabel || emptyData.contact.formEmailLabel,
+                        formEmailPlaceholder: d.formEmailPlaceholder || emptyData.contact.formEmailPlaceholder,
+                        formSubjectLabel: d.formSubjectLabel || emptyData.contact.formSubjectLabel,
+                        formSubjectPlaceholder: d.formSubjectPlaceholder || emptyData.contact.formSubjectPlaceholder,
+                        formMessageLabel: d.formMessageLabel || emptyData.contact.formMessageLabel,
+                        formMessagePlaceholder: d.formMessagePlaceholder || emptyData.contact.formMessagePlaceholder,
+                        formSubmitButton: d.formSubmitButton || emptyData.contact.formSubmitButton,
                     } as ContactData;
                 } else if (id === 'navbar') {
                     newContent[id] = { ...emptyData.navbar, ...docData };

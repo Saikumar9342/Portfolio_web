@@ -29,9 +29,9 @@ export function ProjectShowcase({ projects, onProjectClick }: ProjectShowcasePro
                         onClick={() => onProjectClick(project)}
                     >
                         {/* Glow effect */}
-                        <div className="absolute -inset-4 bg-accent/20 rounded-[2rem] blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+                        <div className="absolute -inset-4 bg-accent/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
 
-                        <div className="relative aspect-[16/10] overflow-hidden rounded-[1.5rem] bg-foreground/5 transform transition-transform duration-1000 group-hover:scale-[0.98]">
+                        <div className="relative aspect-[16/10] overflow-hidden rounded-3xl border border-foreground/10 bg-foreground/5 transform transition-transform duration-1000 group-hover:scale-[0.99] shadow-2xl">
                             <Image
                                 src={project.imageUrl || "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1000&auto=format&fit=crop"}
                                 alt={project.title}

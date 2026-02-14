@@ -20,12 +20,15 @@ export interface HeroData {
     subtitle: string;
     cta: string;
     secondaryCta: string;
+    secondaryCtaHref?: string;
     imageUrl?: string;
 }
 
 export interface AboutData {
     title: string;
     biography: string;
+    biographyLabel?: string;
+    educationLabel?: string;
     education: Education[];
     location: string;
     interests: string[];
@@ -85,6 +88,16 @@ export interface ContactData {
     cta: string;
     secondaryCta: string;
     resumeUrl?: string;
+    // Form Dynamic Fields
+    formNameLabel?: string;
+    formNamePlaceholder?: string;
+    formEmailLabel?: string;
+    formEmailPlaceholder?: string;
+    formSubjectLabel?: string;
+    formSubjectPlaceholder?: string;
+    formMessageLabel?: string;
+    formMessagePlaceholder?: string;
+    formSubmitButton?: string;
 }
 
 export interface SocialLink {
@@ -97,6 +110,13 @@ export interface NavbarData {
     logoText: string;
     items: NavItem[];
     ctaText: string;
+}
+
+export interface ProjectsPageData {
+    title: string;
+    titleHighlight: string;
+    label: string;
+    description: string;
 }
 
 export interface NavItem {

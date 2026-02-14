@@ -1,13 +1,18 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Loader2, Github, Linkedin, Twitter, Globe, Copy, Check } from "lucide-react";
-import { useState, type MouseEvent } from "react";
-import { Typography } from "@/components/ui/layout";
+import { motion, AnimatePresence } from "framer-motion";
+import { Loader2, Github, Linkedin, Twitter, Globe, Copy, Check, Send } from "lucide-react";
+import { useState, type MouseEvent, type FormEvent } from "react";
+import { Typography, GlassCard } from "@/components/ui/layout";
 import { Button, buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
 import { ContactData, AboutData, NavbarData } from "@/types";
 import { BrandLogo } from "../ui/BrandLogo";
+import { Input } from "../ui/input";
+import { Textarea } from "../ui/textarea";
+import { db } from "@/lib/firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { useToast } from "../ui/Toast";
 
 interface FooterProps {
     contact: ContactData;
@@ -19,6 +24,18 @@ interface FooterProps {
 export function Footer({ contact, about, navbar, name }: FooterProps) {
     const [isDownloadingResume, setIsDownloadingResume] = useState(false);
     const [isCopied, setIsCopied] = useState(false);
+    const { push } = useToast();
+
+    // Form State
+    const [formData, setFormData] = useState({
+        name: "",
+        email: "",
+        subject: "",
+        message: ""
+    });
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitSuccess, setSubmitSuccess] = useState(false);
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const resumeUrl = contact.resumeUrl || "/Saikumar.p_FrontendDeveloper.pdf";
     const isCloudinary = resumeUrl.includes("res.cloudinary.com");
 
@@ -68,48 +85,202 @@ export function Footer({ contact, about, navbar, name }: FooterProps) {
         setTimeout(() => setIsCopied(false), 2000);
     };
 
+    const handleFormSubmit = async (e: FormEvent) => {
+        e.preventDefault();
+        setErrors({});
+
+        // Validation Logic
+        const name = formData.name.trim();
+        const email = formData.email.trim();
+        const message = formData.message.trim();
+        const newErrors: { [key: string]: string } = {};
+
+        if (name.length < 2) {
+            newErrors.name = "Name must be at least 2 characters.";
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            newErrors.email = "Please enter a valid email address.";
+        }
+
+        if (message.length < 10) {
+            newErrors.message = "Message must be at least 10 characters.";
+        }
+
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            return;
+        }
+
+        setIsSubmitting(true);
+        try {
+            await addDoc(collection(db, "messages"), {
+                ...formData,
+                name,
+                email,
+                message,
+                status: "unread",
+                timestamp: serverTimestamp(),
+            });
+
+            setSubmitSuccess(true);
+            setFormData({ name: "", email: "", subject: "", message: "" });
+            setTimeout(() => setSubmitSuccess(false), 5000);
+        } catch (error) {
+            console.error("Error sending message:", error);
+            push("Failed to send message. Please try again.");
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
     return (
         <footer id="contact" className="min-h-screen flex flex-col justify-center relative overflow-hidden border-t border-foreground/10 bg-foreground/5">
             <div className="container px-6 mx-auto max-w-6xl relative z-10 flex flex-col justify-center py-12 md:py-24">
-                {/* Contact CTA Section */}
-                <div className="mb-16 text-center space-y-8 max-w-3xl mx-auto">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        className="space-y-6"
-                    >
-                        <Typography element="h2" className="text-5xl md:text-6xl font-black uppercase tracking-tighter text-foreground">
-                            {contact.title}
-                        </Typography>
-                        <Typography className="text-lg text-muted-foreground leading-relaxed">
-                            {contact.description}
-                        </Typography>
-                        <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-                            <a
-                                href={`mailto:${contact.email}?subject=Portfolio Inquiry`}
-                                className={buttonVariants({
-                                    size: "lg",
-                                    className: "rounded-2xl px-12 h-16 text-sm font-black uppercase tracking-widest shadow-2xl shadow-accent/20"
-                                })}
-                            >
-                                {contact.cta}
-                            </a>
-                            <a
-                                href={resumeDownloadUrl}
-                                onClick={handleResumeDownload}
-                                download="resume.pdf"
-                                aria-busy={isDownloadingResume}
-                                className={`rounded-2xl px-12 h-16 flex items-center justify-center gap-2 text-sm font-black uppercase tracking-widest border border-foreground/10 text-foreground transition-all duration-300 ${isDownloadingResume
-                                    ? "opacity-80 cursor-not-allowed"
-                                    : "hover:bg-foreground/10"
-                                    }`}
-                            >
-                                {isDownloadingResume && <Loader2 className="w-4 h-4 animate-spin" />}
-                                {isDownloadingResume ? "Processing..." : contact.secondaryCta}
-                            </a>
-                        </div>
-                    </motion.div>
+                {/* Contact Section */}
+                <div className="mb-16">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                        <motion.div
+                            initial={{ opacity: 0, x: -30 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            className="space-y-8"
+                        >
+                            <div className="space-y-6">
+                                <Typography element="h2" className="text-4xl md:text-5xl font-semibold tracking-tight text-foreground">
+                                    {contact.title}
+                                </Typography>
+                                <Typography className="text-lg text-muted-foreground leading-relaxed">
+                                    {contact.description}
+                                </Typography>
+                            </div>
+
+                            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                                <a
+                                    href={`mailto:${contact.email}?subject=Portfolio Inquiry`}
+                                    className={buttonVariants({
+                                        size: "lg",
+                                        className: "rounded-none px-12 h-16 text-sm font-bold uppercase tracking-widest shadow-2xl shadow-accent/10 hover:bg-accent hover:text-accent-foreground transition-all duration-300 active:scale-95"
+                                    })}
+                                >
+                                    {contact.cta}
+                                </a>
+                                <a
+                                    href={resumeDownloadUrl}
+                                    onClick={handleResumeDownload}
+                                    download="resume.pdf"
+                                    aria-busy={isDownloadingResume}
+                                    className={`rounded-none px-12 h-16 flex items-center justify-center gap-2 text-sm font-bold uppercase tracking-widest border border-foreground/20 text-foreground transition-all duration-300 hover:bg-foreground/5 active:scale-95 ${isDownloadingResume ? "opacity-80 cursor-not-allowed" : ""}`}
+                                >
+                                    {isDownloadingResume && <Loader2 className="w-4 h-4 animate-spin" />}
+                                    {isDownloadingResume ? "Processing..." : contact.secondaryCta}
+                                </a>
+                            </div>
+                        </motion.div>
+
+                        <motion.div
+                            initial={{ opacity: 0, x: 30 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                        >
+                            <GlassCard className="form-glass p-8 md:p-12 border border-foreground/15 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] rounded-none relative bg-black/40 backdrop-blur-3xl overflow-visible">
+                                <div className="absolute -top-px -left-px w-12 h-12 border-t-2 border-l-2 border-accent z-20" />
+                                <div className="absolute -bottom-px -right-px w-12 h-12 border-b-2 border-r-2 border-accent z-20" />
+
+                                <AnimatePresence mode="wait">
+                                    {submitSuccess ? (
+                                        <motion.div
+                                            key="success"
+                                            initial={{ opacity: 0, scale: 0.95 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            exit={{ opacity: 0, scale: 1.05 }}
+                                            className="flex flex-col items-center justify-center py-12 text-center space-y-4"
+                                        >
+                                            <div className="w-20 h-20 rounded-none border-2 border-accent flex items-center justify-center mb-4">
+                                                <Check className="w-10 h-10 text-accent" />
+                                            </div>
+                                            <Typography className="text-xl font-bold uppercase tracking-tight text-foreground">
+                                                Message Received
+                                            </Typography>
+                                            <Typography className="text-sm text-muted-foreground max-w-[280px]">
+                                                Thank you for reaching out. I've received your inquiry and will get back to you shortly.
+                                            </Typography>
+                                            <Button
+                                                variant="outline"
+                                                className="mt-6 rounded-none uppercase tracking-[0.2em] text-[10px] font-bold"
+                                                onClick={() => setSubmitSuccess(false)}
+                                            >
+                                                Send Another
+                                            </Button>
+                                        </motion.div>
+                                    ) : (
+                                        <form onSubmit={handleFormSubmit} className="space-y-6">
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                <div className="space-y-2">
+                                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-accent/80 px-1">{contact.formNameLabel || "Full Name"}</label>
+                                                    <Input
+                                                        placeholder={contact.formNamePlaceholder || "John Doe"}
+                                                        className={`h-14 !bg-black/20 border-foreground/10 rounded-none focus:ring-1 focus:ring-accent text-foreground transition-all placeholder:text-muted-foreground/30 ${errors.name ? 'border-red-500/50 ring-1 ring-red-500/20' : ''}`}
+                                                        value={formData.name}
+                                                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                                        required
+                                                    />
+                                                    {errors.name && <p className="text-[10px] text-red-500 font-bold uppercase tracking-wider px-1">{errors.name}</p>}
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-accent/80 px-1">{contact.formEmailLabel || "Email Address"}</label>
+                                                    <Input
+                                                        type="email"
+                                                        placeholder={contact.formEmailPlaceholder || "john@example.com"}
+                                                        className={`h-14 !bg-black/20 border-foreground/10 rounded-none focus:ring-1 focus:ring-accent text-foreground transition-all placeholder:text-muted-foreground/30 ${errors.email ? 'border-red-500/50 ring-1 ring-red-500/20' : ''}`}
+                                                        value={formData.email}
+                                                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                                        required
+                                                    />
+                                                    {errors.email && <p className="text-[10px] text-red-500 font-bold uppercase tracking-wider px-1">{errors.email}</p>}
+                                                </div>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-accent/80 px-1">{contact.formSubjectLabel || "Subject (Optional)"}</label>
+                                                <Input
+                                                    placeholder={contact.formSubjectPlaceholder || "Project Inquiry"}
+                                                    className="h-14 !bg-black/20 border-foreground/10 rounded-none focus:ring-1 focus:ring-accent text-foreground transition-all placeholder:text-muted-foreground/30"
+                                                    value={formData.subject}
+                                                    onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                                                />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-accent/80 px-1">{contact.formMessageLabel || "Your Message"}</label>
+                                                <Textarea
+                                                    placeholder={contact.formMessagePlaceholder || "How can I help you?"}
+                                                    className={`min-h-[140px] !bg-black/20 border-foreground/10 rounded-none focus:ring-1 focus:ring-accent text-foreground resize-none transition-all placeholder:text-muted-foreground/30 ${errors.message ? 'border-red-500/50 ring-1 ring-red-500/20' : ''}`}
+                                                    value={formData.message}
+                                                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                                                    required
+                                                />
+                                                {errors.message && <p className="text-[10px] text-red-500 font-bold uppercase tracking-wider px-1">{errors.message}</p>}
+                                            </div>
+                                            <Button
+                                                type="submit"
+                                                disabled={isSubmitting}
+                                                className="w-full h-16 rounded-none text-sm font-bold uppercase tracking-[0.4em] shadow-xl shadow-accent/20 flex items-center justify-center gap-3 group bg-accent text-accent-foreground hover:bg-accent/90 transition-all active:scale-[0.98]"
+                                            >
+                                                {isSubmitting ? (
+                                                    <Loader2 className="w-6 h-6 animate-spin" />
+                                                ) : (
+                                                    <>
+                                                        SEND INQUIRY
+                                                        <Send className="w-5 h-5 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+                                                    </>
+                                                )}
+                                            </Button>
+                                        </form>
+                                    )}
+                                </AnimatePresence>
+                            </GlassCard>
+                        </motion.div>
+                    </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 pt-8 border-t border-foreground/10">
@@ -119,7 +290,7 @@ export function Footer({ contact, about, navbar, name }: FooterProps) {
                             <div className="transition-transform group-hover:scale-105">
                                 <BrandLogo className="text-foreground" size={32} />
                             </div>
-                            <span className="text-lg font-bold tracking-tighter text-foreground uppercase">ATOM</span>
+                            <span className="text-lg font-bold tracking-tighter text-foreground uppercase">{name.charAt(0).toLowerCase()}</span>
                         </Link>
                         <Typography className="text-sm text-muted-foreground leading-relaxed max-w-sm font-medium">
                             {about.title}
@@ -190,6 +361,6 @@ export function Footer({ contact, about, navbar, name }: FooterProps) {
                     </div>
                 </div>
             </div>
-        </footer>
+        </footer >
     );
 }

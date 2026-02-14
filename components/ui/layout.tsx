@@ -49,7 +49,7 @@ export function Typography({ children, className, element = "p", gradient = fals
         element === "h1" && "text-4xl md:text-6xl font-extrabold tracking-tight leading-[1.05]",
         element === "h2" && "text-2xl md:text-3xl font-semibold tracking-tight leading-snug",
         element === "h3" && "text-base md:text-lg font-medium tracking-tight",
-        element === "p" && "text-slate-600 text-base md:text-base leading-relaxed",
+        element === "p" && "text-muted-foreground text-base md:text-base leading-relaxed",
         gradient && "text-gradient",
         className
     );

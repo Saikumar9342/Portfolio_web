@@ -55,7 +55,7 @@ export function Navbar({ name, data, contact, loading }: NavbarProps) {
                         <BrandLogo className="text-foreground" size={36} />
                     </motion.div>
                     <div className="hidden sm:flex flex-col">
-                        <span className="text-xl font-black tracking-tighter text-foreground uppercase">ATOM</span>
+                        <span className="text-xl font-bold tracking-tighter text-foreground uppercase">{data?.logoText || name.charAt(0).toLowerCase()}</span>
                     </div>
                 </Link>
 

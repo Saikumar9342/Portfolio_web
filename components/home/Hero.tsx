@@ -52,27 +52,26 @@ export function Hero({ data, role, name, location }: HeroProps) {
                             className="flex flex-wrap gap-4 pt-2"
                         >
                             <Link href="/projects">
-                                <Button size="lg" className="rounded-full px-10 h-14 text-sm font-bold flex items-center gap-3 hover:scale-[1.02] transition-all active:scale-95 group shadow-2xl shadow-accent/20">
+                                <Button size="lg" className="px-8 flex items-center gap-3 hover:scale-[1.02] transition-all active:scale-95 group shadow-2xl shadow-accent/20">
                                     {hero.cta}
-                                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                                 </Button>
                             </Link>
-                            <Link href="/#about">
-                                <Button size="lg" className="rounded-full px-10 h-14 text-sm font-bold border-border bg-transparent hover:bg-foreground/5 text-foreground transition-all duration-300" variant="outline">
-                                    About
+                            <Link href={hero.secondaryCtaHref || "/#about"}>
+                                <Button size="lg" className="px-8 border-border bg-transparent hover:bg-foreground/5 text-foreground transition-all duration-300" variant="outline">
+                                    {hero.secondaryCta || "About"}
                                 </Button>
                             </Link>
                         </motion.div>
                     </motion.div>
 
-                    {/* Image Content - Prominent & Neat */}
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9, x: 50 }}
                         animate={{ opacity: 1, scale: 1, x: 0 }}
                         transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
                         className="lg:col-span-6 flex justify-center lg:justify-end"
                     >
-                        <div className="relative aspect-[3/4] w-full max-w-md lg:max-w-lg xl:max-w-xl max-h-[75vh] overflow-hidden rounded-[3rem] shadow-2xl group transition-all duration-1000">
+                        <div className="relative aspect-[3/4] w-full max-w-md lg:max-w-lg xl:max-w-xl max-h-[75vh] overflow-hidden rounded-[2rem] shadow-2xl group transition-all duration-1000 border border-foreground/10">
                             {/* Smooth hover zoom */}
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
@@ -82,7 +81,7 @@ export function Hero({ data, role, name, location }: HeroProps) {
                             />
 
                             {/* Seamless mix: No border, no hard overlay */}
-                            <div className="absolute inset-0 ring-1 ring-inset ring-white/5 rounded-[3rem] pointer-events-none" />
+                            <div className="absolute inset-0 ring-1 ring-inset ring-white/5 pointer-events-none" />
                         </div>
                     </motion.div>
                 </div>

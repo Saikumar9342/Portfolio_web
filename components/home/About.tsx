@@ -38,7 +38,7 @@ export function About({ about, expertise, contact }: AboutProps) {
                     <div className="space-y-6">
                         <div className="flex justify-between items-center">
                             <Typography className="text-sm font-semibold text-accent tracking-widest uppercase">
-                                Biography
+                                {about.biographyLabel || "Biography"}
                             </Typography>
                             {about.location && (
                                 <div className="flex items-center gap-2 text-muted-foreground">
@@ -75,7 +75,7 @@ export function About({ about, expertise, contact }: AboutProps) {
 
                     <div className="space-y-6">
                         <Typography className="text-sm font-semibold text-accent tracking-widest uppercase">
-                            Education
+                            {about.educationLabel || "Education"}
                         </Typography>
                         <div className="space-y-4">
                             {about.education?.map((edu) => (

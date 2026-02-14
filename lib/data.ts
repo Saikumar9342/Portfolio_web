@@ -102,10 +102,18 @@ export const portfolioData = {
         ],
         location: "Vizag, Andhra Pradesh",
         interests: ["3D Web Development", "Fintech Innovations", "Open Source", "UI/UX Research"],
+        biographyLabel: "Biography",
+        educationLabel: "Education",
         socialLinks: [
             { platform: 'github', url: 'https://github.com/saikumarpasumarthi' },
             { platform: 'linkedin', url: 'https://linkedin.com/in/saikumar-pasumarthi' }
         ]
+    },
+    projectsPage: {
+        title: "Selected",
+        titleHighlight: "Works",
+        label: "Works Portfolio",
+        description: "A curated collection of digital experiences, focusing on high-performance interfaces and elegant mobile interactions."
     },
     contact: {
         title: "LET'S BUILD THE FUTURE.",
@@ -113,6 +121,15 @@ export const portfolioData = {
         email: "saikumar.p@finsolconsultancy.com",
         personalEmail: "saikumarp@gmail.com",
         cta: "Start a Project",
-        secondaryCta: "Download Resume"
+        secondaryCta: "Download Resume",
+        formNameLabel: "Full Name",
+        formNamePlaceholder: "John Doe",
+        formEmailLabel: "Email Address",
+        formEmailPlaceholder: "john@example.com",
+        formSubjectLabel: "Subject (Optional)",
+        formSubjectPlaceholder: "Project Inquiry",
+        formMessageLabel: "Your Message",
+        formMessagePlaceholder: "How can I help you?",
+        formSubmitButton: "Send Message"
     }
 };
