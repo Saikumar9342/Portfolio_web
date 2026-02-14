@@ -70,7 +70,7 @@ export function Navbar({ name, data, contact, loading }: NavbarProps) {
                             >
                                 {item.label}
                                 <motion.span
-                                    className="absolute bottom-0 left-0 w-0 h-0.5 bg-accent transition-all duration-300 group-hover:w-full"
+                                    className="absolute bottom-0 left-0 w-0 h-0.5 bg-accent rounded-full transition-all duration-300 group-hover:w-full"
                                     layoutId="nav-underline"
                                 />
                             </Link>

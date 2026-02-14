@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Section, Typography } from "@/components/ui/layout";
-// import { portfolioData } from "@/lib/data";
+
 import * as Icons from "lucide-react";
 import { PortfolioContent } from "@/hooks/usePortfolio";
 

@@ -6,7 +6,7 @@ import { Button } from "../ui/button";
 import { Typography } from "../ui/layout";
 import Link from "next/link";
 import { useDynamicColor } from "@/hooks/useDynamicColor";
-// import { portfolioData } from "@/lib/data";
+
 import { PortfolioContent } from "@/hooks/usePortfolio";
 
 interface HeroProps {
