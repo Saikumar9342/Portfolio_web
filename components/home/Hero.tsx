@@ -71,7 +71,7 @@ export function Hero({ data, role, name, location }: HeroProps) {
                         transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
                         className="lg:col-span-6 flex justify-center lg:justify-end"
                     >
-                        <div className="relative aspect-[3/4] w-full max-w-md lg:max-w-lg xl:max-w-xl max-h-[75vh] overflow-hidden rounded-[2rem] shadow-2xl group transition-all duration-1000 border border-foreground/10">
+                        <div className="relative aspect-[3/4] w-full max-w-md lg:max-w-lg xl:max-w-xl max-h-[75vh] overflow-hidden rounded-none group transition-all duration-1000">
                             {/* Smooth hover zoom */}
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
@@ -79,9 +79,6 @@ export function Hero({ data, role, name, location }: HeroProps) {
                                 alt={name}
                                 className="w-full h-full object-cover object-center transition-transform duration-1000 group-hover:scale-105"
                             />
-
-                            {/* Seamless mix: No border, no hard overlay */}
-                            <div className="absolute inset-0 ring-1 ring-inset ring-white/5 pointer-events-none" />
                         </div>
                     </motion.div>
                 </div>

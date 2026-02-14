@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { Section, Typography } from "@/components/ui/layout";
 // import { portfolioData } from "@/lib/data";
-import { Code2, Layout, Maximize2, MapPin, Github, Linkedin, Twitter, Globe } from "lucide-react";
+import * as Icons from "lucide-react";
 import { PortfolioContent } from "@/hooks/usePortfolio";
 
 interface AboutProps {
@@ -14,18 +14,17 @@ interface AboutProps {
 
 export function About({ about, expertise, contact }: AboutProps) {
 
-    const icons = {
-        immersive: <Code2 className="w-6 h-6 text-accent" />,
-        motion: <Maximize2 className="w-6 h-6 text-accent" />,
-        visual: <Layout className="w-6 h-6 text-accent" />
+    const getServiceIcon = (service: any) => {
+        const IconComponent = (Icons as any)[service.icon] || (Icons as any)[service.id] || Icons.Code2;
+        return <IconComponent className="w-6 h-6 text-accent" />;
     };
 
     const getSocialIcon = (platform: string) => {
         switch (platform.toLowerCase()) {
-            case 'github': return <Github className="w-5 h-5" />;
-            case 'linkedin': return <Linkedin className="w-5 h-5" />;
-            case 'twitter': return <Twitter className="w-5 h-5" />;
-            default: return <Globe className="w-5 h-5" />;
+            case 'github': return <Icons.Github className="w-5 h-5" />;
+            case 'linkedin': return <Icons.Linkedin className="w-5 h-5" />;
+            case 'twitter': return <Icons.Twitter className="w-5 h-5" />;
+            default: return <Icons.Globe className="w-5 h-5" />;
         }
     };
 
@@ -34,7 +33,13 @@ export function About({ about, expertise, contact }: AboutProps) {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
 
                 {/* Left Side: Biography & Education */}
-                <div className="space-y-12">
+                <motion.div
+                    initial={{ opacity: 0, x: -50 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true, margin: "-100px" }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
+                    className="space-y-12"
+                >
                     <div className="space-y-6">
                         <div className="flex justify-between items-center">
                             <Typography className="text-sm font-semibold text-accent tracking-widest uppercase">
@@ -42,7 +47,7 @@ export function About({ about, expertise, contact }: AboutProps) {
                             </Typography>
                             {about.location && (
                                 <div className="flex items-center gap-2 text-muted-foreground">
-                                    <MapPin className="w-4 h-4 text-accent" />
+                                    <Icons.MapPin className="w-4 h-4 text-accent" />
                                     <span className="text-xs font-medium uppercase tracking-wider">{about.location}</span>
                                 </div>
                             )}
@@ -78,21 +83,34 @@ export function About({ about, expertise, contact }: AboutProps) {
                             {about.educationLabel || "Education"}
                         </Typography>
                         <div className="space-y-4">
-                            {about.education?.map((edu) => (
-                                <div key={edu.institution} className="p-6 rounded-2xl border border-foreground/10 bg-foreground/5 group hover:bg-foreground/10 transition-colors">
+                            {about.education?.map((edu, idx) => (
+                                <motion.div
+                                    key={edu.institution}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ delay: idx * 0.1 }}
+                                    className="p-6 rounded-2xl border border-foreground/10 bg-foreground/5 group hover:bg-foreground/10 transition-colors"
+                                >
                                     <Typography className="text-lg font-bold text-foreground mb-1">{edu.degree}</Typography>
                                     <div className="flex justify-between items-center text-sm text-muted-foreground">
                                         <span>{edu.institution}</span>
                                         <span className="font-mono">{edu.year}</span>
                                     </div>
-                                </div>
+                                </motion.div>
                             ))}
                         </div>
                     </div>
-                </div>
+                </motion.div>
 
                 {/* Right Side: Services & Stats */}
-                <div className="space-y-16">
+                <motion.div
+                    initial={{ opacity: 0, x: 50 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true, margin: "-100px" }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
+                    className="space-y-16"
+                >
                     <div className="space-y-8">
                         <Typography className="text-sm font-semibold text-accent tracking-widest uppercase">
                             What I Do
@@ -107,7 +125,7 @@ export function About({ about, expertise, contact }: AboutProps) {
                                     className="flex gap-6 items-start group"
                                 >
                                     <div className="p-3 rounded-xl bg-accent/5 border border-accent/10 transition-transform group-hover:scale-110 duration-300">
-                                        {(icons as any)[service.id]}
+                                        {getServiceIcon(service)}
                                     </div>
                                     <div className="space-y-2">
                                         <Typography element="h3" className="text-xl font-bold text-foreground">
@@ -138,7 +156,7 @@ export function About({ about, expertise, contact }: AboutProps) {
                             </motion.div>
                         ))}
                     </div>
-                </div>
+                </motion.div>
             </div>
         </Section>
     );

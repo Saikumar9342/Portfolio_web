@@ -6,12 +6,13 @@ import { Typography } from "../ui/layout";
 import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 
+import Link from "next/link";
+
 interface ProjectShowcaseProps {
     projects: Project[];
-    onProjectClick: (project: Project) => void;
 }
 
-export function ProjectShowcase({ projects, onProjectClick }: ProjectShowcaseProps) {
+export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
     return (
         <div className="space-y-32 md:space-y-64">
             {projects?.map((project, index) => (
@@ -24,9 +25,9 @@ export function ProjectShowcase({ projects, onProjectClick }: ProjectShowcasePro
                     className={`flex flex-col ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-12 lg:gap-24 items-center`}
                 >
                     {/* Image Section - The "Stage" */}
-                    <div
+                    <Link
+                        href={`/projects/${project.id}`}
                         className="relative w-full lg:w-3/5 group cursor-pointer"
-                        onClick={() => onProjectClick(project)}
                     >
                         {/* Glow effect */}
                         <div className="absolute -inset-4 bg-accent/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
@@ -41,7 +42,7 @@ export function ProjectShowcase({ projects, onProjectClick }: ProjectShowcasePro
                             {/* Sophisticated Overlay */}
                             <div className="absolute inset-0 bg-gradient-to-tr from-background/40 via-transparent to-transparent opacity-60" />
                         </div>
-                    </div>
+                    </Link>
 
                     {/* Content Section - The "Story" */}
                     <div className="w-full lg:w-2/5 space-y-8">
@@ -76,15 +77,15 @@ export function ProjectShowcase({ projects, onProjectClick }: ProjectShowcasePro
                         </div>
 
                         <div className="pt-8">
-                            <button
-                                onClick={() => onProjectClick(project)}
+                            <Link
+                                href={`/projects/${project.id}`}
                                 className="group flex items-center gap-4 text-sm font-black uppercase tracking-[0.3em] text-foreground hover:text-accent transition-colors"
                             >
                                 <span>Explore Project</span>
                                 <div className="w-12 h-12 rounded-full border border-foreground/10 flex items-center justify-center group-hover:border-accent group-hover:bg-accent transition-all duration-500">
                                     <ArrowUpRight className="w-5 h-5 group-hover:text-accent-foreground transition-colors" />
                                 </div>
-                            </button>
+                            </Link>
                         </div>
                     </div>
                 </motion.div>

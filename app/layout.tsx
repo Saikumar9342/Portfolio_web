@@ -1,10 +1,16 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Inter, Outfit } from 'next/font/google'
 import './globals.css'
 
 const inter = Inter({
     subsets: ['latin'],
     variable: '--font-inter',
+    display: 'swap',
+})
+
+const outfit = Outfit({
+    subsets: ['latin'],
+    variable: '--font-outfit',
     display: 'swap',
 })
 
@@ -30,6 +36,7 @@ import dynamic from 'next/dynamic';
 const ScrollToTop = dynamic(() => import('@/components/ui/ScrollToTop').then((m) => m.ScrollToTop), { ssr: false });
 import { ToastProvider } from '@/components/ui/Toast';
 import { ThemeProvider } from '@/hooks/useTheme';
+import { PageTransition } from '@/components/ui/PageTransition';
 
 export default function RootLayout({
     children,
@@ -37,13 +44,16 @@ export default function RootLayout({
     children: React.ReactNode
 }) {
     return (
-        <html lang="en" className={`${inter.variable} scroll-smooth`}>
+        <html lang="en" className={`${inter.variable} ${outfit.variable} scroll-smooth`}>
             <body className="font-sans" suppressHydrationWarning>
+                <div className="noise" />
                 <ThemeProvider>
                     <ToastProvider>
                         <CustomCursor />
                         <ScrollToTop />
-                        {children}
+                        <PageTransition>
+                            {children}
+                        </PageTransition>
                     </ToastProvider>
                 </ThemeProvider>
             </body>

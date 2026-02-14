@@ -45,7 +45,7 @@ export function Navbar({ name, data, contact, loading }: NavbarProps) {
                     : "bg-transparent py-4"
             )}
         >
-            <div className="max-w-6xl mx-auto px-4 md:px-6 flex justify-between items-center">
+            <div className="max-w-7xl mx-auto px-4 md:px-6 flex justify-between items-center">
                 {/* Logo */}
                 <Link href="/" className="flex items-center gap-3 group">
                     <motion.div
@@ -66,26 +66,35 @@ export function Navbar({ name, data, contact, loading }: NavbarProps) {
                             <Link
                                 key={item.label}
                                 href={item.href}
-                                className="text-muted-foreground hover:text-foreground transition-colors"
+                                className="relative text-muted-foreground hover:text-foreground transition-colors group py-2"
                             >
                                 {item.label}
+                                <motion.span
+                                    className="absolute bottom-0 left-0 w-0 h-0.5 bg-accent transition-all duration-300 group-hover:w-full"
+                                    layoutId="nav-underline"
+                                />
                             </Link>
                         ))}
                     </div>
 
                     <div className="flex items-center gap-3">
-                        <Button
-                            className="rounded-lg px-6"
-                            variant="default"
-                            onClick={() => {
-                                const contactSection = document.getElementById("contact");
-                                if (contactSection) {
-                                    contactSection.scrollIntoView({ behavior: "smooth" });
-                                }
-                            }}
+                        <motion.div
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
                         >
-                            {ctaText}
-                        </Button>
+                            <Button
+                                className="rounded-lg px-8 py-6 font-bold text-xs uppercase tracking-widest shadow-xl shadow-accent/10 hover:shadow-accent/20 transition-all"
+                                variant="default"
+                                onClick={() => {
+                                    const contactSection = document.getElementById("contact");
+                                    if (contactSection) {
+                                        contactSection.scrollIntoView({ behavior: "smooth" });
+                                    }
+                                }}
+                            >
+                                {ctaText}
+                            </Button>
+                        </motion.div>
                     </div>
                 </div>
 

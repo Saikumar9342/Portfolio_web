@@ -28,7 +28,7 @@ export function Section({ children, className, id, grid = false, container = tru
                     <div className="architect-corner bottom-0 right-0 border-r border-b opacity-40" />
                 </>
             )}
-            <div className={cn(container && "container mx-auto max-w-6xl px-6 md:px-12 relative z-10")}>
+            <div className={cn(container && "container mx-auto max-w-7xl px-6 md:px-12 relative z-10")}>
                 {children}
             </div>
         </section>
@@ -38,7 +38,7 @@ export function Section({ children, className, id, grid = false, container = tru
 interface TypographyProps {
     children: React.ReactNode;
     className?: string;
-    element?: "h1" | "h2" | "h3" | "p" | "span";
+    element?: "h1" | "h2" | "h3" | "h4" | "h5" | "p" | "span";
     gradient?: boolean;
 }
 
@@ -49,6 +49,8 @@ export function Typography({ children, className, element = "p", gradient = fals
         element === "h1" && "text-4xl md:text-6xl font-extrabold tracking-tight leading-[1.05]",
         element === "h2" && "text-2xl md:text-3xl font-semibold tracking-tight leading-snug",
         element === "h3" && "text-base md:text-lg font-medium tracking-tight",
+        element === "h4" && "text-sm md:text-base font-medium tracking-tight",
+        element === "h5" && "text-xs md:text-sm font-medium tracking-tight",
         element === "p" && "text-muted-foreground text-base md:text-base leading-relaxed",
         gradient && "text-gradient",
         className

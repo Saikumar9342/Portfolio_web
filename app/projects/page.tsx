@@ -16,19 +16,12 @@ import { LoadingScreen } from "@/components/ui/LoadingScreen";
 export default function ProjectsPage() {
     const { data, loading } = usePortfolio();
     const { projects, name, contact, about, hero } = data;
-    const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
 
     // Apply dynamic theme based on first project or hero profile
     const firstProjectImage = projects?.length > 0 ? projects[0].imageUrl : null;
-    useDynamicColor(firstProjectImage || hero?.imageUrl || "/pfp.jpeg");
+    const { isLoading: themeLoading } = useDynamicColor(firstProjectImage || hero?.imageUrl || "/pfp.jpeg");
 
-    const handleProjectClick = (project: Project) => {
-        setSelectedProject(project);
-        setIsModalOpen(true);
-    };
-
-    if (loading) return <LoadingScreen />;
+    if (loading || themeLoading) return <LoadingScreen />;
 
     return (
         <main className="relative min-h-screen bg-background text-foreground overflow-x-hidden">
@@ -71,17 +64,10 @@ export default function ProjectsPage() {
                         <div className="mt-48 mb-64">
                             <ProjectShowcase
                                 projects={projects}
-                                onProjectClick={handleProjectClick}
                             />
                         </div>
                     </div>
                 </section>
-
-                <ProjectModal
-                    project={selectedProject}
-                    isOpen={isModalOpen}
-                    onClose={() => setIsModalOpen(false)}
-                />
 
                 {/* COMBINED CONTACT & FOOTER */}
                 <Footer contact={contact} about={about} navbar={data.navbar} name={name} />

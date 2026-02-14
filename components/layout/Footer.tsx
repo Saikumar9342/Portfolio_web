@@ -137,6 +137,20 @@ export function Footer({ contact, about, navbar, name }: FooterProps) {
 
     return (
         <footer id="contact" className="min-h-screen flex flex-col justify-center relative overflow-hidden border-t border-foreground/10 bg-foreground/5">
+            {/* Ambient Background Elements */}
+            <motion.div
+                animate={{
+                    scale: [1, 1.2, 1],
+                    rotate: [0, 90, 0],
+                }}
+                transition={{
+                    duration: 20,
+                    repeat: Infinity,
+                    ease: "linear"
+                }}
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_center,var(--accent)_0%,transparent_60%)] opacity-[0.03] blur-3xl pointer-events-none"
+            />
+
             <div className="container px-6 mx-auto max-w-6xl relative z-10 flex flex-col justify-center py-12 md:py-24">
                 {/* Contact Section */}
                 <div className="mb-16">
@@ -145,37 +159,42 @@ export function Footer({ contact, about, navbar, name }: FooterProps) {
                             initial={{ opacity: 0, x: -30 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
+                            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                             className="space-y-8"
                         >
                             <div className="space-y-6">
-                                <Typography element="h2" className="text-4xl md:text-5xl font-semibold tracking-tight text-foreground">
+                                <Typography element="h2" className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tightest uppercase text-foreground leading-[1.1]">
                                     {contact.title}
                                 </Typography>
-                                <Typography className="text-lg text-muted-foreground leading-relaxed">
+                                <Typography className="text-lg text-muted-foreground leading-relaxed max-w-md font-medium">
                                     {contact.description}
                                 </Typography>
                             </div>
 
                             <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                                <a
-                                    href={`mailto:${contact.email}?subject=Portfolio Inquiry`}
-                                    className={buttonVariants({
-                                        size: "lg",
-                                        className: "rounded-none px-12 h-16 text-sm font-bold uppercase tracking-widest shadow-2xl shadow-accent/10 hover:bg-accent hover:text-accent-foreground transition-all duration-300 active:scale-95"
-                                    })}
-                                >
-                                    {contact.cta}
-                                </a>
-                                <a
-                                    href={resumeDownloadUrl}
-                                    onClick={handleResumeDownload}
-                                    download="resume.pdf"
-                                    aria-busy={isDownloadingResume}
-                                    className={`rounded-none px-12 h-16 flex items-center justify-center gap-2 text-sm font-bold uppercase tracking-widest border border-foreground/20 text-foreground transition-all duration-300 hover:bg-foreground/5 active:scale-95 ${isDownloadingResume ? "opacity-80 cursor-not-allowed" : ""}`}
-                                >
-                                    {isDownloadingResume && <Loader2 className="w-4 h-4 animate-spin" />}
-                                    {isDownloadingResume ? "Processing..." : contact.secondaryCta}
-                                </a>
+                                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                                    <a
+                                        href={`mailto:${contact.email}?subject=Portfolio Inquiry`}
+                                        className={buttonVariants({
+                                            size: "lg",
+                                            className: "rounded-none px-12 h-16 text-sm font-bold uppercase tracking-widest shadow-2xl shadow-accent/10 hover:bg-accent hover:text-accent-foreground transition-all duration-300"
+                                        })}
+                                    >
+                                        {contact.cta}
+                                    </a>
+                                </motion.div>
+                                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                                    <a
+                                        href={resumeDownloadUrl}
+                                        onClick={handleResumeDownload}
+                                        download="resume.pdf"
+                                        aria-busy={isDownloadingResume}
+                                        className={`rounded-none px-12 h-16 flex items-center justify-center gap-2 text-sm font-bold uppercase tracking-widest border border-foreground/20 text-foreground transition-all duration-300 hover:bg-foreground/5 ${isDownloadingResume ? "opacity-80 cursor-not-allowed" : ""}`}
+                                    >
+                                        {isDownloadingResume && <Loader2 className="w-4 h-4 animate-spin" />}
+                                        {isDownloadingResume ? "Processing..." : contact.secondaryCta}
+                                    </a>
+                                </motion.div>
                             </div>
                         </motion.div>
 
@@ -183,6 +202,7 @@ export function Footer({ contact, about, navbar, name }: FooterProps) {
                             initial={{ opacity: 0, x: 30 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
+                            transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
                         >
                             <GlassCard className="form-glass p-8 md:p-12 border border-foreground/15 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] rounded-none relative bg-black/40 backdrop-blur-3xl overflow-visible">
                                 <div className="absolute -top-px -left-px w-12 h-12 border-t-2 border-l-2 border-accent z-20" />
@@ -285,56 +305,91 @@ export function Footer({ contact, about, navbar, name }: FooterProps) {
 
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 pt-8 border-t border-foreground/10">
                     {/* Brand Column */}
-                    <div className="md:col-span-5 space-y-4">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.1 }}
+                        className="md:col-span-5 space-y-4"
+                    >
                         <Link href="/" className="flex items-center gap-3 group">
-                            <div className="transition-transform group-hover:scale-105">
+                            <motion.div
+                                whileHover={{ scale: 1.05 }}
+                                className="flex items-center justify-center transition-transform"
+                            >
                                 <BrandLogo className="text-foreground" size={32} />
-                            </div>
-                            <span className="text-lg font-bold tracking-tighter text-foreground uppercase">{name.charAt(0).toLowerCase()}</span>
+                            </motion.div>
+                            <span className="text-xl font-bold tracking-tighter text-foreground uppercase">{navbar?.logoText || name.charAt(0).toLowerCase()}</span>
                         </Link>
                         <Typography className="text-sm text-muted-foreground leading-relaxed max-w-sm font-medium">
                             {about.title}
                         </Typography>
                         <div className="flex items-center gap-3 pt-2">
-                            {about.socialLinks?.map((link: any) => (
-                                <Link key={link.url} href={link.url} target="_blank" className="w-10 h-10 rounded-xl bg-foreground/5 flex items-center justify-center text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-all duration-300 border border-foreground/5">
-                                    {link.platform.toLowerCase() === 'github' && <Github className="w-4 h-4" />}
-                                    {link.platform.toLowerCase() === 'linkedin' && <Linkedin className="w-4 h-4" />}
-                                    {link.platform.toLowerCase() === 'twitter' && <Twitter className="w-4 h-4" />}
-                                    {['github', 'linkedin', 'twitter'].indexOf(link.platform.toLowerCase()) === -1 && <Globe className="w-4 h-4" />}
-                                </Link>
+                            {about.socialLinks?.map((link: any, idx: number) => (
+                                <motion.div
+                                    key={link.url}
+                                    whileHover={{ y: -5, scale: 1.1 }}
+                                    initial={{ opacity: 0, scale: 0.8 }}
+                                    whileInView={{ opacity: 1, scale: 1 }}
+                                    viewport={{ once: true }}
+                                    transition={{ delay: 0.2 + (idx * 0.1) }}
+                                >
+                                    <Link href={link.url} target="_blank" className="w-10 h-10 rounded-xl bg-foreground/5 flex items-center justify-center text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-all duration-300 border border-foreground/5">
+                                        {link.platform.toLowerCase() === 'github' && <Github className="w-4 h-4" />}
+                                        {link.platform.toLowerCase() === 'linkedin' && <Linkedin className="w-4 h-4" />}
+                                        {link.platform.toLowerCase() === 'twitter' && <Twitter className="w-4 h-4" />}
+                                        {['github', 'linkedin', 'twitter'].indexOf(link.platform.toLowerCase()) === -1 && <Globe className="w-4 h-4" />}
+                                    </Link>
+                                </motion.div>
                             ))}
                         </div>
-                    </div>
+                    </motion.div>
 
                     {/* Quick Links */}
-                    <div className="md:col-span-3 space-y-6">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.2 }}
+                        className="md:col-span-3 space-y-6"
+                    >
                         <Typography className="text-[10px] font-black uppercase tracking-[0.2em] text-accent">Links</Typography>
                         <ul className="space-y-3">
-                            {navbar?.items.map((item: any) => (
-                                <li key={item.label}>
-                                    <Link href={item.href} className="text-xs text-foreground/70 hover:text-accent transition-colors font-bold uppercase tracking-wider">
+                            {navbar?.items.map((item: any, idx: number) => (
+                                <motion.li
+                                    key={item.label}
+                                    whileHover={{ x: 10 }}
+                                    transition={{ type: "spring", stiffness: 300 }}
+                                >
+                                    <Link href={item.href} className="text-xs text-foreground/70 hover:text-accent transition-colors font-bold uppercase tracking-wider inline-flex items-center gap-2">
+                                        <div className="w-1 h-1 rounded-full bg-accent opacity-0 group-hover:opacity-100 transition-opacity" />
                                         {item.label}
                                     </Link>
-                                </li>
+                                </motion.li>
                             ))}
                         </ul>
-                    </div>
+                    </motion.div>
 
                     {/* Contact Info */}
-                    <div className="md:col-span-4 space-y-6">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.3 }}
+                        className="md:col-span-4 space-y-6"
+                    >
                         <Typography className="text-[10px] font-black uppercase tracking-[0.2em] text-accent">Contact</Typography>
                         <div className="space-y-4">
                             <button
                                 onClick={handleCopyEmail}
-                                className="group flex items-center gap-2 text-left hover:bg-foreground/5 p-2 -ml-2 rounded-lg transition-colors"
+                                className="group flex items-center gap-2 text-left hover:bg-foreground/5 p-4 -ml-4 rounded-2xl transition-all"
                                 title="Click to copy email"
                             >
                                 <div className="space-y-1">
                                     <span className="block text-base font-bold text-foreground group-hover:text-accent transition-colors tracking-tight">
                                         {contact.email}
                                     </span>
-                                    {isCopied && <span className="text-[10px] text-accent font-bold uppercase tracking-wider">Copied to clipboard!</span>}
+                                    {isCopied && <motion.span initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="text-[10px] text-accent font-bold uppercase tracking-wider block">Copied to clipboard!</motion.span>}
                                 </div>
                                 <div className="text-muted-foreground group-hover:text-accent transition-colors">
                                     {isCopied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />}
@@ -345,19 +400,19 @@ export function Footer({ contact, about, navbar, name }: FooterProps) {
                                 {about.location}
                             </Typography>
                             <div className="pt-2">
-                                <Button size="sm" variant="outline" className="rounded-lg px-4 h-8 font-bold uppercase tracking-widest text-[10px]" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+                                <Button size="sm" variant="outline" className="rounded-lg px-6 h-10 font-bold uppercase tracking-widest text-[10px] hover:bg-accent hover:text-accent-foreground border-foreground/10 transition-all" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
                                     Back to Top
                                 </Button>
                             </div>
                         </div>
-                    </div>
+                    </motion.div>
                 </div>
 
                 <div className="mt-12 pt-6 border-t border-foreground/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
                     <span>(c) {new Date().getFullYear()} {name}. All Rights Reserved.</span>
                     <div className="flex gap-6">
-                        <span className="hover:text-foreground cursor-pointer transition-colors">Privacy</span>
-                        <span className="hover:text-foreground cursor-pointer transition-colors">Terms</span>
+                        <span className="hover:text-foreground cursor-pointer transition-colors hover:translate-y-[-2px]">Privacy</span>
+                        <span className="hover:text-foreground cursor-pointer transition-colors hover:translate-y-[-2px]">Terms</span>
                     </div>
                 </div>
             </div>
