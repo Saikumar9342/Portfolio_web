@@ -32,6 +32,7 @@ export const metadata: Metadata = {
 }
 
 import { CustomCursor } from "@/components/ui/CustomCursor";
+import { ScrollProgress } from "@/components/ui/ScrollProgress";
 import dynamic from 'next/dynamic';
 const ScrollToTop = dynamic(() => import('@/components/ui/ScrollToTop').then((m) => m.ScrollToTop), { ssr: false });
 import { ToastProvider } from '@/components/ui/Toast';
@@ -50,6 +51,7 @@ export default function RootLayout({
                 <ThemeProvider>
                     <ToastProvider>
                         <CustomCursor />
+                        <ScrollProgress />
                         <ScrollToTop />
                         <PageTransition>
                             {children}

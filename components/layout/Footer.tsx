@@ -191,8 +191,14 @@ export function Footer({ contact, about, navbar, name }: FooterProps) {
                                         aria-busy={isDownloadingResume}
                                         className={`w-full sm:w-auto rounded-none px-12 h-16 flex items-center justify-center gap-2 text-sm font-bold uppercase tracking-widest border border-foreground/20 text-foreground transition-all duration-300 hover:bg-foreground/5 ${isDownloadingResume ? "opacity-80 cursor-not-allowed" : ""}`}
                                     >
-                                        {isDownloadingResume && <Loader2 className="w-4 h-4 animate-spin" />}
-                                        {isDownloadingResume ? "Processing..." : contact.secondaryCta}
+                                        {isDownloadingResume ? (
+                                            <>
+                                                <Loader2 className="w-4 h-4 animate-spin" />
+                                                <span>PROCESSING</span>
+                                            </>
+                                        ) : (
+                                            contact.secondaryCta
+                                        )}
                                     </a>
                                 </motion.div>
                             </div>
@@ -284,10 +290,13 @@ export function Footer({ contact, about, navbar, name }: FooterProps) {
                                             <Button
                                                 type="submit"
                                                 disabled={isSubmitting}
-                                                className="w-full h-16 rounded-none text-sm font-bold uppercase tracking-[0.4em] shadow-xl shadow-accent/20 flex items-center justify-center gap-3 group bg-accent text-accent-foreground hover:bg-accent/90 transition-all active:scale-[0.98]"
+                                                className="w-full h-16 rounded-none text-sm font-bold uppercase tracking-[0.4em] shadow-xl shadow-accent/20 flex items-center justify-center gap-3 group bg-accent text-accent-foreground hover:bg-accent/90 transition-all active:scale-[0.98] border border-transparent"
                                             >
                                                 {isSubmitting ? (
-                                                    <Loader2 className="w-6 h-6 animate-spin" />
+                                                    <div className="flex items-center gap-3">
+                                                        <Loader2 className="w-5 h-5 animate-spin" />
+                                                        <span>PROCESSING...</span>
+                                                    </div>
                                                 ) : (
                                                     <>
                                                         SEND INQUIRY

@@ -1,33 +1,40 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion, useSpring } from "framer-motion";
+import { motion, useSpring, useMotionValue } from "framer-motion";
 
 export function CustomCursor() {
-    const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
     const [isHovering, setIsHovering] = useState(false);
 
-    const cursorX = useSpring(0, { damping: 20, stiffness: 200 });
-    const cursorY = useSpring(0, { damping: 20, stiffness: 200 });
+    // Smooth movement for the outer ring
+    const cursorX = useSpring(0, { damping: 25, stiffness: 120 });
+    const cursorY = useSpring(0, { damping: 25, stiffness: 120 });
+
+    // Direct movement for the inner dot
+    const dotX = useSpring(0, { damping: 40, stiffness: 400 });
+    const dotY = useSpring(0, { damping: 40, stiffness: 400 });
 
     useEffect(() => {
         const handleMouseMove = (e: MouseEvent) => {
             cursorX.set(e.clientX);
             cursorY.set(e.clientY);
+            dotX.set(e.clientX);
+            dotY.set(e.clientY);
         };
 
         const handleMouseOver = (e: MouseEvent) => {
             const target = e.target as HTMLElement;
-            if (
+            const isInteractive =
                 target.tagName === "A" ||
                 target.tagName === "BUTTON" ||
+                target.closest("a") ||
                 target.closest("button") ||
-                target.closest("a")
-            ) {
-                setIsHovering(true);
-            } else {
-                setIsHovering(false);
-            }
+                target.tagName === "INPUT" ||
+                target.tagName === "TEXTAREA" ||
+                target.getAttribute("role") === "button" ||
+                target.getAttribute("data-cursor-hover");
+
+            setIsHovering(!!isInteractive);
         };
 
         window.addEventListener("mousemove", handleMouseMove);
@@ -37,35 +44,40 @@ export function CustomCursor() {
             window.removeEventListener("mousemove", handleMouseMove);
             window.removeEventListener("mouseover", handleMouseOver);
         };
-    }, [cursorX, cursorY]);
+    }, [cursorX, cursorY, dotX, dotY]);
 
     return (
-        <>
+        <div className="hidden md:block pointer-events-none fixed inset-0 z-[9999]">
+            {/* Outer Ring */}
             <motion.div
-                className="fixed top-0 left-0 w-8 h-8 rounded-full border border-accent pointer-events-none z-[9999] mix-blend-difference flex items-center justify-center"
+                className="fixed top-0 left-0 w-8 h-8 rounded-full border border-accent/50 mix-blend-difference flex items-center justify-center"
                 style={{
                     x: cursorX,
                     y: cursorY,
                     translateX: "-50%",
                     translateY: "-50%",
-                    borderColor: "var(--accent)",
                 }}
                 animate={{
-                    scale: isHovering ? 2 : 1,
-                    opacity: isHovering ? 1 : 0,
-                    backgroundColor: "var(--muted)",
+                    scale: isHovering ? 2.5 : 1,
+                    opacity: isHovering ? 0.5 : 1,
+                    backgroundColor: isHovering ? "var(--accent)" : "transparent",
+                    borderColor: isHovering ? "var(--accent)" : "var(--accent)",
                 }}
+                transition={{ duration: 0.2 }}
             />
+            {/* Inner Dot */}
             <motion.div
-                className="fixed top-0 left-0 w-1.5 h-1.5 bg-accent rounded-full pointer-events-none z-[9999]"
+                className="fixed top-0 left-0 w-2 h-2 bg-accent rounded-full"
                 style={{
-                    x: cursorX,
-                    y: cursorY,
+                    x: dotX,
+                    y: dotY,
                     translateX: "-50%",
                     translateY: "-50%",
-                    backgroundColor: "var(--accent)",
+                }}
+                animate={{
+                    scale: isHovering ? 0.5 : 1,
                 }}
             />
-        </>
+        </div>
     );
 }
