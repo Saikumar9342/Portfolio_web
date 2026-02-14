@@ -1,11 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Loader2 } from "lucide-react";
+import { Loader2, Github, Linkedin, Twitter, Globe } from "lucide-react";
 import { useState, type MouseEvent } from "react";
 import { Typography } from "@/components/ui/layout";
 import { Button } from "@/components/ui/button";
-import { Github, Linkedin, Twitter, Globe } from "lucide-react";
 import Link from "next/link";
 import { ContactData, AboutData, NavbarData } from "@/types";
 
