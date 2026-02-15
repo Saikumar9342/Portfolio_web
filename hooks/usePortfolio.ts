@@ -149,6 +149,7 @@ export function usePortfolio(userId?: string) {
     const [contentLoaded, setContentLoaded] = useState(false);
     const [projectsLoaded, setProjectsLoaded] = useState(false);
     const [resolvedUid, setResolvedUid] = useState<string | undefined>(undefined);
+    const [isNotFound, setIsNotFound] = useState(false);
 
     // Initialize resolving state based on whether we have a non-admin userId to resolve
     const [isResolving, setIsResolving] = useState(!!effectiveUserId);
@@ -170,6 +171,7 @@ export function usePortfolio(userId?: string) {
         setIsResolving(true);
         setContentLoaded(false);
         setProjectsLoaded(false);
+        setIsNotFound(false);
         setData(baseData); // Immediately show baseData (empty state for guests) while loading
 
         async function resolve() {
@@ -199,11 +201,12 @@ export function usePortfolio(userId?: string) {
                 if (!querySnapshot.empty) {
                     setResolvedUid(querySnapshot.docs[0].id);
                 } else {
-                    setResolvedUid(effectiveUserId);
+                    // If all resolution attempts fail, it's a 404
+                    setIsNotFound(true);
                 }
             } catch (error) {
                 console.error("Error resolving user:", error);
-                setResolvedUid(effectiveUserId);
+                setIsNotFound(true);
             } finally {
                 setIsResolving(false);
             }
@@ -265,6 +268,8 @@ export function usePortfolio(userId?: string) {
         const contentUnsub = onSnapshot(contentRef as any, (snapshot: QuerySnapshot) => {
             const newContent: any = {};
             if (snapshot.empty) {
+                // If we are looking for a specific user and they have NO content, show 404
+                if (!fetchFromRoot) setIsNotFound(true);
                 setData(baseData);
                 setContentLoaded(true);
                 return;
@@ -353,6 +358,6 @@ export function usePortfolio(userId?: string) {
         };
     }, [resolvedUid, isResolving, currentLanguage.code, currentLanguage.isDefault, baseData, fetchFromRoot]);
 
-    const isLoading = isResolving || !contentLoaded || !projectsLoaded;
-    return { data, loading: isLoading };
+    const isLoading = isResolving || (!isNotFound && (!contentLoaded || !projectsLoaded));
+    return { data, loading: isLoading, notFound: isNotFound };
 }

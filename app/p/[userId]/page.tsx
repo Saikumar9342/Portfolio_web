@@ -10,6 +10,7 @@ import { usePortfolio } from "@/hooks/usePortfolio";
 import { Footer } from "@/components/layout/Footer";
 
 import { LoadingScreen } from "@/components/ui/LoadingScreen";
+import { NotFoundScreen } from "@/components/ui/NotFoundScreen";
 import { useDynamicColor } from "@/hooks/useDynamicColor";
 import { useParams } from "next/navigation";
 
@@ -217,9 +218,10 @@ export default function UserPortfolio() {
     const userId = params?.userId as string | undefined;
 
     // Use empty string fallback if needed, but hook handles undefined
-    const { data, loading } = usePortfolio(userId);
+    const { data, loading, notFound } = usePortfolio(userId);
 
     if (loading) return <LoadingScreen />;
+    if (notFound) return <NotFoundScreen />;
 
     return <PortfolioContent data={data} userId={userId} />;
 }

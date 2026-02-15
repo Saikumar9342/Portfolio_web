@@ -3,6 +3,7 @@
 import { useParams } from "next/navigation";
 import { usePortfolio } from "@/hooks/usePortfolio";
 import { LoadingScreen } from "@/components/ui/LoadingScreen";
+import { NotFoundScreen } from "@/components/ui/NotFoundScreen";
 import { Hero } from "@/components/home/Hero";
 import { About } from "@/components/home/About";
 import { Navbar } from "@/components/layout/Navbar";
@@ -44,9 +45,10 @@ const PortfolioContent = ({ data, userId }: { data: any; userId?: string }) => {
 export default function UsernamePortfolioPage() {
     const params = useParams();
     const username = params?.username as string | undefined;
-    const { data, loading } = usePortfolio(username);
+    const { data, loading, notFound } = usePortfolio(username);
 
     if (loading) return <LoadingScreen />;
+    if (notFound) return <NotFoundScreen />;
 
     return <PortfolioContent data={data} userId={username} />;
 }
