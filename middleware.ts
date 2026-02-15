@@ -44,7 +44,8 @@ async function resolveUserIdFromDomain(domain: string): Promise<string | null> {
 
 export async function middleware(request: NextRequest) {
     const host = normalizeHost(request.headers.get("host"));
-    const pathname = request.nextUrl.pathname;
+    // Normalize pathname to remove duplicate slashes
+    const pathname = request.nextUrl.pathname.replace(/\/+/g, "/");
 
     if (!host || shouldBypass(pathname)) {
         return NextResponse.next();
