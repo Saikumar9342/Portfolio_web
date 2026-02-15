@@ -10,9 +10,10 @@ import Link from "next/link";
 
 interface ProjectShowcaseProps {
     projects: Project[];
+    userId?: string;
 }
 
-export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
+export function ProjectShowcase({ projects, userId }: ProjectShowcaseProps) {
     return (
         <div className="space-y-32 md:space-y-64">
             {projects?.map((project, index) => (
@@ -26,7 +27,7 @@ export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
                 >
                     {/* Image Section - The "Stage" */}
                     <Link
-                        href={`/projects/${project.id}`}
+                        href={userId ? `/p/${userId}/projects/${project.id}` : `/projects/${project.id}`}
                         className="relative w-full lg:w-3/5 cursor-pointer block"
                     >
                         {/* Glow effect */}
@@ -78,7 +79,7 @@ export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
 
                         <div className="pt-8">
                             <Link
-                                href={`/projects/${project.id}`}
+                                href={userId ? `/p/${userId}/projects/${project.id}` : `/projects/${project.id}`}
                                 className="inline-flex items-center gap-4 text-sm font-bold uppercase tracking-[0.3em] text-foreground hover:text-accent transition-colors"
                             >
                                 <span>Explore Project</span>

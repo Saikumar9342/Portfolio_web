@@ -14,13 +14,24 @@ interface HeroProps {
     role: string;
     name: string;
     location: string;
+    userId?: string;
 }
 
-export function Hero({ data, role, name, location }: HeroProps) {
+export function Hero({ data, role, name, location, userId }: HeroProps) {
     const hero = data;
     useDynamicColor(hero.imageUrl || "/pfp.jpeg");
     const { scrollY } = useScroll();
     const scrollIndicatorOpacity = useTransform(scrollY, [0, 100], [1, 0]);
+
+    // Helper for link generation
+    const getLink = (path: string) => {
+        if (!userId) return path;
+        if (path.startsWith("http")) return path;
+        if (path === '/projects') return `/p/${userId}/projects`;
+        if (path === '/#about') return `/p/${userId}#about`;
+        if (path.startsWith('#')) return `/p/${userId}${path}`;
+        return path;
+    };
 
     return (
         <section className="relative min-h-[100dvh] w-full flex items-center pt-32 md:pt-24 pb-12 px-4 md:px-8 overflow-hidden bg-background transition-colors duration-1000">
@@ -79,13 +90,13 @@ export function Hero({ data, role, name, location }: HeroProps) {
                             transition={{ duration: 0.6, delay: 0.5 }}
                             className="flex flex-wrap gap-4 pt-2"
                         >
-                            <Link href="/projects">
+                            <Link href={getLink("/projects")}>
                                 <Button size="lg" className="px-8 flex items-center gap-3 hover:scale-[1.02] transition-all active:scale-95 group shadow-2xl shadow-accent/20">
                                     {hero.cta}
                                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                                 </Button>
                             </Link>
-                            <Link href={hero.secondaryCtaHref || "/#about"}>
+                            <Link href={getLink(hero.secondaryCtaHref || "/#about")}>
                                 <Button size="lg" className="px-8 border-border bg-transparent hover:bg-foreground/5 text-foreground transition-all duration-300" variant="outline">
                                     {hero.secondaryCta || "About"}
                                 </Button>

@@ -19,9 +19,10 @@ interface FooterProps {
     about: AboutData;
     navbar: NavbarData;
     name: string;
+    targetUserId?: string;
 }
 
-export function Footer({ contact, about, navbar, name }: FooterProps) {
+export function Footer({ contact, about, navbar, name, targetUserId }: FooterProps) {
     const [isDownloadingResume, setIsDownloadingResume] = useState(false);
     const [isCopied, setIsCopied] = useState(false);
     const { push } = useToast();
@@ -120,6 +121,7 @@ export function Footer({ contact, about, navbar, name }: FooterProps) {
                 name,
                 email,
                 message,
+                targetUserId: targetUserId || null,
                 status: "unread",
                 timestamp: serverTimestamp(),
             });
@@ -321,7 +323,7 @@ export function Footer({ contact, about, navbar, name }: FooterProps) {
                         transition={{ delay: 0.1 }}
                         className="md:col-span-5 space-y-4"
                     >
-                        <Link href="/" className="flex items-center gap-3 group">
+                        <Link href={targetUserId ? `/p/${targetUserId}` : "/"} className="flex items-center gap-3 group">
                             <motion.div
                                 whileHover={{ scale: 1.05 }}
                                 className="flex items-center justify-center transition-transform"
@@ -364,18 +366,29 @@ export function Footer({ contact, about, navbar, name }: FooterProps) {
                     >
                         <Typography className="text-[10px] font-black uppercase tracking-[0.2em] text-accent">Links</Typography>
                         <ul className="space-y-3">
-                            {navbar?.items.map((item: any, idx: number) => (
-                                <motion.li
-                                    key={item.label}
-                                    whileHover={{ x: 10 }}
-                                    transition={{ type: "spring", stiffness: 300 }}
-                                >
-                                    <Link href={item.href} className="text-xs text-foreground/70 hover:text-accent transition-colors font-bold uppercase tracking-wider inline-flex items-center gap-2">
-                                        <div className="w-1 h-1 rounded-full bg-accent opacity-0 group-hover:opacity-100 transition-opacity" />
-                                        {item.label}
-                                    </Link>
-                                </motion.li>
-                            ))}
+                            {navbar?.items.map((item: any, idx: number) => {
+                                let href = item.href;
+                                if (targetUserId) {
+                                    if (href === '/projects') href = `/p/${targetUserId}/projects`;
+                                    else if (href === '/#about') href = `/p/${targetUserId}#about`;
+                                    else if (href === '/#skills') href = `/p/${targetUserId}#skills`;
+                                    else if (href.startsWith('#')) href = `/p/${targetUserId}${href}`;
+                                    else if (href.startsWith('/') && href !== '/') href = `/p/${targetUserId}${href}`;
+                                }
+
+                                return (
+                                    <motion.li
+                                        key={item.label}
+                                        whileHover={{ x: 10 }}
+                                        transition={{ type: "spring", stiffness: 300 }}
+                                    >
+                                        <Link href={href} className="text-xs text-foreground/70 hover:text-accent transition-colors font-bold uppercase tracking-wider inline-flex items-center gap-2">
+                                            <div className="w-1 h-1 rounded-full bg-accent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                            {item.label}
+                                        </Link>
+                                    </motion.li>
+                                )
+                            })}
                         </ul>
                     </motion.div>
 

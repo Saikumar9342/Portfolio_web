@@ -13,7 +13,7 @@ import { LoadingScreen } from "@/components/ui/LoadingScreen";
 import { useDynamicColor } from "@/hooks/useDynamicColor";
 import { useParams } from "next/navigation";
 
-const PortfolioContent = ({ data }: { data: any }) => {
+const PortfolioContent = ({ data, userId }: { data: any; userId?: string }) => {
     const { contact, hero, about, expertise, skills, name } = data;
 
     // Extract theme color from hero image or default profile
@@ -35,10 +35,10 @@ const PortfolioContent = ({ data }: { data: any }) => {
     return (
         <main ref={containerRef} className="relative min-h-screen">
             <div className="relative z-10">
-                <Navbar name={name} data={data.navbar} contact={contact} loading={false} />
+                <Navbar name={name} data={data.navbar} contact={contact} loading={false} userId={userId} />
 
                 {/* HERO */}
-                <Hero data={hero} role={data.role} name={name} location={about.location} />
+                <Hero data={hero} role={data.role} name={name} location={about.location} userId={userId} />
 
                 {/* ABOUT SECTION */}
                 <About about={about} expertise={expertise} contact={contact} />
@@ -65,61 +65,69 @@ const PortfolioContent = ({ data }: { data: any }) => {
 
                         <div className="lg:col-span-2 md:columns-2 md:[column-gap:1rem]">
                             {/* Frontend Skill Card */}
-                            <GlassCard className="p-6 space-y-4 hover:border-accent/40 transition-all duration-500 break-inside-avoid mb-4">
-                                <Typography element="h3" className="text-xl font-bold flex items-center gap-2">
-                                    <div className="w-2 h-2 rounded-full bg-accent" />
-                                    {skills.frontendTitle || "Frontend Engineering"}
-                                </Typography>
-                                <div className="space-y-3">
-                                    {skills.frontend?.map((skill: any) => (
-                                        <div key={skill.name} className="space-y-1">
-                                            <div className="flex justify-between text-xs font-medium uppercase tracking-wider text-foreground/60">
-                                                <span>{skill.name}</span>
-                                                <span>{skill.level}%</span>
+                            {skills.frontend && skills.frontend.length > 0 && (
+                                <GlassCard className="p-6 space-y-4 hover:border-accent/40 transition-all duration-500 break-inside-avoid mb-4">
+                                    <Typography element="h3" className="text-xl font-bold flex items-center gap-2">
+                                        <div className="w-2 h-2 rounded-full bg-accent" />
+                                        {skills.frontendTitle || "Frontend Engineering"}
+                                    </Typography>
+                                    <div className="space-y-3">
+                                        {skills.frontend?.map((skill: any) => (
+                                            <div key={skill.name} className="space-y-1">
+                                                <div className="flex justify-between text-xs font-medium uppercase tracking-wider text-foreground/60">
+                                                    <span>{skill.name}</span>
+                                                    <span>{skill.level}%</span>
+                                                </div>
+                                                <div className="h-1 w-full bg-accent/5 rounded-full overflow-hidden">
+                                                    <motion.div
+                                                        initial={{ width: 0 }}
+                                                        whileInView={{ width: `${skill.level}%` }}
+                                                        transition={{ duration: 1, delay: 0.2 }}
+                                                        className="h-full bg-accent"
+                                                    />
+                                                </div>
                                             </div>
-                                            <div className="h-1 w-full bg-accent/5 rounded-full overflow-hidden">
-                                                <motion.div
-                                                    initial={{ width: 0 }}
-                                                    whileInView={{ width: `${skill.level}%` }}
-                                                    transition={{ duration: 1, delay: 0.2 }}
-                                                    className="h-full bg-accent"
-                                                />
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </GlassCard>
+                                        ))}
+                                    </div>
+                                </GlassCard>
+                            )}
 
                             <div className="space-y-4">
                                 {/* Mobile & Backend Cards */}
-                                <GlassCard className="p-6 space-y-3 break-inside-avoid mb-4">
-                                    <Typography element="h3" className="text-lg font-bold">{skills.mobileTitle || "Mobile Development"}</Typography>
-                                    <div className="flex flex-wrap gap-2">
-                                        {skills.mobile?.map((m: string) => (
-                                            <span key={m} className="px-3 py-1 text-xs rounded-lg bg-foreground/5 border border-foreground/10 text-foreground/80">
-                                                {m}
-                                            </span>
-                                        ))}
-                                    </div>
-                                </GlassCard>
+                                {skills.mobile && skills.mobile.length > 0 && (
+                                    <GlassCard className="p-6 space-y-3 break-inside-avoid mb-4">
+                                        <Typography element="h3" className="text-lg font-bold">{skills.mobileTitle || "Mobile Development"}</Typography>
+                                        <div className="flex flex-wrap gap-2">
+                                            {skills.mobile?.map((m: string) => (
+                                                <span key={m} className="px-3 py-1 text-xs rounded-lg bg-foreground/5 border border-foreground/10 text-foreground/80">
+                                                    {m}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </GlassCard>
+                                )}
 
-                                <GlassCard className="p-6 space-y-3 break-inside-avoid mb-4">
-                                    <Typography element="h3" className="text-lg font-bold">{skills.backendTitle || "Cloud & Backend"}</Typography>
-                                    <div className="flex flex-wrap gap-2">
-                                        {skills.backend?.map((b: string) => (
-                                            <span key={b} className="px-3 py-1 text-xs rounded-lg bg-foreground/5 border border-foreground/10 text-foreground/80">
-                                                {b}
-                                            </span>
-                                        ))}
-                                    </div>
-                                </GlassCard>
+                                {skills.backend && skills.backend.length > 0 && (
+                                    <GlassCard className="p-6 space-y-3 break-inside-avoid mb-4">
+                                        <Typography element="h3" className="text-lg font-bold">{skills.backendTitle || "Cloud & Backend"}</Typography>
+                                        <div className="flex flex-wrap gap-2">
+                                            {skills.backend?.map((b: string) => (
+                                                <span key={b} className="px-3 py-1 text-xs rounded-lg bg-foreground/5 border border-foreground/10 text-foreground/80">
+                                                    {b}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </GlassCard>
+                                )}
 
-                                <GlassCard className="p-6 space-y-3 break-inside-avoid mb-4">
-                                    <Typography element="h3" className="text-lg font-bold">{skills.toolsTitle || "Workflow & Tools"}</Typography>
-                                    <div className="flex flex-wrap gap-2 text-xs text-foreground/60">
-                                        {skills.tools?.join(" | ")}
-                                    </div>
-                                </GlassCard>
+                                {skills.tools && skills.tools.length > 0 && (
+                                    <GlassCard className="p-6 space-y-3 break-inside-avoid mb-4">
+                                        <Typography element="h3" className="text-lg font-bold">{skills.toolsTitle || "Workflow & Tools"}</Typography>
+                                        <div className="flex flex-wrap gap-2 text-xs text-foreground/60">
+                                            {skills.tools?.join(" | ")}
+                                        </div>
+                                    </GlassCard>
+                                )}
 
                                 {/* Extra Skill Sections (e.g., DevOps) */}
                                 {(() => {
@@ -197,7 +205,7 @@ const PortfolioContent = ({ data }: { data: any }) => {
                 </Section>
 
                 {/* FOOTER */}
-                <Footer contact={contact} about={about} navbar={data.navbar} name={name} />
+                <Footer contact={contact} about={about} navbar={data.navbar} name={name} targetUserId={userId} />
             </div>
         </main>
     );
@@ -213,5 +221,5 @@ export default function UserPortfolio() {
 
     if (loading) return <LoadingScreen />;
 
-    return <PortfolioContent data={data} />;
+    return <PortfolioContent data={data} userId={userId} />;
 }

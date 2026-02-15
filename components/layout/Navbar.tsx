@@ -14,9 +14,10 @@ interface NavbarProps {
     data: NavbarData;
     contact: ContactData;
     loading?: boolean;
+    userId?: string;
 }
 
-export function Navbar({ name, data, contact, loading }: NavbarProps) {
+export function Navbar({ name, data, contact, loading, userId }: NavbarProps) {
     const [isScrolled, setIsScrolled] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -28,10 +29,34 @@ export function Navbar({ name, data, contact, loading }: NavbarProps) {
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
-    const navItems = data?.items?.length > 0 ? data.items : [
-        { label: "Projects", href: "/projects" },
-        { label: "About", href: "/#about" },
-        { label: "Skills", href: "/#skills" }
+    // Helper to generate correct paths
+    const getPath = (path: string) => {
+        if (!userId) return path; // Main site: use path as is
+
+        // If path is root '/' or empty, go to user home
+        if (path === '/' || path === '') return `/p/${userId}`;
+
+        // If path is an anchor like '/#about', make it '/p/{uid}#about'
+        if (path.startsWith('/#') || path.startsWith('#')) {
+            const hash = path.startsWith('/') ? path.substring(1) : path;
+            return `/p/${userId}${hash}`;
+        }
+
+        // If path is a subpage like '/projects', make it '/p/{uid}/projects'
+        if (path.startsWith('/')) {
+            return `/p/${userId}${path}`;
+        }
+
+        return path;
+    };
+
+    const navItems = data?.items?.length > 0 ? data.items.map(item => ({
+        ...item,
+        href: getPath(item.href)
+    })) : [
+        { label: "Projects", href: getPath("/projects") },
+        { label: "About", href: getPath("/#about") },
+        { label: "Skills", href: getPath("/#skills") }
     ];
 
     const ctaText = data?.ctaText || "Hire Me";
@@ -49,7 +74,7 @@ export function Navbar({ name, data, contact, loading }: NavbarProps) {
         >
             <div className="max-w-7xl mx-auto px-4 md:px-6 flex justify-between items-center">
                 {/* Logo */}
-                <Link href="/" className="flex items-center gap-3 group">
+                <Link href={userId ? `/p/${userId}` : "/"} className="flex items-center gap-3 group">
                     <motion.div
                         whileHover={{ scale: 1.05 }}
                         className="flex items-center justify-center transition-transform"
