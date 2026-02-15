@@ -99,7 +99,7 @@ export function LanguageSwitcher() {
                                 initial={{ opacity: 0, y: 10, scale: 0.95 }}
                                 animate={{ opacity: 1, y: 0, scale: 1 }}
                                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                                className="absolute bottom-full left-0 mb-4 w-full bg-background/95 backdrop-blur-[60px] border border-l-0 border-white/10 rounded-tr-[24px] rounded-br-[8px] shadow-[0_20px_60px_rgba(0,0,0,0.6)] p-2 pointer-events-auto"
+                                className="absolute bottom-full left-0 mb-4 w-full bg-[#0a0a0a] border border-white/20 rounded-tr-[24px] rounded-br-[8px] shadow-[0_20px_60px_rgba(0,0,0,0.8)] p-2 pointer-events-auto"
                             >
                                 <div className="space-y-1">
                                     {languages.map((lang) => (
@@ -115,8 +115,8 @@ export function LanguageSwitcher() {
                                             className={cn(
                                                 "w-full text-left p-2.5 rounded-[16px] flex items-center gap-3 transition-all group",
                                                 currentLanguage.code === lang.code
-                                                    ? "bg-accent shadow-lg shadow-accent/10"
-                                                    : "hover:bg-white/5"
+                                                    ? "bg-accent shadow-lg shadow-accent/20"
+                                                    : "hover:bg-white/10"
                                             )}
                                         >
                                             <span className="text-xl group-hover:scale-110 transition-transform">
@@ -130,8 +130,8 @@ export function LanguageSwitcher() {
                                                     {lang.name}
                                                 </span>
                                                 <span className={cn(
-                                                    "text-[8px] font-black uppercase tracking-[0.1em] opacity-40 leading-none",
-                                                    currentLanguage.code === lang.code ? "text-white/60" : "text-white/40"
+                                                    "text-[8px] font-black uppercase tracking-[0.1em] leading-none",
+                                                    currentLanguage.code === lang.code ? "text-white/70" : "text-white/40"
                                                 )}>
                                                     {lang.code}
                                                 </span>
