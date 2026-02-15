@@ -37,7 +37,7 @@ export function NotFoundScreen() {
 
                 <div className="space-y-4">
                     <Typography className="text-muted-foreground text-sm uppercase tracking-widest font-medium">
-                        The portfolio you're looking for doesn't exist or is currently private.
+                        The portfolio you&apos;re looking for doesn&apos;t exist or is currently private.
                     </Typography>
                 </div>
 
