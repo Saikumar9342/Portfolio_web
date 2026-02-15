@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { collection, onSnapshot, doc } from "firebase/firestore";
+import { useEffect, useState, useMemo } from "react";
+import { collection, onSnapshot, doc, query, where, getDocs, getDoc, DocumentSnapshot, QuerySnapshot } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Project, HeroData, AboutData, ExpertiseData, SkillsData, ContactData, NavbarData, SocialLink, ProjectsPageData } from "@/types";
 import { portfolioData } from "@/lib/data";
@@ -44,8 +44,6 @@ function normalizeSocialLinks(input: any): SocialLink[] {
 }
 
 const getInitialData = (isMainSite: boolean): PortfolioContent => {
-    // If it's the main site entry point, use the hardcoded portfolioData as base
-    // If it's a specific user sub-page, use generic placeholders
     if (isMainSite) {
         return {
             hero: {
@@ -117,7 +115,6 @@ const getInitialData = (isMainSite: boolean): PortfolioContent => {
         };
     }
 
-    // Truly empty state for new users
     return {
         hero: { badge: "Welcome", title: "New Portfolio", subtitle: "", cta: "Contact", secondaryCta: "", imageUrl: "" },
         about: { title: "", biography: "", biographyLabel: "Biography", educationLabel: "Education", education: [], location: "", interests: [], socialLinks: [] },
@@ -133,54 +130,113 @@ const getInitialData = (isMainSite: boolean): PortfolioContent => {
 };
 
 export function usePortfolio(userId?: string) {
-    // 1. Determine if we are on the main site or a guest portal
-    // Main site = no userId passed (app/page.tsx)
-    const isMainSitePath = !userId;
+    // Robust check for main site vs specific user
+    const isMainSitePath = userId === undefined || userId === null || userId === "" || userId === "index";
 
-    // 2. Determine if this specific userId belongs to an Admin
     const adminUidsString = process.env.NEXT_PUBLIC_ADMIN_UIDS || "";
     const adminUids = adminUidsString.split(",").map(id => id.trim()).filter(id => id.length > 0);
+
+    // Check if the current URL parameter is an Admin UID
     const isActuallyAdmin = userId ? adminUids.includes(userId) : false;
 
-    // 3. Decide where to fetch data from
-    // If it's the main site OR the userId is an admin, we pull from root
-    // otherwise we pull from the specific user collection
+    // fetchFromRoot is true if we are on the main site OR viewing an admin's profile
     const fetchFromRoot = isMainSitePath || isActuallyAdmin;
     const effectiveUserId = fetchFromRoot ? undefined : userId;
 
-    // 4. Set the initial "loading" state data
-    // Main site/Admin sees Saikumar's branding while loading
-    // Guests see a generic "Welcome" branding while loading
-    const baseData = getInitialData(fetchFromRoot);
+    const baseData = useMemo(() => getInitialData(fetchFromRoot), [fetchFromRoot]);
     const [data, setData] = useState<PortfolioContent>(baseData);
 
-    // Track loading state for different parts
     const [contentLoaded, setContentLoaded] = useState(false);
     const [projectsLoaded, setProjectsLoaded] = useState(false);
+    const [resolvedUid, setResolvedUid] = useState<string | undefined>(undefined);
+
+    // Initialize resolving state based on whether we have a non-admin userId to resolve
+    const [isResolving, setIsResolving] = useState(!!effectiveUserId);
 
     const { currentLanguage } = useLanguage();
 
+    // 1. Resolve username to UID if necessary
     useEffect(() => {
-        // Determine collection references
+        if (!effectiveUserId) {
+            setResolvedUid(undefined);
+            setIsResolving(false);
+            setData(baseData); // Sync data with baseData for main site
+            setContentLoaded(false);
+            setProjectsLoaded(false);
+            return;
+        }
+
+        // Reset states for a fresh resolution
+        setIsResolving(true);
+        setContentLoaded(false);
+        setProjectsLoaded(false);
+        setData(baseData); // Immediately show baseData (empty state for guests) while loading
+
+        async function resolve() {
+            try {
+                // Try searching as UID first
+                const docRef = doc(db, "users", effectiveUserId!);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    setResolvedUid(effectiveUserId);
+                    setIsResolving(false);
+                    return;
+                }
+                // Try searching in usernames collection
+                const uRef = doc(db, "usernames", effectiveUserId!);
+                const uSnap = await getDoc(uRef);
+                if (uSnap.exists()) {
+                    const foundUid = uSnap.data()?.userId;
+                    if (foundUid) {
+                        setResolvedUid(foundUid);
+                        setIsResolving(false);
+                        return;
+                    }
+                }
+                // Fallback query
+                const q = query(collection(db, "users"), where("username", "==", effectiveUserId));
+                const querySnapshot = await getDocs(q);
+                if (!querySnapshot.empty) {
+                    setResolvedUid(querySnapshot.docs[0].id);
+                } else {
+                    setResolvedUid(effectiveUserId);
+                }
+            } catch (error) {
+                console.error("Error resolving user:", error);
+                setResolvedUid(effectiveUserId);
+            } finally {
+                setIsResolving(false);
+            }
+        }
+        resolve();
+    }, [effectiveUserId, baseData]);
+
+    // 2. Setup Listeners
+    useEffect(() => {
+        // CRITICAL: If we are still resolving a username, DO NOT start listeners.
+        // Starting listeners without a resolvedUid often defaults to 'root' collections,
+        // which is why the admin's portfolio was flashing first.
+        if (isResolving) return;
+
+        // If we are on a user page but haven't resolved a UID yet (and aren't root), wait.
+        if (!fetchFromRoot && !resolvedUid) return;
+
         let contentRef;
         let projectsRef;
-        let userProfileRef: any = null;
+        let profileRef: any = null;
 
-        if (effectiveUserId) {
-            // User-specific paths - effectiveUserId is guaranteed string here
-            const uid = effectiveUserId;
+        if (resolvedUid) {
+            const uid = resolvedUid;
+            profileRef = doc(db, "users", uid);
             if (currentLanguage.isDefault) {
                 contentRef = collection(db, "users", uid, "content");
                 projectsRef = collection(db, "users", uid, "projects");
-                // Also fetch the root user document for profile info (displayName, etc.)
-                // This is now handled in the profileUnsub block below
-                userProfileRef = doc(db, "users", uid);
             } else {
                 contentRef = collection(db, "users", uid, "languages", currentLanguage.code, "content");
                 projectsRef = collection(db, "users", uid, "languages", currentLanguage.code, "projects");
             }
         } else {
-            // Root paths (Admin or Default)
+            // Main site or Admin root paths
             if (currentLanguage?.isDefault) {
                 contentRef = collection(db, "content");
                 projectsRef = collection(db, "projects");
@@ -190,65 +246,47 @@ export function usePortfolio(userId?: string) {
             }
         }
 
-        // Listen to Content
-        const contentUnsub = onSnapshot(contentRef, (snapshot) => {
-            const newContent: any = {};
+        const mergeData = (target: any, source: any) => {
+            const result = { ...target };
+            for (const key in source) {
+                if (source[key] !== undefined && source[key] !== null) {
+                    if (Array.isArray(source[key])) {
+                        if (source[key].length > 0) result[key] = source[key];
+                    } else if (typeof source[key] === 'object' && !Array.isArray(source[key])) {
+                        result[key] = { ...target[key], ...source[key] };
+                    } else {
+                        result[key] = source[key];
+                    }
+                }
+            }
+            return result;
+        };
 
-            // If the whole collection is empty, fall back to baseData
+        const contentUnsub = onSnapshot(contentRef as any, (snapshot: QuerySnapshot) => {
+            const newContent: any = {};
             if (snapshot.empty) {
                 setData(baseData);
                 setContentLoaded(true);
                 return;
             }
-
-            // Helper to merge data with fallbacks
-            const mergeData = (target: any, source: any) => {
-                const result = { ...target };
-                for (const key in source) {
-                    if (source[key] !== undefined && source[key] !== null) {
-                        if (Array.isArray(source[key])) {
-                            if (source[key].length > 0) result[key] = source[key];
-                        } else if (typeof source[key] === 'object' && !Array.isArray(source[key])) {
-                            result[key] = { ...target[key], ...source[key] };
-                        } else {
-                            result[key] = source[key];
-                        }
-                    }
-                }
-                return result;
-            };
-
-            snapshot.forEach(doc => {
-                const docData = doc.data();
-                const id = doc.id;
-
-                if (id === 'skills') {
-                    newContent[id] = mergeData(baseData.skills, docData);
-                } else if (id === 'about') {
+            snapshot.forEach(docSnap => {
+                const docData = docSnap.data();
+                const id = docSnap.id;
+                if (id === 'skills') newContent[id] = mergeData(baseData.skills, docData);
+                else if (id === 'about') {
                     const socialLinks = normalizeSocialLinks(docData.socialLinks);
                     const baseAbout = mergeData(baseData.about, docData);
-                    newContent[id] = {
-                        ...baseAbout,
-                        socialLinks: socialLinks.length > 0 ? socialLinks : baseData.about.socialLinks
-                    };
-                } else if (id === 'expertise') {
-                    newContent[id] = mergeData(baseData.expertise, docData);
-                } else if (id === 'hero') {
-                    newContent[id] = mergeData(baseData.hero, docData);
-                } else if (id === 'projects_page') {
-                    newContent.projectsPage = mergeData(baseData.projectsPage, docData);
-                } else if (id === 'contact') {
-                    newContent[id] = mergeData(baseData.contact, docData);
-                } else if (id === 'navbar') {
-                    newContent[id] = mergeData(baseData.navbar, docData);
-                } else if (id === 'personal') {
+                    newContent[id] = { ...baseAbout, socialLinks: socialLinks.length > 0 ? socialLinks : baseData.about.socialLinks };
+                } else if (id === 'expertise') newContent[id] = mergeData(baseData.expertise, docData);
+                else if (id === 'hero') newContent[id] = mergeData(baseData.hero, docData);
+                else if (id === 'projects_page') newContent.projectsPage = mergeData(baseData.projectsPage, docData);
+                else if (id === 'contact') newContent[id] = mergeData(baseData.contact, docData);
+                else if (id === 'navbar') newContent[id] = mergeData(baseData.navbar, docData);
+                else if (id === 'personal') {
                     newContent.name = docData.name || baseData.name;
                     newContent.role = docData.role || baseData.role;
-                } else {
-                    newContent[id] = docData;
-                }
+                } else newContent[id] = docData;
             });
-
             setData(prev => ({ ...prev, ...newContent }));
             setContentLoaded(true);
         }, (error) => {
@@ -256,31 +294,16 @@ export function usePortfolio(userId?: string) {
             setContentLoaded(true);
         });
 
-        // Listen to User Profile (for Name fallback)
         let profileUnsub = () => { };
-        if (effectiveUserId) {
-            // We use a separate listener for the user profile doc "users/{uid}"
-            const profileRef = doc(db, "users", effectiveUserId);
-            profileUnsub = onSnapshot(profileRef, (docSnap) => {
+        if (profileRef) {
+            profileUnsub = onSnapshot(profileRef, (docSnap: DocumentSnapshot) => {
                 if (docSnap.exists()) {
                     const profileData = docSnap.data();
                     const displayName = profileData.displayName || profileData.username;
                     if (displayName) {
                         setData(prev => {
-                            // Only update if 'personal' content hasn't set a name already
-                            // Or if the current name is the default "User Portfolio"
-                            // We can't easily check here if 'personal' exists in 'prev', 
-                            // so we'll just update if it looks default or we want to sync.
-                            // Better approach: merge it.
-                            const currentName = prev.name;
-                            const isDefault = currentName === "User Portfolio" || currentName === "New Portfolio";
-                            if (isDefault || !prev.role) { // minimal check
-                                return {
-                                    ...prev,
-                                    name: displayName,
-                                    // Could also use customDomain or other fields here
-                                };
-                            }
+                            const isDefault = prev.name === "User Portfolio" || prev.name === "New Portfolio";
+                            if (isDefault) return { ...prev, name: displayName };
                             return prev;
                         });
                     }
@@ -288,24 +311,18 @@ export function usePortfolio(userId?: string) {
             });
         }
 
-
-        // Listen to Projects
-        const projectsUnsub = onSnapshot(projectsRef, (snapshot) => {
+        const projectsUnsub = onSnapshot(projectsRef as any, (snapshot: QuerySnapshot) => {
             if (snapshot.empty) {
                 setData(prev => ({ ...prev, projects: [] }));
                 setProjectsLoaded(true);
                 return;
             }
-
-            const projects = snapshot.docs.map(doc => {
-                const d = doc.data();
+            const projectsList = snapshot.docs.map(docSnap => {
+                const d = docSnap.data();
                 let createdAt = d.createdAt;
-                if (createdAt && typeof createdAt.toDate === 'function') {
-                    createdAt = createdAt.toDate();
-                }
-
+                if (createdAt && typeof createdAt.toDate === 'function') createdAt = createdAt.toDate();
                 return {
-                    id: doc.id,
+                    id: docSnap.id,
                     title: d.title,
                     description: d.description,
                     fullDescription: d.fullDescription || "",
@@ -322,8 +339,7 @@ export function usePortfolio(userId?: string) {
                 const bTime = b.createdAt instanceof Date ? b.createdAt.getTime() : 0;
                 return bTime - aTime;
             });
-
-            setData(prev => ({ ...prev, projects }));
+            setData(prev => ({ ...prev, projects: projectsList }));
             setProjectsLoaded(true);
         }, (error) => {
             console.error("Error fetching projects:", error);
@@ -335,9 +351,8 @@ export function usePortfolio(userId?: string) {
             profileUnsub();
             projectsUnsub();
         };
-    }, [effectiveUserId, currentLanguage, baseData]);
+    }, [resolvedUid, isResolving, currentLanguage.code, currentLanguage.isDefault, baseData, fetchFromRoot]);
 
-    const isLoading = !contentLoaded || !projectsLoaded;
-
+    const isLoading = isResolving || !contentLoaded || !projectsLoaded;
     return { data, loading: isLoading };
 }
