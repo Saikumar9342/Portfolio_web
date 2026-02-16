@@ -72,6 +72,15 @@ export function LoadingScreen() {
                 </div>
             </div>
 
+            {/* Powered by Anthrix Footer */}
+            <div className="absolute bottom-12 left-0 right-0 flex flex-col items-center gap-1">
+                <Typography className="text-[10px] font-black uppercase tracking-[0.4em] text-white/10">
+                    Powered by
+                </Typography>
+                <Typography className="text-sm font-black uppercase tracking-[0.8em] text-white/30 ml-2">
+                    Anthrix
+                </Typography>
+            </div>
         </div>
     );
 }

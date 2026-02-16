@@ -431,7 +431,11 @@ export function Footer({ contact, about, navbar, name, targetUserId }: FooterPro
                 </div>
 
                 <div className="mt-12 pt-6 border-t border-foreground/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                    <span>(c) {new Date().getFullYear()} {name}. All Rights Reserved.</span>
+                    <div className="flex flex-col md:flex-row items-center gap-2 md:gap-4">
+                        <span>(c) {new Date().getFullYear()} {name}. All Rights Reserved.</span>
+                        <span className="hidden md:block opacity-20">|</span>
+                        <span className="text-accent/60">Powered by Anthrix</span>
+                    </div>
                     <div className="flex gap-6">
                         <span className="hover:text-foreground cursor-pointer transition-colors hover:translate-y-[-2px]">Privacy</span>
                         <span className="hover:text-foreground cursor-pointer transition-colors hover:translate-y-[-2px]">Terms</span>
