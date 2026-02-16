@@ -50,26 +50,31 @@ export async function middleware(request: NextRequest) {
         return NextResponse.next();
     }
 
-    const primaryDomain = (process.env.NEXT_PUBLIC_PRIMARY_DOMAIN || "resume-portfolioweb.netlify.app")
+    const primaryDomain = (process.env.NEXT_PUBLIC_PRIMARY_DOMAIN || "anithix.com")
         .trim()
         .toLowerCase();
     const localHosts = new Set(["localhost", "127.0.0.1", "::1"]);
 
-    if (host === primaryDomain || localHosts.has(host)) {
+    // 1. Handle Brand Domain, Localhost, or Product Subdomains (e.g., atom.anithix.com)
+    const isSystemProduct = host === `atom.${primaryDomain}` || host === `www.${primaryDomain}`;
+
+    if (host === primaryDomain || localHosts.has(host) || isSystemProduct) {
         return NextResponse.next();
     }
 
+    // 2. Handle External Custom Domains (e.g., deus.com)
     let userId = await resolveUserIdFromDomain(host);
     if (!userId && host.startsWith("www.")) {
         userId = await resolveUserIdFromDomain(host.replace(/^www\./, ""));
     }
-    if (!userId) {
-        return NextResponse.next();
+
+    if (userId) {
+        const rewriteUrl = request.nextUrl.clone();
+        rewriteUrl.pathname = `/p/${userId}${pathname === '/' ? '' : pathname}`;
+        return NextResponse.rewrite(rewriteUrl);
     }
 
-    const rewriteUrl = request.nextUrl.clone();
-    rewriteUrl.pathname = `/p/${userId}`;
-    return NextResponse.rewrite(rewriteUrl);
+    return NextResponse.next();
 }
 
 export const config = {
