@@ -155,6 +155,8 @@ export function usePortfolio(userId?: string) {
     const [isResolving, setIsResolving] = useState(!!effectiveUserId);
 
     const { currentLanguage } = useLanguage();
+    const languageCode = currentLanguage.code;
+    const isDefaultLanguage = currentLanguage.isDefault;
 
     // 1. Resolve username to UID if necessary
     useEffect(() => {
@@ -216,147 +218,221 @@ export function usePortfolio(userId?: string) {
 
     // 2. Setup Listeners
     useEffect(() => {
-        // CRITICAL: If we are still resolving a username, DO NOT start listeners.
-        // Starting listeners without a resolvedUid often defaults to 'root' collections,
-        // which is why the admin's portfolio was flashing first.
         if (isResolving) return;
-
-        // If we are on a user page but haven't resolved a UID yet (and aren't root), wait.
         if (!fetchFromRoot && !resolvedUid) return;
 
-        let contentRef;
-        let projectsRef;
-        let profileRef: any = null;
+        // Initialize loaded states when starting listeners for a new context
+        setContentLoaded(false);
+        setProjectsLoaded(false);
 
-        if (resolvedUid) {
-            const uid = resolvedUid;
-            profileRef = doc(db, "users", uid);
-            if (currentLanguage.isDefault) {
-                contentRef = collection(db, "users", uid, "content");
-                projectsRef = collection(db, "users", uid, "projects");
-            } else {
-                contentRef = collection(db, "users", uid, "languages", currentLanguage.code, "content");
-                projectsRef = collection(db, "users", uid, "languages", currentLanguage.code, "projects");
-            }
-        } else {
-            // Main site or Admin root paths
-            if (currentLanguage?.isDefault) {
-                contentRef = collection(db, "content");
-                projectsRef = collection(db, "projects");
-            } else {
-                contentRef = collection(db, "languages", currentLanguage.code, "content");
-                projectsRef = collection(db, "languages", currentLanguage.code, "projects");
-            }
-        }
-
-        const mergeData = (target: any, source: any) => {
+        /**
+         * Deeply merges source onto target.
+         * @param ignoreImages If true, keys containing 'imageurl' or 'icon' will not be overwritten.
+         */
+        const mergeData = (target: any, source: any, ignoreImages: boolean = false): any => {
+            if (!source) return target;
             const result = { ...target };
+
             for (const key in source) {
-                if (source[key] !== undefined && source[key] !== null) {
-                    if (Array.isArray(source[key])) {
-                        if (source[key].length > 0) result[key] = source[key];
-                    } else if (typeof source[key] === 'object' && !Array.isArray(source[key])) {
-                        result[key] = { ...target[key], ...source[key] };
+                if (Object.prototype.hasOwnProperty.call(source, key)) {
+                    const val = source[key];
+                    if (val === undefined || val === null) continue;
+
+                    if (Array.isArray(val)) {
+                        // Deeply merge arrays of objects (like Expertise services)
+                        if (Array.isArray(target[key]) && typeof val[0] === 'object' && val[0] !== null) {
+                            result[key] = val.map((item: any, idx: number) => {
+                                const targetItem = target[key][idx] || {};
+                                return mergeData(targetItem, item, ignoreImages);
+                            });
+                        } else if (val.length > 0) {
+                            result[key] = val;
+                        }
+                    } else if (typeof val === 'object' && val !== null) {
+                        result[key] = mergeData(target[key], val, ignoreImages);
                     } else {
-                        result[key] = source[key];
+                        // Only skip images if we are explicitly told to (e.g. during translation merge)
+                        if (ignoreImages && (key.toLowerCase().includes('imageurl') || key.toLowerCase().includes('icon'))) {
+                            continue;
+                        }
+                        result[key] = val;
                     }
                 }
             }
             return result;
         };
 
-        const contentUnsub = onSnapshot(contentRef as any, (snapshot: QuerySnapshot) => {
-            const newContent: any = {};
-            if (snapshot.empty) {
-                // If we are looking for a specific user and they have NO content, show 404
-                if (!fetchFromRoot) setIsNotFound(true);
-                setData(baseData);
-                setContentLoaded(true);
-                return;
-            }
-            snapshot.forEach(docSnap => {
-                const docData = docSnap.data();
-                const id = docSnap.id;
-                if (id === 'skills') newContent[id] = mergeData(baseData.skills, docData);
-                else if (id === 'about') {
-                    const socialLinks = normalizeSocialLinks(docData.socialLinks);
-                    const baseAbout = mergeData(baseData.about, docData);
-                    newContent[id] = { ...baseAbout, socialLinks: socialLinks.length > 0 ? socialLinks : baseData.about.socialLinks };
-                } else if (id === 'expertise') newContent[id] = mergeData(baseData.expertise, docData);
-                else if (id === 'hero') newContent[id] = mergeData(baseData.hero, docData);
-                else if (id === 'projects_page') newContent.projectsPage = mergeData(baseData.projectsPage, docData);
-                else if (id === 'contact') newContent[id] = mergeData(baseData.contact, docData);
-                else if (id === 'navbar') newContent[id] = mergeData(baseData.navbar, docData);
-                else if (id === 'personal') {
-                    newContent.name = docData.name || baseData.name;
-                    newContent.role = docData.role || baseData.role;
-                } else newContent[id] = docData;
-            });
-            setData(prev => ({ ...prev, ...newContent }));
-            setContentLoaded(true);
-        }, (error) => {
-            console.error("Error fetching content:", error);
-            setContentLoaded(true);
-        });
+        const mapProject = (docSnap: any): Project => {
+            const d = docSnap.data();
+            let createdAt = d.createdAt;
+            if (createdAt && typeof createdAt.toDate === 'function') createdAt = createdAt.toDate();
+            return {
+                id: docSnap.id,
+                title: d.title,
+                description: d.description,
+                fullDescription: d.fullDescription || "",
+                role: d.role || "",
+                techStack: d.techStack || [],
+                imageUrl: d.imageUrl || "",
+                liveLink: d.liveLink || "",
+                githubLink: d.githubLink || "",
+                category: d.category || "",
+                createdAt
+            } as Project;
+        };
 
-        let profileUnsub = () => { };
-        if (profileRef) {
-            profileUnsub = onSnapshot(profileRef, (docSnap: DocumentSnapshot) => {
-                if (docSnap.exists()) {
-                    const profileData = docSnap.data();
-                    const displayName = profileData.displayName || profileData.username;
-                    if (displayName) {
-                        setData(prev => {
-                            const isDefault = prev.name === "User Portfolio" || prev.name === "New Portfolio";
-                            if (isDefault) return { ...prev, name: displayName };
-                            return prev;
-                        });
-                    }
+        // Storage for individual streams
+        const rawDefaultContent: any = {};
+        const rawLocalizedContent: any = {};
+        const rawDefaultProjects: Map<string, Project> = new Map();
+        const rawLocalizedProjects: Map<string, Project> = new Map();
+
+        const syncAllSubsystems = () => {
+            const newContentConfigs: any = {};
+
+            // 1. Merge Content Docs
+            // We consider all documents from hardcoded baseData AND Firestore
+            const contentKeys = ['hero', 'about', 'expertise', 'skills', 'contact', 'navbar', 'projects_page', 'personal'];
+
+            contentKeys.forEach(id => {
+                const defDoc = rawDefaultContent[id];
+                const locDoc = rawLocalizedContent[id];
+
+                // Base template from hardcoded data
+                let baseTemplate: any = (baseData as any)[id] || {};
+                // Handle naming difference: Firestore uses 'projects_page', hardcoded data uses 'projectsPage'
+                if (id === 'projects_page') {
+                    baseTemplate = baseData.projectsPage;
+                }
+
+                // Merge: Hardcoded Base < Default Firestore (English) < Localized Firestore (Translation)
+                // When merging English (defDoc) onto hardcoded base, we ALLOW image updates (ignoreImages: false)
+                let merged = defDoc ? mergeData(baseTemplate, defDoc, false) : baseTemplate;
+
+                // When merging Localized (locDoc) onto English, we BLOCK image updates (ignoreImages: true)
+                if (locDoc) {
+                    merged = mergeData(merged, locDoc, true);
+                }
+
+                if (id === 'personal') {
+                    newContentConfigs.name = locDoc?.name || defDoc?.name || baseData.name;
+                    newContentConfigs.role = locDoc?.role || defDoc?.role || baseData.role;
+                } else if (id === 'projects_page') {
+                    newContentConfigs.projectsPage = merged;
+                } else if (id === 'about') {
+                    // Special handling for social links to ensure they are always valid SocialLink[]
+                    const socialLinks = normalizeSocialLinks(locDoc?.socialLinks || defDoc?.socialLinks);
+                    newContentConfigs.about = {
+                        ...merged,
+                        socialLinks: socialLinks.length > 0 ? socialLinks : baseData.about.socialLinks
+                    };
+                } else {
+                    newContentConfigs[id] = merged;
                 }
             });
-        }
 
-        const projectsUnsub = onSnapshot(projectsRef as any, (snapshot: QuerySnapshot) => {
-            if (snapshot.empty) {
-                setData(prev => ({ ...prev, projects: [] }));
-                setProjectsLoaded(true);
-                return;
-            }
-            const projectsList = snapshot.docs.map(docSnap => {
-                const d = docSnap.data();
-                let createdAt = d.createdAt;
-                if (createdAt && typeof createdAt.toDate === 'function') createdAt = createdAt.toDate();
+            // 2. Merge Projects
+            const allProjectIds = new Set([
+                ...Array.from(rawDefaultProjects.keys()),
+                ...Array.from(rawLocalizedProjects.keys())
+            ]);
+
+            const mergedProjects = Array.from(allProjectIds).map(id => {
+                const defProj = rawDefaultProjects.get(id);
+                const locProj = rawLocalizedProjects.get(id);
+
+                if (!locProj) return defProj!;
+                if (!defProj) return locProj;
+
+                // Merge locProj onto defProj
                 return {
-                    id: docSnap.id,
-                    title: d.title,
-                    description: d.description,
-                    fullDescription: d.fullDescription || "",
-                    role: d.role || "",
-                    techStack: d.techStack || [],
-                    imageUrl: d.imageUrl || "",
-                    liveLink: d.liveLink || "",
-                    githubLink: d.githubLink || "",
-                    category: d.category || "",
-                    createdAt
-                } as Project;
+                    ...defProj,
+                    ...locProj,
+                    // FORCE use default English image for projects to ensure consistency across languages
+                    imageUrl: defProj.imageUrl
+                };
             }).sort((a, b) => {
                 const aTime = a.createdAt instanceof Date ? a.createdAt.getTime() : 0;
                 const bTime = b.createdAt instanceof Date ? b.createdAt.getTime() : 0;
                 return bTime - aTime;
             });
-            setData(prev => ({ ...prev, projects: projectsList }));
-            setProjectsLoaded(true);
-        }, (error) => {
-            console.error("Error fetching projects:", error);
-            setProjectsLoaded(true);
-        });
 
-        return () => {
-            contentUnsub();
-            profileUnsub();
-            projectsUnsub();
+            setData(prev => ({
+                ...prev,
+                ...newContentConfigs,
+                projects: mergedProjects.length > 0 ? mergedProjects : baseData.projects
+            }));
         };
-    }, [resolvedUid, isResolving, currentLanguage.code, currentLanguage.isDefault, baseData, fetchFromRoot]);
+
+        // Determine Refs
+        const uid = resolvedUid;
+        const profileRef = uid ? doc(db, "users", uid) : null;
+
+        const defContentRef = uid ? collection(db, "users", uid, "content") : collection(db, "content");
+        const defProjectsRef = uid ? collection(db, "users", uid, "projects") : collection(db, "projects");
+
+        const isDefault = currentLanguage.isDefault;
+        const locContentRef = !isDefaultLanguage ? (uid
+            ? collection(db, "users", uid, "languages", languageCode, "content")
+            : collection(db, "languages", languageCode, "content")
+        ) : null;
+        const locProjectsRef = !isDefaultLanguage ? (uid
+            ? collection(db, "users", uid, "languages", languageCode, "projects")
+            : collection(db, "languages", languageCode, "projects")
+        ) : null;
+
+        // LISTENERS
+        const unsubs: (() => void)[] = [];
+
+        // 1. Default Content
+        unsubs.push(onSnapshot(defContentRef as any, (snap: QuerySnapshot) => {
+            snap.forEach(d => rawDefaultContent[d.id] = d.data());
+            setContentLoaded(true);
+            syncAllSubsystems();
+        }, (err: any) => { console.error("Def Content Err:", err); setContentLoaded(true); }));
+
+        // 2. Default Projects
+        unsubs.push(onSnapshot(defProjectsRef as any, (snap: QuerySnapshot) => {
+            snap.docs.forEach(d => rawDefaultProjects.set(d.id, mapProject(d)));
+            setProjectsLoaded(true);
+            syncAllSubsystems();
+        }, (err: any) => { console.error("Def Proj Err:", err); setProjectsLoaded(true); }));
+
+        // 3. Localized Content (Optional)
+        if (locContentRef) {
+            unsubs.push(onSnapshot(locContentRef as any, (snap: QuerySnapshot) => {
+                snap.forEach(d => rawLocalizedContent[d.id] = d.data());
+                syncAllSubsystems();
+            }));
+        }
+
+        // 4. Localized Projects (Optional)
+        if (locProjectsRef) {
+            unsubs.push(onSnapshot(locProjectsRef as any, (snap: QuerySnapshot) => {
+                snap.docs.forEach(d => rawLocalizedProjects.set(d.id, mapProject(d)));
+                syncAllSubsystems();
+            }));
+        }
+
+        // 5. Profile Listener (Independent)
+        if (profileRef) {
+            unsubs.push(onSnapshot(profileRef, (docSnap: DocumentSnapshot) => {
+                if (docSnap.exists()) {
+                    const profileData = docSnap.data();
+                    const displayName = profileData.displayName || profileData.username;
+                    if (displayName) {
+                        setData(prev => {
+                            const isDefaultName = prev.name === "User Portfolio" || prev.name === "New Portfolio";
+                            if (isDefaultName) return { ...prev, name: displayName };
+                            return prev;
+                        });
+                    }
+                }
+            }));
+        }
+
+        return () => unsubs.forEach(u => u());
+    }, [resolvedUid, isResolving, languageCode, isDefaultLanguage, baseData, fetchFromRoot]);
 
     const isLoading = isResolving || (!isNotFound && (!contentLoaded || !projectsLoaded));
     return { data, loading: isLoading, notFound: isNotFound };
