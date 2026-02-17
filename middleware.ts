@@ -68,6 +68,11 @@ export async function middleware(request: NextRequest) {
         userId = await resolveUserIdFromDomain(host.replace(/^www\./, ""));
     }
 
+    // High-Priority Fail-safe for saikumar.is-a.dev
+    if (!userId && (host === "saikumar.is-a.dev" || host === "www.saikumar.is-a.dev")) {
+        userId = "W8ScjbrMSuXBaQm5IWCQ5E6bAsk2";
+    }
+
     if (userId) {
         const rewriteUrl = request.nextUrl.clone();
         rewriteUrl.pathname = `/p/${userId}${pathname === '/' ? '' : pathname}`;
