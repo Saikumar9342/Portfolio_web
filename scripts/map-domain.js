@@ -1,8 +1,16 @@
+// Run with: node --env-file=.env.local scripts/map-domain.js (Node 20+)
+// Or: export $(cat .env.local | xargs) && node scripts/map-domain.js
 
-const projectId = 'portfolio-86c25';
-const apiKey = 'AIzaSyBPmggbdAUzzwwh5UB8ZBFzeXnDNqtmB4w';
+const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
+const apiKey = process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
 const domain = 'saikumar.is-a.dev';
 const userId = 'W8ScjbrMSuXBaQm5IWCQ5E6bAsk2';
+
+if (!projectId || !apiKey) {
+    console.error('Error: Environment variables NEXT_PUBLIC_FIREBASE_PROJECT_ID or NEXT_PUBLIC_FIREBASE_API_KEY are missing.');
+    console.error('Please run with environment variables loaded (e.g., node --env-file=.env.local scripts/map-domain.js)');
+    process.exit(1);
+}
 
 async function mapDomain() {
     const url = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/domain_mappings?documentId=${encodeURIComponent(domain)}&key=${apiKey}`;
