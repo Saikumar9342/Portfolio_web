@@ -50,6 +50,19 @@ export async function POST(req: Request) {
 
         const message = {
             notification: { title, body },
+            android: {
+                notification: {
+                    sound: "default",
+                    priority: "high" as const,
+                },
+            },
+            apns: {
+                payload: {
+                    aps: {
+                        sound: "default",
+                    },
+                },
+            },
             tokens: tokens,
         };
 
