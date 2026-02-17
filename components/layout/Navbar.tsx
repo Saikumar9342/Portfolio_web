@@ -74,30 +74,30 @@ export function Navbar({ name, data, contact, loading, userId }: NavbarProps) {
         >
             <div className="max-w-7xl mx-auto px-4 md:px-6 flex justify-between items-center">
                 {/* Logo */}
-                <Link href={userId ? `/p/${userId}` : "/"} className="flex items-center gap-3 group">
+                <Link href={userId ? `/p/${userId}` : "/"} className="flex items-center gap-2 group">
                     <motion.div
                         whileHover={{ scale: 1.05 }}
                         className="flex items-center justify-center transition-transform"
                     >
-                        <BrandLogo className="text-foreground" size={36} />
+                        <BrandLogo className="text-foreground" size={28} />
                     </motion.div>
                     <div className="hidden sm:flex flex-col">
-                        <span className="text-xl font-bold tracking-tighter text-foreground uppercase">{data?.logoText || (name ? name.charAt(0).toLowerCase() : "s")}</span>
+                        <span className="text-base font-outfit font-black tracking-tighter text-foreground uppercase">{data?.logoText || (name ? name.charAt(0).toLowerCase() : "s")}</span>
                     </div>
                 </Link>
 
                 {/* Desktop Nav */}
                 <div className="hidden md:flex items-center gap-8">
-                    <div className="flex gap-6 text-sm font-medium">
+                    <div className="flex gap-6 text-[10px] font-inter font-black uppercase tracking-[0.3em] text-muted-foreground">
                         {navItems.map((item) => (
                             <Link
                                 key={item.label}
                                 href={item.href}
-                                className="relative text-muted-foreground hover:text-foreground transition-colors group py-2"
+                                className="relative hover:text-foreground transition-colors group py-2"
                             >
                                 {item.label}
                                 <motion.span
-                                    className="absolute bottom-0 left-0 w-0 h-0.5 bg-accent rounded-full transition-all duration-300 group-hover:w-full"
+                                    className="absolute bottom-0 left-0 w-0 h-px bg-[#C6A969] rounded-full transition-all duration-300 group-hover:w-full"
                                     layoutId="nav-underline"
                                 />
                             </Link>
@@ -113,7 +113,7 @@ export function Navbar({ name, data, contact, loading, userId }: NavbarProps) {
                                 href={contact?.email ? `mailto:${contact.email}` : "#"}
                                 className={cn(
                                     buttonVariants({ variant: "default" }),
-                                    "rounded-xl px-8 h-12 flex items-center justify-center font-bold text-xs uppercase tracking-widest shadow-xl shadow-accent/10 hover:shadow-accent/20 transition-all"
+                                    "rounded-lg px-5 h-9 flex items-center justify-center font-outfit font-black text-[9px] uppercase tracking-[0.3em] shadow-xl shadow-[#C6A969]/5 hover:bg-[#C6A969] hover:text-black transition-all border-none bg-white/5 text-white"
                                 )}
                             >
                                 {ctaText}

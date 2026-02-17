@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     openGraph: {
         type: 'website',
         locale: 'en_US',
-        url: 'https://saikumar.dev',
+        url: 'https://atom.anithix.com',
         siteName: 'ATOM Portfolio',
     }
 }
