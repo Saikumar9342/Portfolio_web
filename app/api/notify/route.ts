@@ -1,12 +1,16 @@
-
+import { db, messaging, verifyInternalSecret } from "@/lib/firebase-admin";
 import { NextResponse } from "next/server";
-import { admin, db, messaging } from "@/lib/firebase-admin";
 
 export async function POST(req: Request) {
     try {
+        // 1. Security Check
+        if (!verifyInternalSecret(req)) {
+            console.error("--- UNAUTHORIZED NOTIFY ATTEMPT ---");
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+
         const bodyData = await req.json();
         console.log("--- NOTIFY API CALLED ---");
-        console.log("Request Body:", JSON.stringify(bodyData, null, 2));
 
         const { targetUserId, title, body } = bodyData;
 
@@ -15,70 +19,46 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
         }
 
-        // Fetch user's FCM tokens from Firestore
+        // Fetch user's FCM tokens
         const userDoc = await db.collection("users").doc(targetUserId).get();
-        if (!userDoc.exists) {
-            console.log(`--- ERROR: User ${targetUserId} not found in Firestore ---`);
-            return NextResponse.json({ message: "User not found" }, { status: 404 });
-        }
+        const fcmDoc = await db.collection("users").doc(targetUserId).collection("private").doc("fcm").get();
 
-        const userData = userDoc.data();
-        // Support both single token 'fcmToken' and array 'fcmTokens'
-        let tokens: string[] = userData?.fcmTokens || [];
+        let tokens: string[] = [];
 
-        // Add single token if it exists and isn't already in the list
-        if (userData?.fcmToken && !tokens.includes(userData.fcmToken)) {
-            tokens.push(userData.fcmToken);
-        }
-
-        if (tokens.length === 0) {
-            return NextResponse.json({ message: "No devices registered for notifications" });
-        }
-
-        // Send multicast message
-        const message: any = {
-            notification: {
-                title,
-                body,
-            },
-            data: {
-                click_action: "FLUTTER_NOTIFICATION_CLICK",
-                sound: "default"
-            },
-            tokens: tokens, // sendEachForMulticast handles this list
-        };
-
-        console.log(`--- SENDING VIA sendEachForMulticast to ${tokens.length} tokens ---`);
-        // Using sendEachForMulticast to avoid legacy /batch endpoint issues
-        const response = await messaging.sendEachForMulticast(message);
-        console.log(`--- SENT: Success=${response.successCount}, Fail=${response.failureCount} ---`);
-
-        // Clean up invalid tokens
-        if (response.failureCount > 0) {
-            const failedTokens: string[] = [];
-            response.responses.forEach((resp, idx) => {
-                if (!resp.success) {
-                    failedTokens.push(tokens[idx]);
-                }
-            });
-
-            if (failedTokens.length > 0) {
-                const updateData: any = {
-                    fcmTokens: admin.firestore.FieldValue.arrayRemove(...failedTokens)
-                };
-
-                // If the single token failed, remove it too
-                if (userData?.fcmToken && failedTokens.includes(userData.fcmToken)) {
-                    updateData.fcmToken = admin.firestore.FieldValue.delete();
-                }
-
-                await db.collection("users").doc(targetUserId).update(updateData);
+        if (userDoc.exists) {
+            const data = userDoc.data();
+            if (data?.fcmToken) tokens.push(data.fcmToken);
+            if (data?.fcmTokens && Array.isArray(data.fcmTokens)) {
+                tokens.push(...data.fcmTokens);
             }
         }
 
+        if (fcmDoc.exists) {
+            const data = fcmDoc.data();
+            if (data?.tokens && Array.isArray(data.tokens)) {
+                tokens.push(...data.tokens);
+            }
+        }
+
+        // De-duplicate
+        tokens = Array.from(new Set(tokens));
+
+        if (tokens.length === 0) {
+            console.log(`--- No tokens found for user ${targetUserId} ---`);
+            return NextResponse.json({ message: "No tokens found" }, { status: 200 });
+        }
+
+        const message = {
+            notification: { title, body },
+            tokens: tokens,
+        };
+
+        const response = await messaging.sendEachForMulticast(message);
+        console.log(`--- SUCCESS: Sent notification to ${response.successCount} devices ---`);
+
         return NextResponse.json({
             success: true,
-            sentCount: response.successCount,
+            successCount: response.successCount,
             failureCount: response.failureCount
         });
 

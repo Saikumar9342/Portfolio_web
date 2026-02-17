@@ -42,3 +42,14 @@ try {
 
 // @ts-ignore
 export { admin, db, messaging };
+
+export const verifyInternalSecret = (req: Request) => {
+    const secret = process.env.INTERNAL_NOTIFY_SECRET;
+    const providedSecret = req.headers.get("x-internal-secret");
+
+    // If no secret is configured, we allow it (for retro-compatibility during setup)
+    // but in production, this should be enforced.
+    if (!secret) return true;
+
+    return secret === providedSecret;
+};

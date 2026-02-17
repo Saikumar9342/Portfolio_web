@@ -38,11 +38,10 @@ service cloud.firestore {
       allow write: if isOwner(userId) || isAdmin();
     }
 
-    // Public profile metadata for link/domain routing
+    // Public profile metadata (Restrict sensitive fields if possible)
     match /users/{userId} {
-      allow read: if true;
-      allow create, update: if isOwner(userId) || isAdmin();
-      allow delete: if isAdmin();
+      allow read: if true; // Needs to be true for website to load bio/name
+      allow write: if isOwner(userId) || isAdmin();
     }
 
     // Username -> user routing map
@@ -72,11 +71,30 @@ service cloud.firestore {
         || (isSignedIn() && resource.data.userId == request.auth.uid);
     }
 
-    // Messages / Inquiries
+    // User-specific messages/inquiries
+    match /users/{userId}/messages/{messageId} {
+      allow create: if isValidMessage(request.resource.data);
+      allow read, delete: if isOwner(userId) || isAdmin();
+      allow update: if isAdmin();
+    }
+
+    // Global Messages/Inquiries
     match /messages/{messageId} {
-      allow create: if true; // Guests can send messages
-      allow read, update, delete: if isAdmin() 
-        || (isSignedIn() && resource.data.targetUserId == request.auth.uid);
+      allow create: if isValidMessage(request.resource.data);
+      allow read, delete: if isAdmin();
+      allow update: if isAdmin();
+    }
+
+    // Private user data (FCM tokens, etc)
+    match /users/{userId}/private/{docId} {
+      allow read, write: if isOwner(userId) || isAdmin();
+    }
+
+    // Helper for message validation
+    function isValidMessage(data) {
+      return data.name is string && data.name.size() > 0 && data.name.size() < 100
+          && data.email is string && data.email.matches('.+@.+\\..+')
+          && data.message is string && data.message.size() > 0 && data.message.size() < 5000;
     }
 
     // Languages (Global and User-Specific)

@@ -149,7 +149,10 @@ export function Footer({ contact, about, navbar, name, targetUserId }: FooterPro
                 if (notifyTarget) {
                     await fetch("/api/notify", {
                         method: "POST",
-                        headers: { "Content-Type": "application/json" },
+                        headers: {
+                            "Content-Type": "application/json",
+                            "x-internal-secret": "change-me" // Should match INTERNAL_NOTIFY_SECRET
+                        },
                         body: JSON.stringify({
                             targetUserId: notifyTarget,
                             title: isAdminTarget ? `🚀 New Lead: ${name}` : `📩 Message from ${name}`,
