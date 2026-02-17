@@ -13,17 +13,32 @@ console.log("Private Key Length:", serviceAccount.privateKey ? serviceAccount.pr
 
 if (!admin.apps.length) {
     try {
-        admin.initializeApp({
-            credential: admin.credential.cert(serviceAccount),
-            projectId: serviceAccount.projectId
-        });
-        console.log("--- FIREBASE ADMIN INIT SUCCESS ---");
+        if (serviceAccount.clientEmail && serviceAccount.privateKey) {
+            admin.initializeApp({
+                credential: admin.credential.cert(serviceAccount),
+                projectId: serviceAccount.projectId
+            });
+            console.log("--- FIREBASE ADMIN INIT SUCCESS ---");
+        } else {
+            console.warn("--- FIREBASE ADMIN: Missing Email or Key. Skipping Init (Build safe) ---");
+        }
     } catch (e) {
-        console.error("--- FIREBASE ADMIN INIT ERROR ---", e);
+        console.error("--- FIREBASE ADMIN INIT ERROR (Non-fatal) ---", e);
     }
 }
 
-const db = admin.firestore();
-const messaging = admin.messaging();
 
+let db: admin.firestore.Firestore;
+let messaging: admin.messaging.Messaging;
+
+try {
+    if (admin.apps.length > 0) {
+        db = admin.firestore();
+        messaging = admin.messaging();
+    }
+} catch (e) {
+    console.error("Firebase services initialization failed:", e);
+}
+
+// @ts-ignore
 export { admin, db, messaging };
