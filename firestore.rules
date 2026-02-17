@@ -71,5 +71,23 @@ service cloud.firestore {
       allow delete: if isAdmin()
         || (isSignedIn() && resource.data.userId == request.auth.uid);
     }
+
+    // Messages / Inquiries
+    match /messages/{messageId} {
+      allow create: if true; // Guests can send messages
+      allow read, update, delete: if isAdmin() 
+        || (isSignedIn() && resource.data.targetUserId == request.auth.uid);
+    }
+
+    // Languages (Global and User-Specific)
+    match /languages/{langId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    
+    match /users/{userId}/languages/{langId} {
+      allow read: if true;
+      allow write: if isOwner(userId) || isAdmin();
+    }
   }
 }
