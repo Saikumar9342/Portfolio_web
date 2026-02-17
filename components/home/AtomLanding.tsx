@@ -61,7 +61,7 @@ export function AtomLanding() {
                     >
                         <div className="inline-block px-4 py-1.5 rounded-full bg-[#C6A969]/10 border border-[#C6A969]/20 mb-4">
                             <Typography className="text-[10px] font-outfit font-black tracking-[0.4em] text-[#C6A969] uppercase leading-none">
-                                The Developer's Ecosystem
+                                The Developer&apos;s Ecosystem
                             </Typography>
                         </div>
 
