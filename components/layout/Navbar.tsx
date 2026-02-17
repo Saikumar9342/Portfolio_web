@@ -110,7 +110,7 @@ export function Navbar({ name, data, contact, loading, userId }: NavbarProps) {
                             whileTap={{ scale: 0.95 }}
                         >
                             <a
-                                href={contact?.email ? `mailto:${contact.email}` : "#"}
+                                href={data?.ctaHref || (contact?.email ? `mailto:${contact.email}` : "#")}
                                 className={cn(
                                     buttonVariants({ variant: "default" }),
                                     "rounded-lg px-5 h-9 flex items-center justify-center font-outfit font-black text-[9px] uppercase tracking-[0.3em] shadow-xl shadow-[#C6A969]/5 hover:bg-[#C6A969] hover:text-black transition-all border-none bg-white/5 text-white"
@@ -165,7 +165,7 @@ export function Navbar({ name, data, contact, loading, userId }: NavbarProps) {
                         className="pt-2"
                     >
                         <a
-                            href={contact?.email ? `mailto:${contact.email}` : "#"}
+                            href={data?.ctaHref || (contact?.email ? `mailto:${contact.email}` : "#")}
                             className={cn(
                                 buttonVariants({ variant: "default" }),
                                 "w-full rounded-xl h-12 flex items-center justify-center font-bold text-xs uppercase tracking-widest"

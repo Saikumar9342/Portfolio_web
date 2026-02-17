@@ -244,76 +244,74 @@ export function AtomLanding() {
                 </div>
             </section>
 
-            {/* TECH STACK - REIMAGINED */}
-            <section className="relative h-screen min-h-[700px] flex flex-col items-center px-6 snap-start border-t border-white/5 bg-black pt-20 pb-10">
-                {/* Decorative Tech Background */}
-                <div className="absolute inset-0 opacity-[0.02] pointer-events-none overflow-hidden">
-                    <Terminal className="absolute top-10 left-10 w-96 h-96 -rotate-12" />
-                    <Code2 className="absolute bottom-10 right-10 w-96 h-96 rotate-12" />
-                </div>
+            {/* TECH STACKS - MODERN MINIMALIST */}
+            <section className="relative h-screen min-h-[750px] flex flex-col items-center px-8 snap-start border-t border-white/5 bg-black pt-20 pb-10">
+                {/* Subtle Refined Grid */}
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:30px_30px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none" />
 
-                <div className="max-w-7xl mx-auto w-full relative z-10 flex-1 flex flex-col justify-between py-4">
-                    <div className="text-center">
-                        <motion.div initial={{ opacity: 0, y: -10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                            <Typography className="text-[#C6A969] font-black tracking-[0.6em] text-[9px] mb-3 uppercase">System Architecture</Typography>
-                            <Typography element="h2" className="text-3xl md:text-5xl lg:text-6xl font-outfit font-black tracking-tight uppercase leading-none">
-                                Engineered <br /> <span className="text-white/20">for Performance.</span>
+                <div className="max-w-7xl mx-auto w-full relative z-10 flex-1 flex flex-col items-center justify-center">
+                    <div className="text-center mb-12">
+                        <motion.div initial={{ opacity: 0, y: -5 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+                            <Typography className="text-[#C6A969] font-bold text-[9px] uppercase mb-3 tracking-normal">Core Infrastructure</Typography>
+                            <Typography element="h2" className="text-3xl md:text-5xl font-outfit font-black tracking-tight uppercase leading-none">
+                                SYSTEM <span className="text-white/20">PROTOCOLS.</span>
                             </Typography>
                         </motion.div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 px-4 md:px-0">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 px-4 md:px-0 w-full mb-12">
                         {[
-                            { icon: Cpu, title: "Next.js 15", desc: "Edge Runtime SSR", detail: "Sub-50ms TTFB across 300+ nodes." },
-                            { icon: Layers, title: "Motion Engine", desc: "Native Physics", detail: "60fps interactions via Framer Motion." },
-                            { icon: Database, title: "Firestore", desc: "Real-time Sync", detail: "Liquid data flow to mobile & web." },
-                            { icon: Cloud, title: "Edge Gateway", desc: "Middleware TLD", detail: "Dynamic proxying for custom domains." }
+                            { icon: Cpu, title: "Edge Performance", detail: "Sub-50ms TTFB global delivery." },
+                            { icon: Layers, title: "Native Physics", detail: "Hardware-accelerated engine." },
+                            { icon: Database, title: "Real-time State", detail: "Liquid sync across all nodes." },
+                            { icon: Cloud, title: "Edge Gateway", detail: "Zero-latency domain proxy." }
                         ].map((tech, i) => (
                             <motion.div
                                 key={i}
-                                initial={{ opacity: 0, y: 20 }}
+                                initial={{ opacity: 0, y: 10 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                transition={{ delay: i * 0.1 }}
+                                transition={{ delay: i * 0.1, duration: 0.5 }}
                             >
-                                <GlassCard className="p-5 h-full bg-white/[0.01] border-white/5 rounded-[1.5rem] flex flex-col items-center md:items-start text-center md:text-left hover:border-[#C6A969]/30 transition-all group overflow-hidden relative">
-                                    <div className="w-8 h-8 rounded-xl bg-[#C6A969]/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform relative z-10">
-                                        <tech.icon className="w-4 h-4 text-[#C6A969]" />
+                                <div className="p-5 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-all group flex flex-col items-center text-center">
+                                    <div className="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center mb-4 group-hover:border-[#C6A969]/30 border border-transparent transition-all">
+                                        <tech.icon className="w-4 h-4 text-white/50 group-hover:text-[#C6A969] transition-colors" />
                                     </div>
-                                    <Typography element="h4" className="text-[13px] font-outfit font-black text-white uppercase mb-1 tracking-tight relative z-10">{tech.title}</Typography>
-                                    <Typography className="text-[9px] text-[#C6A969] font-bold uppercase tracking-widest mb-2 relative z-10">{tech.desc}</Typography>
-                                    <Typography className="text-[10px] text-[#AAAAAA] leading-relaxed opacity-60 relative z-10">{tech.detail}</Typography>
-
-                                    {/* Accent Decoration */}
-                                    <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-[#C6A969]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                                </GlassCard>
+                                    <Typography className="text-[11px] font-outfit font-black text-white/90 uppercase mb-1 tracking-tight">{tech.title}</Typography>
+                                    <Typography className="text-[10px] text-[#AAAAAA] leading-relaxed opacity-60 font-medium tracking-tight">{tech.detail}</Typography>
+                                </div>
                             </motion.div>
                         ))}
                     </div>
 
-                    <div className="flex flex-col items-center">
-                        <motion.div initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} className="text-center space-y-6">
-                            <div className="space-y-1">
-                                <Typography element="h2" className="text-lg md:text-2xl font-outfit font-black tracking-tight uppercase leading-tight">Build your <span className="text-[#C6A969]">Digital Legacy.</span></Typography>
-                                <Typography className="text-[9px] text-[#AAAAAA] uppercase tracking-[0.4em] opacity-60">Zero Code. Absolute Authority.</Typography>
-                            </div>
-                            <Link href="https://github.com/Saikumar9342/register" target="_blank">
-                                <Button size="lg" className="h-11 px-10 rounded-xl bg-[#F5F5F7] text-black font-outfit font-black uppercase tracking-[0.4em] text-[9px] hover:bg-white shadow-2xl shadow-white/5 transform active:scale-95 transition-all">
-                                    Claim .is-a.dev Domain
-                                </Button>
-                            </Link>
-                        </motion.div>
-                    </div>
+                    <motion.div initial={{ opacity: 0, scale: 0.98 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} className="text-center">
+                        <div className="mb-6">
+                            <Typography className="text-[9px] text-[#C6A969] font-bold uppercase mb-1">Architecture Verified</Typography>
+                            <Typography element="h2" className="text-xl md:text-2xl font-outfit font-black tracking-tight uppercase text-white">
+                                BUILD YOUR <span className="text-[#C6A969]">IDENTITY.</span>
+                            </Typography>
+                        </div>
+                        <Link href="https://github.com/Saikumar9342/register" target="_blank">
+                            <Button size="lg" className="h-11 px-10 rounded-xl bg-white text-black font-outfit font-black uppercase tracking-tight text-[11px] hover:bg-[#C6A969] hover:text-white transition-all shadow-xl">
+                                Claim .is-a.dev Domain
+                            </Button>
+                        </Link>
+                    </motion.div>
                 </div>
 
-                {/* Minimal Footer */}
+                {/* Refined Footer - Clean & Integrated */}
                 <div className="max-w-7xl mx-auto w-full relative z-10 px-6">
-                    <footer className="pt-6 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
-                        <div className="flex items-center gap-3">
-                            <BrandLogo size={16} className="text-[#C6A969]/20" />
-                            <Typography className="text-[8px] font-black text-white/20 tracking-[0.4em] uppercase">Anthrix Engineering</Typography>
+                    <footer className="pt-6 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
+                        <div className="flex items-center gap-8">
+                            <div className="flex items-center gap-2">
+                                <BrandLogo size={16} className="text-[#C6A969]" />
+                                <Typography className="text-[10px] font-black text-white uppercase tracking-tight">ATOM ECOSYSTEM</Typography>
+                            </div>
+                            <Typography className="text-[10px] font-outfit font-bold text-white/40 uppercase tracking-tight">
+                                ARCHITECTED BY <span className="text-white">SAIKUMAR PASUMARTHI</span>
+                            </Typography>
                         </div>
-                        <Typography className="text-[7px] text-white/10 tracking-[0.2em] font-medium uppercase font-inter">© 2026 ATOM ECOSYSTEM • ALL RIGHTS RESERVED.</Typography>
+                        <Typography className="text-[8px] text-white/20 font-medium uppercase tracking-tight">© 2026 ANTHRIX ENGINEERING • ALL RIGHTS RESERVED.</Typography>
                     </footer>
                 </div>
             </section>

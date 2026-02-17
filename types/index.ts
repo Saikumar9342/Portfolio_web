@@ -110,6 +110,7 @@ export interface NavbarData {
     logoText: string;
     items: NavItem[];
     ctaText: string;
+    ctaHref?: string;
 }
 
 export interface ProjectsPageData {

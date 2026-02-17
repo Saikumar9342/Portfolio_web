@@ -19,7 +19,8 @@ export default function Home() {
                         { label: "Mobile", href: "#mobile" }
                     ],
                     logoText: "ATOM",
-                    ctaText: "Get Atom"
+                    ctaText: "Get Atom",
+                    ctaHref: "#mobile"
                 }}
                 contact={{ email: "saikumar.p9342@gmail.com" } as any}
             />
