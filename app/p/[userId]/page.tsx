@@ -218,10 +218,13 @@ export default function UserPortfolio() {
     const userId = params?.userId as string | undefined;
 
     // Use empty string fallback if needed, but hook handles undefined
-    const { data, loading, notFound } = usePortfolio(userId);
+    const { data, loading, notFound, resolvedUid } = usePortfolio(userId);
 
     if (loading) return <LoadingScreen />;
     if (notFound) return <NotFoundScreen />;
 
-    return <PortfolioContent data={data} userId={userId} />;
+    // Use resolved UID if available (for username URLs), otherwise fallback to param userId
+    const effectiveUserId = resolvedUid || userId;
+
+    return <PortfolioContent data={data} userId={effectiveUserId} />;
 }

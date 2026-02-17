@@ -6,11 +6,43 @@ import { useLanguage } from "@/context/LanguageContext";
 import { ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+import { usePathname } from "next/navigation";
+
 export function LanguageSwitcher() {
     const { languages, currentLanguage, setLanguage } = useLanguage();
     const [isCollapsed, setIsCollapsed] = useState(true);
     const [isOpen, setIsOpen] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
+
+    const pathname = usePathname();
+    const [isVisible, setIsVisible] = useState(true);
+
+    // Visibility Logic: Hide on Brand Landing Page ('/'), Show everywhere else (including custom domains)
+    useEffect(() => {
+        // If path is not root, always show (e.g. /p/userId)
+        if (pathname !== "/") {
+            setIsVisible(true);
+            return;
+        }
+
+        // If path is root ('/'), check if we are on the main domain or a custom domain.
+        // Main Domain = Landing Page (Hide Switcher)
+        // Custom Domain = User Portfolio (Show Switcher)
+        const hostname = window.location.hostname;
+        const primaryDomain = (process.env.NEXT_PUBLIC_PRIMARY_DOMAIN || "anithix.com").toLowerCase();
+
+        // Check if we are on the main branding site root
+        const isMainSite = hostname === primaryDomain ||
+            hostname === `www.${primaryDomain}` ||
+            hostname === "localhost" ||
+            hostname.endsWith(`.vercel.app`); // Vercel preview URLs
+
+        if (isMainSite) {
+            setIsVisible(false);
+        } else {
+            setIsVisible(true);
+        }
+    }, [pathname]);
 
     // Close menu on click outside
     useEffect(() => {
@@ -24,7 +56,8 @@ export function LanguageSwitcher() {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-    if (languages.length <= 1) return null;
+    // if (languages.length <= 1) return null;
+    if (!isVisible) return null;
 
     // Dimensions for the "small" version
     const closedWidth = 170;
@@ -33,7 +66,7 @@ export function LanguageSwitcher() {
 
     return (
         <div
-            className="fixed bottom-32 left-0 z-[100]"
+            className="fixed bottom-32 left-0 z-[500]"
             ref={containerRef}
         >
             <motion.div

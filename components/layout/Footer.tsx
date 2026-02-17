@@ -116,7 +116,18 @@ export function Footer({ contact, about, navbar, name, targetUserId }: FooterPro
 
         setIsSubmitting(true);
         try {
-            await addDoc(collection(db, "messages"), {
+            // ADMIN LOGIC: If targetUserId is an admin (or null), use global 'messages'
+            // USER LOGIC: If targetUserId is a regular user, use 'users/{uid}/messages'
+
+            const adminUidsString = process.env.NEXT_PUBLIC_ADMIN_UIDS || "";
+            const adminUids = adminUidsString.split(",").map(id => id.trim()).filter(Boolean);
+            const isAdminTarget = !targetUserId || adminUids.includes(targetUserId);
+
+            const messagesRef = isAdminTarget
+                ? collection(db, "messages")
+                : collection(db, "users", targetUserId!, "messages");
+
+            await addDoc(messagesRef, {
                 ...formData,
                 name,
                 email,

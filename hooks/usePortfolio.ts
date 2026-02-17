@@ -435,5 +435,5 @@ export function usePortfolio(userId?: string) {
     }, [resolvedUid, isResolving, languageCode, isDefaultLanguage, baseData, fetchFromRoot]);
 
     const isLoading = isResolving || (!isNotFound && (!contentLoaded || !projectsLoaded));
-    return { data, loading: isLoading, notFound: isNotFound };
+    return { data, loading: isLoading, notFound: isNotFound, resolvedUid };
 }

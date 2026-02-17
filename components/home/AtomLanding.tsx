@@ -76,11 +76,6 @@ export function AtomLanding() {
                         </Typography>
 
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-8 px-4">
-                            <Link href="https://github.com/Saikumar9342/register" target="_blank" className="w-full sm:w-auto">
-                                <Button size="lg" className="w-full sm:w-auto h-11 px-8 rounded-xl bg-[#C6A969] text-black font-outfit font-bold uppercase tracking-widest text-[10px] hover:bg-[#D4B97E] transition-all shadow-lg shadow-[#C6A969]/5 active:scale-95">
-                                    Link Custom Domain <ArrowRight className="ml-2 w-3.5 h-3.5" />
-                                </Button>
-                            </Link>
                             <Button size="lg" variant="ghost" className="w-full sm:w-auto h-11 px-8 rounded-xl text-white hover:bg-white/5 transition-all font-outfit uppercase tracking-[0.3em] text-[10px] font-black border border-white/5">
                                 Live Showcase
                             </Button>
@@ -284,19 +279,6 @@ export function AtomLanding() {
                         ))}
                     </div>
 
-                    <motion.div initial={{ opacity: 0, scale: 0.98 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} className="text-center">
-                        <div className="mb-6">
-                            <Typography className="text-[9px] text-[#C6A969] font-bold uppercase mb-1">Architecture Verified</Typography>
-                            <Typography element="h2" className="text-xl md:text-2xl font-outfit font-black tracking-tight uppercase text-white">
-                                BUILD YOUR <span className="text-[#C6A969]">IDENTITY.</span>
-                            </Typography>
-                        </div>
-                        <Link href="https://github.com/Saikumar9342/register" target="_blank">
-                            <Button size="lg" className="h-11 px-10 rounded-xl bg-white text-black font-outfit font-black uppercase tracking-tight text-[11px] hover:bg-[#C6A969] hover:text-white transition-all shadow-xl">
-                                Claim .is-a.dev Domain
-                            </Button>
-                        </Link>
-                    </motion.div>
                 </div>
 
                 {/* Refined Footer - Clean & Integrated */}
