@@ -137,6 +137,30 @@ export function Footer({ contact, about, navbar, name, targetUserId }: FooterPro
                 timestamp: serverTimestamp(),
             });
 
+            // Trigger Push Notification via Next.js API
+            try {
+                // If it's an admin target (global pool), we need to find who to notify.
+                // We'll notify the first admin in the list.
+                let notifyTarget = targetUserId;
+                if (isAdminTarget) {
+                    notifyTarget = adminUids.length > 0 ? adminUids[0] : undefined;
+                }
+
+                if (notifyTarget) {
+                    await fetch("/api/notify", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            targetUserId: notifyTarget,
+                            title: isAdminTarget ? `🚀 New Lead: ${name}` : `📩 Message from ${name}`,
+                            body: `"${message.substring(0, 150)}${message.length > 150 ? "..." : ""}"\n\n📧 ${email}`,
+                        }),
+                    });
+                }
+            } catch (notifyError) {
+                console.error("Failed to trigger notification:", notifyError);
+            }
+
             setSubmitSuccess(true);
             setFormData({ name: "", email: "", subject: "", message: "" });
             setTimeout(() => setSubmitSuccess(false), 5000);
