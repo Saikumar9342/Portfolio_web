@@ -293,7 +293,7 @@ export function AtomLanding() {
                                 ARCHITECTED BY <span className="text-white">SAIKUMAR PASUMARTHI</span>
                             </Typography>
                         </div>
-                        <Typography className="text-[8px] text-white/20 font-medium uppercase tracking-tight">© 2026 ANTHRIX ENGINEERING • ALL RIGHTS RESERVED.</Typography>
+                        <Typography className="text-[8px] text-white/20 font-medium uppercase tracking-tight">© 2026 ANTHRIX • ALL RIGHTS RESERVED.</Typography>
                     </footer>
                 </div>
             </section>
