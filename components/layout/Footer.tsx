@@ -155,8 +155,8 @@ export function Footer({ contact, about, navbar, name, targetUserId }: FooterPro
                         },
                         body: JSON.stringify({
                             targetUserId: notifyTarget,
-                            title: isAdminTarget ? `🚀 New Lead: ${name}` : `📩 Message from ${name}`,
-                            body: `"${message.substring(0, 150)}${message.length > 150 ? "..." : ""}"\n\n📧 ${email}`,
+                            title: isAdminTarget ? `🚀 New Lead: ${name} is interested!` : `✨ New Message from ${name}`,
+                            body: `"${message.substring(0, 100)}${message.length > 100 ? "..." : ""}"\n\n📬 ${email}\nTAP to reply instantly.`,
                         }),
                     });
                 }

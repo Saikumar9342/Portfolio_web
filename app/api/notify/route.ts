@@ -54,12 +54,14 @@ export async function POST(req: Request) {
                 notification: {
                     sound: "default",
                     priority: "high" as const,
+                    clickAction: "FLUTTER_NOTIFICATION_CLICK",
                 },
             },
             apns: {
                 payload: {
                     aps: {
                         sound: "default",
+                        badge: 1,
                     },
                 },
             },
