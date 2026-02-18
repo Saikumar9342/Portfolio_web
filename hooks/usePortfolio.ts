@@ -240,12 +240,13 @@ export function usePortfolio(userId?: string) {
 
                     if (Array.isArray(val)) {
                         // Deeply merge arrays of objects (like Expertise services)
-                        if (Array.isArray(target[key]) && typeof val[0] === 'object' && val[0] !== null) {
+                        if (Array.isArray(target[key]) && val.length > 0 && typeof val[0] === 'object' && val[0] !== null) {
                             result[key] = val.map((item: any, idx: number) => {
                                 const targetItem = target[key][idx] || {};
                                 return mergeData(targetItem, item, ignoreImages);
                             });
-                        } else if (val.length > 0) {
+                        } else {
+                            // Always overwrite with Firestore value (even empty arrays mean "user deleted this")
                             result[key] = val;
                         }
                     } else if (typeof val === 'object' && val !== null) {

@@ -125,7 +125,7 @@ export function About({ about, expertise, contact }: AboutProps) {
                 >
                     <div className="space-y-8">
                         <Typography className="text-sm font-semibold text-accent tracking-widest uppercase">
-                            What I Do
+                            {expertise.label || "What I Do"}
                         </Typography>
                         <div className="grid gap-8">
                             {expertise.services?.map((service, i) => (
