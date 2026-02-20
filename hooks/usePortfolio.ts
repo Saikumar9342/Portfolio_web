@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
-import { collection, onSnapshot, doc, query, where, getDocs, getDoc, DocumentSnapshot, QuerySnapshot } from "firebase/firestore";
+import { collection, onSnapshot, doc, query, where, getDocs, getDoc, DocumentSnapshot, QuerySnapshot, updateDoc, increment, setDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Project, HeroData, AboutData, ExpertiseData, SkillsData, ContactData, NavbarData, SocialLink, ProjectsPageData } from "@/types";
 import { portfolioData } from "@/lib/data";
@@ -18,6 +18,9 @@ export interface PortfolioContent {
     projects: Project[];
     name: string;
     role: string;
+    layoutOrder?: string[];
+    theme?: string;
+    showHeroImage?: boolean;
 }
 
 const allowedPlatforms = new Set<SocialLink["platform"]>([
@@ -216,7 +219,47 @@ export function usePortfolio(userId?: string) {
         resolve();
     }, [effectiveUserId, baseData]);
 
-    // 2. Setup Listeners
+    // 2. Increment Visit Counts (Live Analytics)
+    useEffect(() => {
+        if (isResolving || isNotFound) return;
+
+        // Use session storage to prevent count spamming in a single session
+        const sessionKey = `v_count_${resolvedUid || 'global'}`;
+        if (sessionStorage.getItem(sessionKey)) return;
+
+        async function incrementVisits() {
+            try {
+                if (resolvedUid) {
+                    // Update user-specific visits
+                    const userRef = doc(db, "users", resolvedUid);
+                    await updateDoc(userRef, {
+                        totalVisits: increment(1)
+                    }).catch(async (err) => {
+                        // If doc exists but field doesn't, or doc needs initialization
+                        if (err.code === 'not-found') return;
+                        await setDoc(userRef, { totalVisits: increment(1) }, { merge: true });
+                    });
+
+                    // Update global analytics for the admin to see total traffic
+                    const globalRef = doc(db, "analytics", "global");
+                    await setDoc(globalRef, { totalVisits: increment(1) }, { merge: true });
+
+                } else if (fetchFromRoot) {
+                    // Update main site global visits
+                    const globalRef = doc(db, "analytics", "global");
+                    await setDoc(globalRef, { totalVisits: increment(1) }, { merge: true });
+                }
+
+                sessionStorage.setItem(sessionKey, 'true');
+            } catch (error) {
+                console.error("Error incrementing visits:", error);
+            }
+        }
+
+        incrementVisits();
+    }, [resolvedUid, isResolving, isNotFound, fetchFromRoot]);
+
+    // 3. Setup Listeners
     useEffect(() => {
         if (isResolving) return;
         if (!fetchFromRoot && !resolvedUid) return;
@@ -287,6 +330,7 @@ export function usePortfolio(userId?: string) {
         const rawLocalizedContent: any = {};
         const rawDefaultProjects: Map<string, Project> = new Map();
         const rawLocalizedProjects: Map<string, Project> = new Map();
+        let rawSettings: any = null;
 
         const syncAllSubsystems = () => {
             const newContentConfigs: any = {};
@@ -361,7 +405,10 @@ export function usePortfolio(userId?: string) {
             setData(prev => ({
                 ...prev,
                 ...newContentConfigs,
-                projects: mergedProjects.length > 0 ? mergedProjects : baseData.projects
+                projects: mergedProjects.length > 0 ? mergedProjects : baseData.projects,
+                layoutOrder: rawSettings?.layoutOrder || baseData.layoutOrder,
+                theme: rawSettings?.theme || baseData.theme,
+                showHeroImage: rawSettings?.showHeroImage ?? true,
             }));
         };
 
@@ -381,6 +428,8 @@ export function usePortfolio(userId?: string) {
             ? collection(db, "users", uid, "languages", languageCode, "projects")
             : collection(db, "languages", languageCode, "projects")
         ) : null;
+
+        const settingsRef = uid ? doc(db, "users", uid, "settings", "design") : doc(db, "settings", "design");
 
         // LISTENERS
         const unsubs: (() => void)[] = [];
@@ -428,6 +477,16 @@ export function usePortfolio(userId?: string) {
                             return prev;
                         });
                     }
+                }
+            }));
+        }
+
+        // 6. Settings Listener
+        if (settingsRef) {
+            unsubs.push(onSnapshot(settingsRef, (docSnap: DocumentSnapshot) => {
+                if (docSnap.exists()) {
+                    rawSettings = docSnap.data();
+                    syncAllSubsystems();
                 }
             }));
         }

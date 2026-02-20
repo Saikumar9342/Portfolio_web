@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from "react";
 
-export function useDynamicColor(imageSrc: string, options?: { lockBackground?: boolean }) {
+export function useDynamicColor(imageSrc: string, options?: { lockBackground?: boolean, theme?: string }) {
     const [color, setColor] = useState<string>("transparent");
     const lockBackground = options?.lockBackground ?? false;
+    const theme = options?.theme;
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -117,22 +118,45 @@ export function useDynamicColor(imageSrc: string, options?: { lockBackground?: b
                     root.style.setProperty('--dynamic-bg', bgHex);
                     root.style.setProperty('--dynamic-accent', accentHex);
 
-                    // Contrast handling for Foreground (Text)
+                    // Contrast handling for Foreground (Text) based on explicit theme or background brightness
                     const bgBrightness = (bgR * 299 + bgG * 587 + bgB * 114) / 1000;
-                    const isDarkBg = bgBrightness < 150;
+                    const isDarkBg = theme === 'dark' || (theme !== 'light' && bgBrightness < 150);
 
                     root.style.setProperty('--dynamic-fg', isDarkBg ? '#ffffff' : '#0a0a0b');
                     root.style.setProperty('--dynamic-muted-fg', isDarkBg ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)');
                     root.style.setProperty('--dynamic-border', isDarkBg ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)');
                     root.style.setProperty('--dynamic-muted', isDarkBg ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)');
+
+                    // Force background color based on explicit theme if provided
+                    if (theme === 'dark') {
+                        // Enforce dark background if the calculated bg is actually light
+                        if (bgBrightness >= 150) {
+                            const ratio = 45 / Math.max(bgR, bgG, bgB, 1);
+                            root.style.setProperty('--dynamic-bg', rgbToHex(
+                                Math.floor(bgR * ratio), Math.floor(bgG * ratio), Math.floor(bgB * ratio)
+                            ));
+                        }
+                    } else if (theme === 'light') {
+                        // Enforce light background if the calculated bg is actually dark
+                        if (bgBrightness < 150) {
+                            const ratio = 240 / Math.max(bgR, bgG, bgB, 1);
+                            root.style.setProperty('--dynamic-bg', rgbToHex(
+                                Math.min(255, Math.floor(bgR * ratio)),
+                                Math.min(255, Math.floor(bgG * ratio)),
+                                Math.min(255, Math.floor(bgB * ratio))
+                            ));
+                        }
+                    }
+
                 } else {
                     // Only update the accent, reset background/foreground to CSS defaults
+                    const isDarkBg = theme !== 'light'; // Default to dark if auto or dark or undefined
                     root.style.setProperty('--dynamic-accent', accentHex);
                     root.style.removeProperty('--dynamic-bg');
-                    root.style.removeProperty('--dynamic-fg');
-                    root.style.removeProperty('--dynamic-muted-fg');
-                    root.style.removeProperty('--dynamic-border');
-                    root.style.removeProperty('--dynamic-muted');
+                    root.style.setProperty('--dynamic-fg', isDarkBg ? '#ffffff' : '#0a0a0b');
+                    root.style.setProperty('--dynamic-muted-fg', isDarkBg ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)');
+                    root.style.setProperty('--dynamic-border', isDarkBg ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)');
+                    root.style.setProperty('--dynamic-muted', isDarkBg ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)');
                 }
 
                 setColor(accentHex);

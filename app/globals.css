@@ -21,12 +21,15 @@
   }
 }
 
-html.dark {
+html.dark,
+.theme-dark,
+.theme-auto {
   --background: var(--dynamic-bg, #000000);
   --foreground: var(--dynamic-fg, #ffffff);
 }
 
-html.light {
+html.light,
+.theme-light {
   --background: var(--dynamic-bg, #ffffff);
   --foreground: var(--dynamic-fg, #000000);
 }

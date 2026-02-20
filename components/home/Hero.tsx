@@ -6,7 +6,6 @@ import { Button } from "../ui/button";
 import { Typography } from "../ui/layout";
 import Link from "next/link";
 import Image from "next/image";
-import { useDynamicColor } from "@/hooks/useDynamicColor";
 
 import { PortfolioContent } from "@/hooks/usePortfolio";
 
@@ -16,11 +15,11 @@ interface HeroProps {
     name: string;
     location: string;
     userId?: string;
+    showImage?: boolean;
 }
 
-export function Hero({ data, role, name, location, userId }: HeroProps) {
+export function Hero({ data, role, name, location, userId, showImage = true }: HeroProps) {
     const hero = data;
-    useDynamicColor(hero.imageUrl || "");
     const { scrollY } = useScroll();
     const scrollIndicatorOpacity = useTransform(scrollY, [0, 100], [1, 0]);
 
@@ -53,7 +52,7 @@ export function Hero({ data, role, name, location, userId }: HeroProps) {
                                 }
                             }
                         }}
-                        className="lg:col-span-6 space-y-6"
+                        className={`${showImage ? 'lg:col-span-6' : 'lg:col-span-8 lg:col-start-3 text-center'} space-y-6`}
                     >
                         <div className="space-y-4">
                             <Typography element="h1" className="text-5xl md:text-6xl lg:text-7xl font-bold leading-[0.9] text-foreground tracking-tighter uppercase overflow-hidden">
@@ -89,7 +88,7 @@ export function Hero({ data, role, name, location, userId }: HeroProps) {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6, delay: 0.5 }}
-                            className="flex flex-wrap gap-4 pt-2"
+                            className={`flex flex-wrap gap-4 pt-2 ${showImage ? '' : 'justify-center'}`}
                         >
                             <Link href={getLink("/projects")}>
                                 <Button size="lg" className="px-8 flex items-center gap-3 hover:scale-[1.02] transition-all active:scale-95 group shadow-2xl shadow-accent/20">
@@ -105,35 +104,37 @@ export function Hero({ data, role, name, location, userId }: HeroProps) {
                         </motion.div>
                     </motion.div>
 
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.9, x: 50 }}
-                        animate={{ opacity: 1, scale: 1, x: 0 }}
-                        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
-                        className="lg:col-span-6 flex justify-center lg:justify-end"
-                    >
-                        <div className="relative aspect-[3/4] w-full max-w-md lg:max-w-lg xl:max-w-xl max-h-[75vh] overflow-hidden rounded-3xl group transition-all duration-1000 bg-secondary/10 border border-border/50">
-                            {/* Smooth hover zoom or placeholder */}
-                            {hero.imageUrl ? (
-                                <Image
-                                    src={hero.imageUrl}
-                                    alt={name}
-                                    fill
-                                    className="object-cover object-center transition-transform duration-1000 group-hover:scale-105"
-                                />
-                            ) : (
-                                <div className="w-full h-full flex flex-col items-center justify-center text-muted-foreground/30 bg-muted/5 p-12 text-center">
-                                    <div className="w-32 h-32 rounded-full bg-accent/5 flex items-center justify-center mb-6 ring-1 ring-border/50">
-                                        <Typography className="text-6xl font-black text-accent/20">
-                                            {name?.charAt(0) || "U"}
+                    {showImage && (
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9, x: 50 }}
+                            animate={{ opacity: 1, scale: 1, x: 0 }}
+                            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
+                            className="lg:col-span-6 flex justify-center lg:justify-end"
+                        >
+                            <div className="relative aspect-[3/4] w-full max-w-md lg:max-w-lg xl:max-w-xl max-h-[75vh] overflow-hidden rounded-3xl group transition-all duration-1000 bg-secondary/10 border border-border/50">
+                                {/* Smooth hover zoom or placeholder */}
+                                {hero.imageUrl ? (
+                                    <Image
+                                        src={hero.imageUrl}
+                                        alt={name}
+                                        fill
+                                        className="object-cover object-center transition-transform duration-1000 group-hover:scale-105"
+                                    />
+                                ) : (
+                                    <div className="w-full h-full flex flex-col items-center justify-center text-muted-foreground/30 bg-muted/5 p-12 text-center">
+                                        <div className="w-32 h-32 rounded-full bg-accent/5 flex items-center justify-center mb-6 ring-1 ring-border/50">
+                                            <Typography className="text-6xl font-black text-accent/20">
+                                                {name?.charAt(0) || "U"}
+                                            </Typography>
+                                        </div>
+                                        <Typography className="text-sm font-medium tracking-widest uppercase opacity-50">
+                                            {name || "User Portfolio"}
                                         </Typography>
                                     </div>
-                                    <Typography className="text-sm font-medium tracking-widest uppercase opacity-50">
-                                        {name || "User Portfolio"}
-                                    </Typography>
-                                </div>
-                            )}
-                        </div>
-                    </motion.div>
+                                )}
+                            </div>
+                        </motion.div>
+                    )}
                 </div>
             </div>
 
@@ -157,6 +158,6 @@ export function Hero({ data, role, name, location, userId }: HeroProps) {
             {/* Ambient Background Gradient */}
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-accent/5 rounded-full blur-[120px] pointer-events-none mix-blend-screen" />
             <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-accent/5 rounded-full blur-[120px] pointer-events-none mix-blend-screen" />
-        </section >
+        </section>
     );
 }
