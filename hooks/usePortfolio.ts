@@ -232,14 +232,7 @@ export function usePortfolio(userId?: string) {
                 if (resolvedUid) {
                     // Update user-specific visits
                     const userRef = doc(db, "users", resolvedUid);
-                    await updateDoc(userRef, {
-                        totalVisits: increment(1)
-                    }).catch(async (err) => {
-                        // If doc exists but field doesn't, or doc needs initialization
-                        if (err.code === 'not-found') return;
-                        await setDoc(userRef, { totalVisits: increment(1) }, { merge: true });
-                    });
-
+                    await setDoc(userRef, { totalVisits: increment(1) }, { merge: true });
                     // Update global analytics for the admin to see total traffic
                     const globalRef = doc(db, "analytics", "global");
                     await setDoc(globalRef, { totalVisits: increment(1) }, { merge: true });
