@@ -38,10 +38,22 @@ service cloud.firestore {
       allow write: if isOwner(userId) || isAdmin();
     }
 
-    // Public profile metadata (Restrict sensitive fields if possible)
+    // Public profile metadata
     match /users/{userId} {
       allow read: if true; // Needs to be true for website to load bio/name
-      allow write: if isOwner(userId) || isAdmin();
+      allow create: if isOwner(userId) || isAdmin()
+        || (request.resource.data.keys().hasOnly(['totalVisits']) && request.resource.data.totalVisits == 1);
+      allow update: if isOwner(userId) || isAdmin() 
+        || (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['totalVisits']) && request.resource.data.totalVisits == resource.data.get('totalVisits', 0) + 1);
+      allow delete: if isOwner(userId) || isAdmin();
+    }
+
+    // Global Analytics (for counting total traffic)
+    match /analytics/{docId} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasOnly(['totalVisits']) && request.resource.data.totalVisits == 1;
+      allow update: if request.resource.data.diff(resource.data).affectedKeys().hasOnly(['totalVisits']) && request.resource.data.totalVisits == resource.data.get('totalVisits', 0) + 1;
+      allow delete: if isAdmin();
     }
 
     // Username -> user routing map
