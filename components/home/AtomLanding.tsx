@@ -18,7 +18,13 @@ import {
     Terminal,
     Code2,
     Database,
-    Cloud
+    Cloud,
+    Sparkles,
+    Infinity as InfinityIcon,
+    Palette,
+    Search,
+    Bot,
+    Fingerprint
 } from "lucide-react";
 import { Button } from "../ui/button";
 import { Section, Typography, GlassCard } from "../ui/layout";
@@ -236,6 +242,74 @@ export function AtomLanding() {
                             </div>
                         </motion.div>
                     </div>
+                </div>
+            </section>
+
+            {/* THE ARSENAL (Features Engine) */}
+            <section id="features" className="relative min-h-[800px] flex items-center justify-center px-6 snap-start border-t border-white/5 bg-[#0A0A0A] py-24">
+                <div className="absolute inset-0 bg-gradient-to-b from-[#C6A969]/5 to-transparent blur-[100px] pointer-events-none opacity-50" />
+                <div className="max-w-7xl mx-auto w-full relative z-10">
+                    <div className="text-center mb-16 space-y-4">
+                        <Typography className="text-[#C6A969] font-black tracking-[0.5em] text-[10px] uppercase">The Arsenal</Typography>
+                        <Typography element="h2" className="text-3xl md:text-5xl font-outfit font-black tracking-tight uppercase leading-[1.1]">
+                            Engineered for <br className="md:hidden" /><span className="text-white/30 italic">Dominance.</span>
+                        </Typography>
+                        <Typography className="text-xs md:text-sm text-[#AAAAAA] max-w-xl mx-auto font-medium leading-[1.7] opacity-80 mt-4">
+                            Beyond a site builder. Atom is a unified digital CMS equipped with AI, advanced SEO, and dynamic theming out of the box.
+                        </Typography>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {[
+                            { icon: Bot, title: "AI-Powered Parsing", desc: "Upload your PDF resume via the mobile app, and let Gemini intelligently fill your entire portfolio schema instantly." },
+                            { icon: Palette, title: "Dynamic Color Extraction", desc: "Your site's theme fluidly adapts to your profile picture or active project images using advanced Canvas API analysis." },
+                            { icon: Search, title: "Advanced SEO & Meta", desc: "Automatically generated OpenGraph tags, semantic HTML, and metadata bases ensure your links always look stunning on socials." },
+                            { icon: Fingerprint, title: "Secure CMS", desc: "Firebase Authentication and strict Firestore rules ensure only you can orchestrate your data." },
+                            { icon: Sparkles, title: "Cinematic Motion", desc: "A robust integration of Framer Motion provides hardware-accelerated, Apple-like scrolling typography and micro-interactions." },
+                            { icon: InfinityIcon, title: "Infinite Scalability", desc: "Architected on Next.js 14 App Router. Ready to handle viral traffic spikes globally without breaking a sweat." }
+                        ].map((feat, i) => (
+                            <motion.div
+                                key={i}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: i * 0.1, duration: 0.6 }}
+                            >
+                                <GlassCard className="p-8 h-full border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition-colors rounded-3xl flex flex-col gap-4 group">
+                                    <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center border border-white/10 group-hover:border-[#C6A969]/30 transition-colors">
+                                        <feat.icon className="w-5 h-5 text-[#C6A969]/70 group-hover:text-[#C6A969] transition-colors" />
+                                    </div>
+                                    <Typography element="h3" className="text-sm font-outfit font-bold uppercase tracking-wide text-white">{feat.title}</Typography>
+                                    <Typography className="text-[11px] text-[#AAAAAA] leading-relaxed opacity-70 font-medium tracking-wide">
+                                        {feat.desc}
+                                    </Typography>
+                                </GlassCard>
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* PHILOSOPHY */}
+            <section className="relative h-screen min-h-[600px] flex items-center justify-center px-6 snap-start bg-[#050505] border-t border-white/5 overflow-hidden">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#C6A969]/10 rounded-full blur-[150px] pointer-events-none" />
+
+                <div className="max-w-4xl mx-auto w-full relative z-10 text-center space-y-12">
+                    <motion.div initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 1 }}>
+                        <Terminal className="w-12 h-12 text-[#C6A969]/40 mx-auto mb-8" />
+                        <Typography element="h2" className="text-2xl md:text-4xl lg:text-5xl font-outfit font-black tracking-tight uppercase leading-[1.3] text-white">
+                            &quot;Most portfolios are static business cards.<br />
+                            <span className="text-[#C6A969]">Atom is a living, breathing digital organism.</span>&quot;
+                        </Typography>
+                    </motion.div>
+
+                    <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.3, duration: 0.8 }} className="flex flex-col items-center">
+                        <div className="flex gap-4 items-center">
+                            <div className="w-12 h-px bg-white/20" />
+                            <Typography className="text-[10px] font-black text-white/40 uppercase tracking-[0.3em]">The Philosophy</Typography>
+                            <div className="w-12 h-px bg-white/20" />
+                        </div>
+                    </motion.div>
                 </div>
             </section>
 
