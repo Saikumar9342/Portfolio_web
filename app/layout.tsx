@@ -24,11 +24,12 @@ const outfit = Outfit({
 })
 
 export const metadata: Metadata = {
+    metadataBase: new URL('https://atom.anithix.com'),
     title: {
         template: '%s | ATOM',
         default: 'ATOM | Portfolio Builder',
     },
-    description: 'ATOM Portfolio Builder - Scalable web and mobile applications.',
+    description: 'ATOM Portfolio Builder - Scalable web and mobile applications for professionals.',
     manifest: '/site.webmanifest',
     icons: {
         icon: [
@@ -39,11 +40,27 @@ export const metadata: Metadata = {
         apple: [{ url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
     },
     openGraph: {
+        title: 'ATOM | Portfolio Builder',
+        description: 'Design and deploy professional, scalable web and mobile portfolios with ATOM.',
         type: 'website',
         locale: 'en_US',
         url: 'https://atom.anithix.com',
         siteName: 'ATOM Portfolio',
-    }
+        images: [
+            {
+                url: '/og-image.jpg', // Recommend creating an og-image.jpg in public folder
+                width: 1200,
+                height: 630,
+                alt: 'ATOM Portfolio Preview',
+            },
+        ],
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: 'ATOM | Portfolio Builder',
+        description: 'Design and deploy professional, scalable web and mobile portfolios with ATOM.',
+        images: ['/og-image.jpg'],
+    },
 }
 
 export default function RootLayout({

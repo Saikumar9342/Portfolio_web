@@ -5,6 +5,7 @@ import { ArrowRight, ChevronDown } from "lucide-react";
 import { Button } from "../ui/button";
 import { Typography } from "../ui/layout";
 import Link from "next/link";
+import Image from "next/image";
 import { useDynamicColor } from "@/hooks/useDynamicColor";
 
 import { PortfolioContent } from "@/hooks/usePortfolio";
@@ -113,10 +114,11 @@ export function Hero({ data, role, name, location, userId }: HeroProps) {
                         <div className="relative aspect-[3/4] w-full max-w-md lg:max-w-lg xl:max-w-xl max-h-[75vh] overflow-hidden rounded-3xl group transition-all duration-1000 bg-secondary/10 border border-border/50">
                             {/* Smooth hover zoom or placeholder */}
                             {hero.imageUrl ? (
-                                <img
+                                <Image
                                     src={hero.imageUrl}
                                     alt={name}
-                                    className="w-full h-full object-cover object-center transition-transform duration-1000 group-hover:scale-105"
+                                    fill
+                                    className="object-cover object-center transition-transform duration-1000 group-hover:scale-105"
                                 />
                             ) : (
                                 <div className="w-full h-full flex flex-col items-center justify-center text-muted-foreground/30 bg-muted/5 p-12 text-center">
