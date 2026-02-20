@@ -8,6 +8,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 import { PortfolioContent } from "@/hooks/usePortfolio";
+import { InteractiveSphere } from "../ui/InteractiveSphere";
 
 interface HeroProps {
     data: PortfolioContent['hero'];
@@ -121,15 +122,8 @@ export function Hero({ data, role, name, location, userId, showImage = true }: H
                                         className="object-cover object-center transition-transform duration-1000 group-hover:scale-105"
                                     />
                                 ) : (
-                                    <div className="w-full h-full flex flex-col items-center justify-center text-muted-foreground/30 bg-muted/5 p-12 text-center">
-                                        <div className="w-32 h-32 rounded-full bg-accent/5 flex items-center justify-center mb-6 ring-1 ring-border/50">
-                                            <Typography className="text-6xl font-black text-accent/20">
-                                                {name?.charAt(0) || "U"}
-                                            </Typography>
-                                        </div>
-                                        <Typography className="text-sm font-medium tracking-widest uppercase opacity-50">
-                                            {name || "User Portfolio"}
-                                        </Typography>
+                                    <div className="w-full h-full flex flex-col items-center justify-center bg-muted/5 relative overflow-hidden">
+                                        <InteractiveSphere />
                                     </div>
                                 )}
                             </div>
