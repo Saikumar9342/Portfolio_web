@@ -18,7 +18,7 @@ const PortfolioContent = ({ data, userId }: { data: any; userId?: string }) => {
     const { contact, hero, about, expertise, skills, name } = data;
 
     // Extract theme color from hero image or default profile
-    useDynamicColor(hero?.imageUrl || "/pfp.jpeg");
+    useDynamicColor(hero?.imageUrl || "");
 
     const containerRef = useRef<HTMLDivElement>(null);
     const { scrollYProgress } = useScroll({
@@ -56,11 +56,14 @@ const PortfolioContent = ({ data, userId }: { data: any; userId?: string }) => {
                                 {skills.description || "A comprehensive suite of technologies I use to build robust, scalable, and secure digital products."}
                             </Typography>
                             <div className="pt-4 flex flex-wrap gap-2">
-                                {skills.frameworks?.map((f: string) => (
-                                    <span key={f} className="px-3 py-1 text-xs font-medium rounded-full bg-accent/10 text-accent border border-accent/20">
-                                        {f}
-                                    </span>
-                                ))}
+                                {skills.frameworks?.map((f: any) => {
+                                    const name = typeof f === 'string' ? f : f.name;
+                                    return (
+                                        <span key={name} className="px-3 py-1 text-xs font-medium rounded-full bg-accent/10 text-accent border border-accent/20">
+                                            {name}
+                                        </span>
+                                    );
+                                })}
                             </div>
                         </GlassCard>
 
@@ -73,22 +76,26 @@ const PortfolioContent = ({ data, userId }: { data: any; userId?: string }) => {
                                         {skills.frontendTitle || "Frontend Engineering"}
                                     </Typography>
                                     <div className="space-y-3">
-                                        {skills.frontend?.map((skill: any) => (
-                                            <div key={skill.name} className="space-y-1">
-                                                <div className="flex justify-between text-xs font-medium uppercase tracking-wider text-foreground/60">
-                                                    <span>{skill.name}</span>
-                                                    <span>{skill.level}%</span>
+                                        {skills.frontend?.map((skill: any) => {
+                                            const name = typeof skill === 'string' ? skill : skill.name;
+                                            const level = typeof skill === 'string' ? 85 : skill.level;
+                                            return (
+                                                <div key={name} className="space-y-1">
+                                                    <div className="flex justify-between text-xs font-medium uppercase tracking-wider text-foreground/60">
+                                                        <span>{name}</span>
+                                                        <span>{level}%</span>
+                                                    </div>
+                                                    <div className="h-1 w-full bg-accent/5 rounded-full overflow-hidden">
+                                                        <motion.div
+                                                            initial={{ width: 0 }}
+                                                            whileInView={{ width: `${level}%` }}
+                                                            transition={{ duration: 1, delay: 0.2 }}
+                                                            className="h-full bg-accent"
+                                                        />
+                                                    </div>
                                                 </div>
-                                                <div className="h-1 w-full bg-accent/5 rounded-full overflow-hidden">
-                                                    <motion.div
-                                                        initial={{ width: 0 }}
-                                                        whileInView={{ width: `${skill.level}%` }}
-                                                        transition={{ duration: 1, delay: 0.2 }}
-                                                        className="h-full bg-accent"
-                                                    />
-                                                </div>
-                                            </div>
-                                        ))}
+                                            );
+                                        })}
                                     </div>
                                 </GlassCard>
                             )}
@@ -99,11 +106,14 @@ const PortfolioContent = ({ data, userId }: { data: any; userId?: string }) => {
                                     <GlassCard className="p-6 space-y-3 break-inside-avoid mb-4">
                                         <Typography element="h3" className="text-lg font-bold">{skills.mobileTitle || "Mobile Development"}</Typography>
                                         <div className="flex flex-wrap gap-2">
-                                            {skills.mobile?.map((m: string) => (
-                                                <span key={m} className="px-3 py-1 text-xs rounded-lg bg-foreground/5 border border-foreground/10 text-foreground/80">
-                                                    {m}
-                                                </span>
-                                            ))}
+                                            {skills.mobile?.map((m: any) => {
+                                                const name = typeof m === 'string' ? m : m.name;
+                                                return (
+                                                    <span key={name} className="px-3 py-1 text-xs rounded-lg bg-foreground/5 border border-foreground/10 text-foreground/80">
+                                                        {name}
+                                                    </span>
+                                                );
+                                            })}
                                         </div>
                                     </GlassCard>
                                 )}
@@ -112,11 +122,14 @@ const PortfolioContent = ({ data, userId }: { data: any; userId?: string }) => {
                                     <GlassCard className="p-6 space-y-3 break-inside-avoid mb-4">
                                         <Typography element="h3" className="text-lg font-bold">{skills.backendTitle || "Cloud & Backend"}</Typography>
                                         <div className="flex flex-wrap gap-2">
-                                            {skills.backend?.map((b: string) => (
-                                                <span key={b} className="px-3 py-1 text-xs rounded-lg bg-foreground/5 border border-foreground/10 text-foreground/80">
-                                                    {b}
-                                                </span>
-                                            ))}
+                                            {skills.backend?.map((b: any) => {
+                                                const name = typeof b === 'string' ? b : b.name;
+                                                return (
+                                                    <span key={name} className="px-3 py-1 text-xs rounded-lg bg-foreground/5 border border-foreground/10 text-foreground/80">
+                                                        {name}
+                                                    </span>
+                                                );
+                                            })}
                                         </div>
                                     </GlassCard>
                                 )}
@@ -125,7 +138,7 @@ const PortfolioContent = ({ data, userId }: { data: any; userId?: string }) => {
                                     <GlassCard className="p-6 space-y-3 break-inside-avoid mb-4">
                                         <Typography element="h3" className="text-lg font-bold">{skills.toolsTitle || "Workflow & Tools"}</Typography>
                                         <div className="flex flex-wrap gap-2 text-xs text-foreground/60">
-                                            {skills.tools?.join(" | ")}
+                                            {skills.tools?.map((t: any) => typeof t === 'string' ? t : t.name).join(" | ")}
                                         </div>
                                     </GlassCard>
                                 )}

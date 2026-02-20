@@ -19,7 +19,7 @@ interface HeroProps {
 
 export function Hero({ data, role, name, location, userId }: HeroProps) {
     const hero = data;
-    useDynamicColor(hero.imageUrl || "/pfp.jpeg");
+    useDynamicColor(hero.imageUrl || "");
     const { scrollY } = useScroll();
     const scrollIndicatorOpacity = useTransform(scrollY, [0, 100], [1, 0]);
 
@@ -110,14 +110,26 @@ export function Hero({ data, role, name, location, userId }: HeroProps) {
                         transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
                         className="lg:col-span-6 flex justify-center lg:justify-end"
                     >
-                        <div className="relative aspect-[3/4] w-full max-w-md lg:max-w-lg xl:max-w-xl max-h-[75vh] overflow-hidden rounded-3xl group transition-all duration-1000">
-                            {/* Smooth hover zoom */}
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
-                                src={hero.imageUrl || "/pfp.jpeg"}
-                                alt={name}
-                                className="w-full h-full object-cover object-center transition-transform duration-1000 group-hover:scale-105"
-                            />
+                        <div className="relative aspect-[3/4] w-full max-w-md lg:max-w-lg xl:max-w-xl max-h-[75vh] overflow-hidden rounded-3xl group transition-all duration-1000 bg-secondary/10 border border-border/50">
+                            {/* Smooth hover zoom or placeholder */}
+                            {hero.imageUrl ? (
+                                <img
+                                    src={hero.imageUrl}
+                                    alt={name}
+                                    className="w-full h-full object-cover object-center transition-transform duration-1000 group-hover:scale-105"
+                                />
+                            ) : (
+                                <div className="w-full h-full flex flex-col items-center justify-center text-muted-foreground/30 bg-muted/5 p-12 text-center">
+                                    <div className="w-32 h-32 rounded-full bg-accent/5 flex items-center justify-center mb-6 ring-1 ring-border/50">
+                                        <Typography className="text-6xl font-black text-accent/20">
+                                            {name?.charAt(0) || "U"}
+                                        </Typography>
+                                    </div>
+                                    <Typography className="text-sm font-medium tracking-widest uppercase opacity-50">
+                                        {name || "User Portfolio"}
+                                    </Typography>
+                                </div>
+                            )}
                         </div>
                     </motion.div>
                 </div>

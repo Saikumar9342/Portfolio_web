@@ -20,7 +20,7 @@ export default function UserProjectsPage() {
 
     // Apply dynamic theme based on first project or hero profile
     const firstProjectImage = projects?.length > 0 ? projects[0].imageUrl : null;
-    const { isLoading: themeLoading } = useDynamicColor(firstProjectImage || hero?.imageUrl || "/pfp.jpeg");
+    const { isLoading: themeLoading } = useDynamicColor(firstProjectImage || hero?.imageUrl || "");
 
     if (loading || themeLoading) return <LoadingScreen />;
 

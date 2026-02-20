@@ -24,7 +24,7 @@ export default function UserProjectDetailPage() {
     const containerRef = useRef<HTMLDivElement>(null);
 
     // Theme color based on project image
-    const { isLoading: themeLoading } = useDynamicColor(project?.imageUrl || data.hero?.imageUrl || "/pfp.jpeg");
+    const { isLoading: themeLoading } = useDynamicColor(project?.imageUrl || data.hero?.imageUrl || "");
 
     const { scrollYProgress } = useScroll({
         target: containerRef,
