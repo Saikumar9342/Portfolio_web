@@ -4,7 +4,7 @@ import { useParams } from "next/navigation";
 import { usePortfolio } from "@/hooks/usePortfolio";
 import { LoadingScreen } from "@/components/ui/LoadingScreen";
 import { NotFoundScreen } from "@/components/ui/NotFoundScreen";
-import { PortfolioContent } from "@/app/p/[userId]/page";
+import { PortfolioContent } from "@/components/portfolio/portfolio-content";
 
 export default function UsernamePortfolioPage() {
     const params = useParams();
