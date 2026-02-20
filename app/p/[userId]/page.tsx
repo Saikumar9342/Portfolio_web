@@ -1,6 +1,7 @@
 "use client";
 
 import { usePortfolio } from "@/hooks/usePortfolio";
+import { useAnalytics } from "@/hooks/useAnalytics";
 import { LoadingScreen } from "@/components/ui/LoadingScreen";
 import { NotFoundScreen } from "@/components/ui/NotFoundScreen";
 import { useParams } from "next/navigation";
@@ -12,7 +13,8 @@ export default function UserPortfolio() {
     const userId = params?.userId as string | undefined;
 
     // Use empty string fallback if needed, but hook handles undefined
-    const { data, loading, notFound, resolvedUid } = usePortfolio(userId);
+    const { data, loading, notFound, resolvedUid, isResolving, fetchFromRoot } = usePortfolio(userId);
+    useAnalytics(resolvedUid, isResolving, notFound, fetchFromRoot);
 
     if (loading) return <LoadingScreen />;
     if (notFound) return <NotFoundScreen />;

@@ -110,12 +110,34 @@ service cloud.firestore {
     }
 
     // Languages (Global and User-Specific)
-    match /languages/{langId} {
+    match /languages/{document=**} {
       allow read: if true;
       allow write: if isAdmin();
     }
     
-    match /users/{userId}/languages/{langId} {
+    match /users/{userId}/languages/{document=**} {
+      allow read: if true;
+      allow write: if isOwner(userId) || isAdmin();
+    }
+
+    // Language configuration details
+    match /languages_config/{document=**} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /users/{userId}/languages_config/{document=**} {
+      allow read: if true;
+      allow write: if isOwner(userId) || isAdmin();
+    }
+
+    // Settings (Global and User-Specific)
+    match /settings/{document=**} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /users/{userId}/settings/{document=**} {
       allow read: if true;
       allow write: if isOwner(userId) || isAdmin();
     }
