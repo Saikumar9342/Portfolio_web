@@ -6,7 +6,7 @@ import { useState, type MouseEvent, type FormEvent } from "react";
 import { Typography, GlassCard } from "@/components/ui/layout";
 import { Button, buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
-import { ContactData, AboutData, NavbarData } from "@/types";
+import { ContactData, AboutData, NavbarData, SocialLink, NavItem } from "@/types";
 import { BrandLogo } from "../ui/BrandLogo";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
@@ -374,7 +374,7 @@ export function Footer({ contact, about, navbar, name, targetUserId }: FooterPro
                             {about.title}
                         </Typography>
                         <div className="flex items-center gap-3 pt-2">
-                            {about.socialLinks?.map((link: any, idx: number) => (
+                            {about.socialLinks?.map((link: SocialLink, idx: number) => (
                                 <motion.div
                                     key={link.url}
                                     whileHover={{ y: -5, scale: 1.1 }}
@@ -404,7 +404,7 @@ export function Footer({ contact, about, navbar, name, targetUserId }: FooterPro
                     >
                         <Typography className="text-[10px] font-black uppercase tracking-[0.2em] text-accent">Links</Typography>
                         <ul className="space-y-3">
-                            {navbar?.items.map((item: any, idx: number) => {
+                            {navbar?.items.map((item: NavItem, idx: number) => {
                                 let href = item.href;
                                 if (targetUserId) {
                                     if (href === '/projects') href = `/p/${targetUserId}/projects`;

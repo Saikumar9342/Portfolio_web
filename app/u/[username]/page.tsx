@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { usePortfolio } from "@/hooks/usePortfolio";
+import { usePortfolio, type PortfolioContent as PortfolioDataType } from "@/hooks/usePortfolio";
 import { LoadingScreen } from "@/components/ui/LoadingScreen";
 import { NotFoundScreen } from "@/components/ui/NotFoundScreen";
 import { Hero } from "@/components/home/Hero";
@@ -14,7 +14,7 @@ import { motion } from "framer-motion";
 // We reuse the PortfolioContent logic or just redirect to our hook-based page
 // But to avoid redirecting the URL, we render the mobile-style wrapper here.
 
-const PortfolioContent = ({ data, userId }: { data: any; userId?: string }) => {
+const PortfolioContent = ({ data, userId }: { data: PortfolioDataType; userId?: string }) => {
     const { contact, hero, about, expertise, skills, name } = data;
 
     return (

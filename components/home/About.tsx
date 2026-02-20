@@ -15,8 +15,8 @@ interface AboutProps {
 
 export function About({ about, expertise, contact }: AboutProps) {
 
-    const getServiceIcon = (service: any) => {
-        const IconComponent = (Icons as any)[service.icon] || (Icons as any)[service.id] || Icons.Code2;
+    const getServiceIcon = (service: import("@/types").Service) => {
+        const IconComponent = (Icons as any)[service.icon || service.id] || Icons.Code2;
         return <IconComponent className="w-6 h-6 text-accent" />;
     };
 

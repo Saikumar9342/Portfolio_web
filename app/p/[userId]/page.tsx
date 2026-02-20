@@ -6,7 +6,7 @@ import { Section, Typography, GlassCard } from "@/components/ui/layout";
 import { Hero } from "@/components/home/Hero";
 import { About } from "@/components/home/About";
 import { Navbar } from "@/components/layout/Navbar";
-import { usePortfolio } from "@/hooks/usePortfolio";
+import { usePortfolio, type PortfolioContent as PortfolioDataType } from "@/hooks/usePortfolio";
 import { Footer } from "@/components/layout/Footer";
 
 import { LoadingScreen } from "@/components/ui/LoadingScreen";
@@ -14,7 +14,7 @@ import { NotFoundScreen } from "@/components/ui/NotFoundScreen";
 import { useDynamicColor } from "@/hooks/useDynamicColor";
 import { useParams } from "next/navigation";
 
-const PortfolioContent = ({ data, userId }: { data: any; userId?: string }) => {
+const PortfolioContent = ({ data, userId }: { data: PortfolioDataType; userId?: string }) => {
     const { contact, hero, about, expertise, skills, name } = data;
 
     // Extract theme color from hero image or default profile
@@ -56,7 +56,7 @@ const PortfolioContent = ({ data, userId }: { data: any; userId?: string }) => {
                                 {skills.description || "A comprehensive suite of technologies I use to build robust, scalable, and secure digital products."}
                             </Typography>
                             <div className="pt-4 flex flex-wrap gap-2">
-                                {skills.frameworks?.map((f: any) => {
+                                {skills.frameworks?.map((f: string | { name: string }) => {
                                     const name = typeof f === 'string' ? f : f.name;
                                     return (
                                         <span key={name} className="px-3 py-1 text-xs font-medium rounded-full bg-accent/10 text-accent border border-accent/20">
@@ -76,7 +76,7 @@ const PortfolioContent = ({ data, userId }: { data: any; userId?: string }) => {
                                         {skills.frontendTitle || "Frontend Engineering"}
                                     </Typography>
                                     <div className="space-y-3">
-                                        {skills.frontend?.map((skill: any) => {
+                                        {skills.frontend?.map((skill: string | { name: string; level?: number }) => {
                                             const name = typeof skill === 'string' ? skill : skill.name;
                                             const level = typeof skill === 'string' ? 85 : skill.level;
                                             return (
@@ -106,7 +106,7 @@ const PortfolioContent = ({ data, userId }: { data: any; userId?: string }) => {
                                     <GlassCard className="p-6 space-y-3 break-inside-avoid mb-4">
                                         <Typography element="h3" className="text-lg font-bold">{skills.mobileTitle || "Mobile Development"}</Typography>
                                         <div className="flex flex-wrap gap-2">
-                                            {skills.mobile?.map((m: any) => {
+                                            {skills.mobile?.map((m: string | { name: string }) => {
                                                 const name = typeof m === 'string' ? m : m.name;
                                                 return (
                                                     <span key={name} className="px-3 py-1 text-xs rounded-lg bg-foreground/5 border border-foreground/10 text-foreground/80">
@@ -122,7 +122,7 @@ const PortfolioContent = ({ data, userId }: { data: any; userId?: string }) => {
                                     <GlassCard className="p-6 space-y-3 break-inside-avoid mb-4">
                                         <Typography element="h3" className="text-lg font-bold">{skills.backendTitle || "Cloud & Backend"}</Typography>
                                         <div className="flex flex-wrap gap-2">
-                                            {skills.backend?.map((b: any) => {
+                                            {skills.backend?.map((b: string | { name: string }) => {
                                                 const name = typeof b === 'string' ? b : b.name;
                                                 return (
                                                     <span key={name} className="px-3 py-1 text-xs rounded-lg bg-foreground/5 border border-foreground/10 text-foreground/80">
@@ -138,7 +138,7 @@ const PortfolioContent = ({ data, userId }: { data: any; userId?: string }) => {
                                     <GlassCard className="p-6 space-y-3 break-inside-avoid mb-4">
                                         <Typography element="h3" className="text-lg font-bold">{skills.toolsTitle || "Workflow & Tools"}</Typography>
                                         <div className="flex flex-wrap gap-2 text-xs text-foreground/60">
-                                            {skills.tools?.map((t: any) => typeof t === 'string' ? t : t.name).join(" | ")}
+                                            {skills.tools?.map((t: string | { name: string }) => typeof t === 'string' ? t : t.name).join(" | ")}
                                         </div>
                                     </GlassCard>
                                 )}
