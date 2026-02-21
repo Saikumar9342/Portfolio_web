@@ -39,8 +39,10 @@ export function About({ about, expertise, contact }: AboutProps) {
     const reverseElementY = useTransform(scrollYProgress, [0, 1], [-100, 100]);
 
     return (
-        <Section id="about" className="py-24 bg-foreground/5 backdrop-blur-sm border-t border-accent/30 overflow-hidden">
-            <div ref={containerRef} className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
+        <Section id="about" className="py-24 overflow-hidden relative">
+
+            <div ref={containerRef} className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-start relative z-10">
+
 
                 {/* Left Side: Biography & Education */}
                 <motion.div
@@ -51,49 +53,59 @@ export function About({ about, expertise, contact }: AboutProps) {
                     transition={{ duration: 0.8, ease: "easeOut" }}
                     className="space-y-12"
                 >
-                    <div className="space-y-6">
-                        <div className="flex justify-between items-center">
-                            <Typography className="text-sm font-semibold text-accent tracking-widest uppercase">
-                                {about.biographyLabel || "Biography"}
-                            </Typography>
-                            {about.location && (
-                                <div className="flex items-center gap-2 text-muted-foreground">
-                                    <Icons.MapPin className="w-4 h-4 text-accent" />
-                                    <span className="text-xs font-medium uppercase tracking-wider">{about.location}</span>
-                                </div>
-                            )}
-                        </div>
-                        <Typography element="h2" className="text-4xl md:text-5xl font-bold text-foreground leading-tight">
-                            {about.title}
-                        </Typography>
-                        <Typography className="text-lg text-muted-foreground leading-relaxed">
-                            {about.biography}
-                        </Typography>
+                    <div className="relative group">
+                        <div className="relative p-8 md:p-10 rounded-[2rem] bg-white/[0.02] border border-white/[0.05] backdrop-blur-3xl overflow-hidden shadow-2xl">
 
-                        {/* Social Links Provision */}
-                        <div className="flex flex-wrap gap-4 pt-4">
-                            {about.socialLinks && about.socialLinks.length > 0 && (
-                                about.socialLinks.map((link) => (
-                                    <a
-                                        key={link.url}
-                                        href={link.url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex items-center gap-2 px-4 py-2 rounded-xl bg-foreground/5 border border-accent/60 text-foreground hover:bg-accent/10 hover:border-accent/80 transition-all group"
-                                    >
-                                        {getSocialIcon(link.platform)}
-                                        <span className="text-xs font-bold uppercase tracking-wider">{link.platform}</span>
-                                    </a>
-                                ))
-                            )}
+                            <div className="space-y-6">
+                                <div className="flex justify-between items-center">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+                                        <Typography className="text-[9px] font-bold text-accent tracking-wide">
+                                            {about.biographyLabel || "Status: Active"}
+                                        </Typography>
+                                    </div>
+                                    {about.location && (
+                                        <div className="flex items-center gap-2 text-muted-foreground/60">
+                                            <Icons.MapPin className="w-3 h-3" />
+                                            <Typography className="text-[9px] font-bold tracking-wide">{about.location}</Typography>
+                                        </div>
+                                    )}
+                                </div>
+                                <Typography element="h2" className="text-2xl md:text-3xl font-bold text-white leading-tight">
+                                    {about.title}
+                                </Typography>
+                                <Typography className="text-base text-muted-foreground/80 leading-relaxed font-medium">
+                                    {about.biography}
+                                </Typography>
+
+                                {/* Social Links - Premium Pills */}
+                                <div className="flex flex-wrap gap-3 pt-6">
+                                    {about.socialLinks?.map((link) => (
+                                        <a
+                                            key={link.url}
+                                            href={link.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex items-center gap-3 px-5 py-2.5 rounded-full bg-white/[0.03] border border-white/5 text-white/70 hover:bg-accent hover:border-accent hover:text-accent-foreground transition-all duration-300 group/link"
+                                        >
+                                            {getSocialIcon(link.platform)}
+                                            <span className="text-[10px] font-bold tracking-wide">{link.platform}</span>
+                                        </a>
+                                    ))}
+                                </div>
+                            </div>
+
                         </div>
                     </div>
 
-                    <div className="space-y-6">
-                        <Typography className="text-sm font-semibold text-accent tracking-widest uppercase">
-                            {about.educationLabel || "Education"}
-                        </Typography>
-                        <div className="space-y-4">
+
+                    <div className="space-y-8">
+                        <div className="flex items-center gap-4">
+                            <Typography className="text-[9px] font-bold text-accent tracking-wide uppercase">
+                                {about.educationLabel || "Education"}
+                            </Typography>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
                             {about.education?.map((edu, idx) => (
                                 <motion.div
                                     key={edu.institution}
@@ -101,17 +113,20 @@ export function About({ about, expertise, contact }: AboutProps) {
                                     whileInView={{ opacity: 1, y: 0 }}
                                     viewport={{ once: true }}
                                     transition={{ delay: idx * 0.1 }}
-                                    className="p-6 rounded-xl border border-accent/40 bg-foreground/5 group hover:bg-foreground/10 transition-colors"
+                                    className="relative p-6 rounded-2xl border border-white/5 bg-white/[0.01] hover:bg-white/[0.03] transition-all group/edu"
                                 >
-                                    <Typography className="text-lg font-bold text-foreground mb-1">{edu.degree}</Typography>
-                                    <div className="flex justify-between items-center text-sm text-muted-foreground">
-                                        <span>{edu.institution}</span>
-                                        <span className="font-mono">{edu.year}</span>
+                                    <div className="flex justify-between items-start mb-2">
+                                        <Typography className="text-base font-bold text-white">{edu.degree}</Typography>
+                                        <span className="text-[9px] font-bold text-muted-foreground/60">{edu.year}</span>
                                     </div>
+                                    <Typography className="text-[9px] font-bold text-muted-foreground tracking-wide">
+                                        {edu.institution}
+                                    </Typography>
                                 </motion.div>
                             ))}
                         </div>
                     </div>
+
                 </motion.div>
 
                 {/* Right Side: Services & Stats */}
@@ -124,7 +139,7 @@ export function About({ about, expertise, contact }: AboutProps) {
                     className="space-y-16"
                 >
                     <div className="space-y-8">
-                        <Typography className="text-sm font-semibold text-accent tracking-widest uppercase">
+                        <Typography className="text-xs font-semibold text-accent tracking-wide">
                             {expertise.label || "What I Do"}
                         </Typography>
                         <div className="grid gap-8">
@@ -140,10 +155,10 @@ export function About({ about, expertise, contact }: AboutProps) {
                                         {getServiceIcon(service)}
                                     </div>
                                     <div className="space-y-2">
-                                        <Typography element="h3" className="text-xl font-bold text-foreground">
+                                        <Typography element="h3" className="text-lg font-bold text-foreground">
                                             {service.title}
                                         </Typography>
-                                        <Typography className="text-muted-foreground leading-relaxed">
+                                        <Typography className="text-sm text-muted-foreground leading-relaxed">
                                             {service.description}
                                         </Typography>
                                     </div>
@@ -159,15 +174,20 @@ export function About({ about, expertise, contact }: AboutProps) {
                                 initial={{ opacity: 0, scale: 0.95 }}
                                 whileInView={{ opacity: 1, scale: 1 }}
                                 transition={{ delay: i * 0.1 }}
-                                className="p-8 rounded-xl bg-foreground/5 border border-accent/40 text-center"
+                                className="relative p-8 rounded-3xl bg-white/[0.02] border border-white/5 text-center group/stat overflow-hidden"
                             >
-                                <Typography className="text-3xl font-bold text-accent mb-2">{stat.value}</Typography>
-                                <Typography className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">
+
+                                <Typography className="text-3xl md:text-4xl font-bold text-white mb-1 group-hover/stat:text-accent transition-colors duration-500">
+                                    {stat.value}
+                                </Typography>
+                                <Typography className="text-[9px] font-bold text-muted-foreground uppercase tracking-[0.2em] group-hover/stat:text-white transition-colors duration-500">
                                     {stat.label}
                                 </Typography>
+
                             </motion.div>
                         ))}
                     </div>
+
                 </motion.div>
             </div>
         </Section>

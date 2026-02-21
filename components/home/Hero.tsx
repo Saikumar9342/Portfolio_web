@@ -56,7 +56,7 @@ export function Hero({ data, role, name, location, userId, showImage = true }: H
                         className={`${showImage ? 'lg:col-span-6' : 'lg:col-span-8 lg:col-start-3 text-center'} space-y-6`}
                     >
                         <div className="space-y-4">
-                            <Typography element="h1" className="text-5xl md:text-6xl lg:text-7xl font-bold leading-[0.9] text-foreground tracking-tighter uppercase overflow-hidden">
+                            <Typography element="h1" className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-white tracking-tight uppercase overflow-hidden">
                                 {hero?.title?.split(" ").map((word, i) => (
                                     <motion.span
                                         key={i}
@@ -80,7 +80,7 @@ export function Hero({ data, role, name, location, userId, showImage = true }: H
                             </Typography>
                         </div>
 
-                        <Typography className="text-base md:text-lg text-muted-foreground max-w-md leading-relaxed font-medium">
+                        <Typography className="text-base md:text-lg text-muted-foreground/80 max-w-md leading-relaxed">
                             {hero.subtitle}
                         </Typography>
 
@@ -107,26 +107,56 @@ export function Hero({ data, role, name, location, userId, showImage = true }: H
 
                     {showImage && (
                         <motion.div
-                            initial={{ opacity: 0, scale: 0.9, x: 50 }}
-                            animate={{ opacity: 1, scale: 1, x: 0 }}
-                            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
-                            className="lg:col-span-6 flex justify-center lg:justify-end"
+                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
+                            className="lg:col-span-6 flex justify-center lg:justify-end relative group"
                         >
-                            <div className="relative aspect-[3/4] w-full max-w-md lg:max-w-lg xl:max-w-xl max-h-[75vh] overflow-hidden rounded-3xl group transition-all duration-1000 bg-secondary/10 border border-border/50">
-                                {/* Smooth hover zoom or placeholder */}
+                            {/* Deep Ambient Glow - The "Soul" of the section */}
+                            <div className="absolute -inset-20 bg-accent/10 blur-[140px] rounded-full opacity-30 group-hover:opacity-60 transition-all duration-1000 -z-10" />
+
+                            {/* Main Floating Container */}
+                            <div className="relative aspect-[3/4] w-full max-w-md lg:max-w-lg xl:max-w-xl max-h-[75vh] 
+                                          rounded-[3rem] overflow-hidden 
+                                          bg-black shadow-[0_50px_100px_-20px_rgba(0,0,0,0.6)] 
+                                          transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)]
+                                          group-hover:shadow-[0_80px_150px_-30px_rgba(0,0,0,0.8)]
+                                          group-hover:-translate-y-4 group-hover:scale-[1.02]">
+
                                 {hero.imageUrl ? (
-                                    <Image
-                                        src={hero.imageUrl}
-                                        alt={name}
-                                        fill
-                                        className="object-cover object-center transition-transform duration-1000 group-hover:scale-105"
-                                    />
+                                    <div className="relative w-full h-full">
+                                        <Image
+                                            src={hero.imageUrl}
+                                            alt={name}
+                                            fill
+                                            className="object-cover object-center transition-transform duration-[2000ms] ease-out group-hover:scale-110"
+                                            priority
+                                        />
+
+                                        {/* Cinematic Light Leak - Top Left */}
+                                        <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+
+                                        {/* Bottom Fade - Text grounding */}
+                                        <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/40 to-transparent" />
+                                    </div>
                                 ) : (
-                                    <div className="w-full h-full flex flex-col items-center justify-center bg-muted/5 relative overflow-hidden">
+                                    <div className="w-full h-full flex items-center justify-center">
                                         <InteractiveSphere />
                                     </div>
                                 )}
+
+                                {/* Subtle Texture Overlay */}
+                                <div className="absolute inset-0 opacity-10 pointer-events-none mix-blend-overlay noise" />
                             </div>
+
+                            {/* Minimal Branding Accent */}
+                            <motion.div
+                                animate={{ opacity: [0.2, 0.5, 0.2] }}
+                                transition={{ duration: 4, repeat: Infinity }}
+                                className="absolute bottom-10 -left-6 z-20"
+                            >
+                                <div className="h-24 w-[1px] bg-gradient-to-b from-transparent via-accent to-transparent" />
+                            </motion.div>
                         </motion.div>
                     )}
                 </div>

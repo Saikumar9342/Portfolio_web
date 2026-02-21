@@ -177,22 +177,22 @@ export function Footer({ contact, about, navbar, name, targetUserId }: FooterPro
     };
 
     return (
-        <footer id="contact" className="min-h-screen flex flex-col justify-center relative overflow-hidden border-t border-foreground/10 bg-foreground/5">
-            {/* Ambient Background Elements */}
-            <motion.div
-                animate={{
-                    scale: [1, 1.2, 1],
-                    rotate: [0, 90, 0],
-                }}
-                transition={{
-                    duration: 20,
-                    repeat: Infinity,
-                    ease: "linear"
-                }}
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_center,var(--accent)_0%,transparent_60%)] opacity-[0.03] blur-3xl pointer-events-none"
-            />
+        <footer id="contact" className="min-h-screen flex flex-col justify-center relative overflow-hidden bg-[#050505]">
+            {/* Deep Cinematic Background Layers */}
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(var(--accent-rgb),0.05)_0%,transparent_70%)]" />
 
-            <div className="container px-6 mx-auto max-w-6xl relative z-10 flex flex-col justify-center py-12 md:py-24">
+            {/* Technical Grid Overlay */}
+            <div className="absolute inset-0 opacity-[0.02] pointer-events-none"
+                style={{ backgroundImage: `linear-gradient(to right, #888 1px, transparent 1px), linear-gradient(to bottom, #888 1px, transparent 1px)`, backgroundSize: '40px 40px' }} />
+
+            {/* Top Atmospheric Divider */}
+            <div className="absolute top-0 left-0 w-full overflow-hidden">
+                <div className="w-full h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-2 bg-accent/20 blur-xl" />
+            </div>
+
+            <div className="container px-6 mx-auto max-w-7xl relative z-10 py-24">
+
                 {/* Contact Section */}
                 <div className="mb-16">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -250,10 +250,15 @@ export function Footer({ contact, about, navbar, name, targetUserId }: FooterPro
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
                             transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                            className="relative"
                         >
-                            <GlassCard className="form-glass p-8 md:p-12 border border-accent/20 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] rounded-3xl relative bg-black/40 backdrop-blur-3xl overflow-visible">
-                                <div className="absolute -top-px -left-px w-12 h-12 border-t-2 border-l-2 border-accent z-20" />
-                                <div className="absolute -bottom-px -right-px w-12 h-12 border-b-2 border-r-2 border-accent z-20" />
+                            {/* Ambient Glow behind the form */}
+                            <div className="absolute -inset-10 bg-accent/5 blur-[100px] rounded-full opacity-20 -z-10" />
+
+                            <GlassCard className="form-glass p-8 md:p-12 border border-white/5 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.8)] rounded-[2.5rem] relative bg-black/60 backdrop-blur-3xl overflow-visible">
+                                {/* Decorative Corners - Floating style */}
+                                <div className="absolute -top-4 -left-4 w-12 h-12 border-t border-l border-accent/40 rounded-tl-3xl z-20" />
+                                <div className="absolute -bottom-4 -right-4 w-12 h-12 border-b border-r border-accent/40 rounded-br-3xl z-20" />
 
                                 <AnimatePresence mode="wait">
                                     {submitSuccess ? (
@@ -353,14 +358,22 @@ export function Footer({ contact, about, navbar, name, targetUserId }: FooterPro
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 pt-8 border-t border-foreground/10">
-                    {/* Brand Column */}
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 mt-32 relative">
+                    {/* Glass Footer Panel */}
+                    <div className="absolute inset-0 -inset-x-8 bg-white/[0.02] backdrop-blur-3xl rounded-[3rem] border border-white/[0.05] -z-10" />
+
+                    {/* Decorative Technical Guides */}
+                    <div className="absolute top-0 right-0 w-px h-full bg-gradient-to-b from-white/10 to-transparent translate-x-12 hidden lg:block" />
+
+                    {/* Divider for the bottom links section */}
+                    <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-foreground/0 via-foreground/5 to-foreground/0" />
+
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.1 }}
-                        className="md:col-span-5 space-y-4"
+                        className="md:col-span-5 space-y-8 p-8 md:p-12"
                     >
                         <Link href={targetUserId ? `/p/${targetUserId}` : "/"} className="flex items-center gap-3 group">
                             <motion.div
@@ -401,9 +414,9 @@ export function Footer({ contact, about, navbar, name, targetUserId }: FooterPro
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.2 }}
-                        className="md:col-span-3 space-y-6"
+                        className="md:col-span-3 space-y-8 p-8 md:p-12 md:border-l border-white/[0.05]"
                     >
-                        <Typography className="text-[10px] font-black uppercase tracking-[0.2em] text-accent">Links</Typography>
+                        <Typography className="text-[10px] font-bold uppercase tracking-widest text-accent">Links</Typography>
                         <ul className="space-y-3">
                             {navbar?.items.map((item: NavItem, idx: number) => {
                                 let href = item.href;
@@ -437,9 +450,9 @@ export function Footer({ contact, about, navbar, name, targetUserId }: FooterPro
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.3 }}
-                        className="md:col-span-4 space-y-6"
+                        className="md:col-span-4 space-y-8 p-8 md:p-12 md:border-l border-white/[0.05]"
                     >
-                        <Typography className="text-[10px] font-black uppercase tracking-[0.2em] text-accent">Contact</Typography>
+                        <Typography className="text-[10px] font-bold uppercase tracking-widest text-accent">Contact</Typography>
                         <div className="space-y-4">
                             <button
                                 onClick={handleCopyEmail}
@@ -469,7 +482,10 @@ export function Footer({ contact, about, navbar, name, targetUserId }: FooterPro
                     </motion.div>
                 </div>
 
-                <div className="mt-12 pt-6 border-t border-foreground/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                <div className="mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] font-bold text-muted-foreground uppercase tracking-widest relative">
+                    <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+
+
                     <div className="flex flex-col md:flex-row items-center gap-2 md:gap-4">
                         <span>(c) {new Date().getFullYear()} All Rights Reserved.</span>
                         <span className="hidden md:block opacity-20">|</span>
@@ -481,6 +497,6 @@ export function Footer({ contact, about, navbar, name, targetUserId }: FooterPro
                     </div>
                 </div>
             </div>
-        </footer >
+        </footer>
     );
 }

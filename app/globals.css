@@ -3,15 +3,39 @@
 @import "tailwindcss/utilities";
 
 :root {
-  --background: var(--dynamic-bg, #000000);
+  --background: var(--dynamic-bg, #050505);
   --foreground: var(--dynamic-fg, #ffffff);
-  --accent: var(--dynamic-accent, #000000);
-  --accent-foreground: var(--dynamic-bg, #ffffff);
-  --muted: var(--dynamic-muted, rgba(255, 255, 255, 0.05));
-  --muted-foreground: var(--dynamic-muted-fg, rgba(255, 255, 255, 0.6));
-  --border: var(--dynamic-border, rgba(255, 255, 255, 0.1));
-  --glass: rgba(0, 0, 0, 0.3);
-  --glass-border: rgba(255, 255, 255, 0.1);
+  --accent: var(--dynamic-accent, #ffffff);
+  --accent-rgb: 255, 255, 255;
+  --accent-foreground: var(--dynamic-bg, #000000);
+  --muted: var(--dynamic-muted, rgba(255, 255, 255, 0.03));
+  --muted-foreground: var(--dynamic-muted-fg, rgba(255, 255, 255, 0.5));
+  --border: var(--dynamic-border, rgba(255, 255, 255, 0.08));
+  --glass: rgba(0, 0, 0, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.05);
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
+
+/* Premium Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -48,8 +72,19 @@ html.theme-loading {
     color: var(--foreground);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    transition: background-color 300ms ease, color 300ms ease;
+    transition: background-color 400ms ease, color 400ms ease;
     font-feature-settings: normal;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at 50% -10%, rgba(var(--accent-rgb), 0.03) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: -1;
   }
 }
 
@@ -81,19 +116,16 @@ html.theme-loading {
 
   .noise {
     position: fixed;
-    top: -50%;
-    left: -50%;
-    right: -50%;
-    bottom: -50%;
-    width: 200%;
-    height: 200%;
-    background: transparent url('https://res.cloudinary.com/ironick/image/upload/v1612025687/noise_transparent_dtztnd.png') repeat 0 0;
-    background-repeat: repeat;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: url('https://res.cloudinary.com/ironick/image/upload/v1612025687/noise_transparent_dtztnd.png') repeat;
     animation: grain 8s steps(10) infinite;
-    opacity: .05;
+    opacity: .04;
     visibility: visible;
     pointer-events: none;
-    z-index: 100;
+    z-index: 9999;
+    mix-blend-mode: overlay;
   }
 
   @keyframes grain {

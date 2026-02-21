@@ -16,7 +16,7 @@ export function Section({ children, className, id, grid = false, container = tru
         <section
             id={id}
             className={cn(
-                "relative py-20 overflow-hidden transition-colors duration-500",
+                "relative py-24 overflow-hidden transition-colors duration-500 bg-background",
                 grid && "bg-grid bg-transparent",
                 className
             )}
