@@ -313,6 +313,33 @@ export function AtomLanding() {
                 </div>
             </section>
 
+            {/* THE ARCHITECT */}
+            <section id="architect" className="relative min-h-[600px] flex items-center justify-center px-6 snap-start border-t border-white/5 bg-[#080808]">
+                <div className="max-w-7xl mx-auto w-full relative z-10 flex flex-col items-center text-center">
+                    <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
+                        <div className="w-24 h-24 rounded-full border border-[#C6A969]/20 p-1 mb-8 mx-auto group overflow-hidden">
+                            <img
+                                src="/pfp.jpeg"
+                                alt="Saikumar Pasumarthi"
+                                className="w-full h-full rounded-full object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-110"
+                            />
+                        </div>
+                        <Typography className="text-[#C6A969] font-black tracking-[0.5em] text-[10px] uppercase mb-4">The Architect</Typography>
+                        <Typography element="h2" className="text-2xl md:text-4xl lg:text-5xl font-outfit font-black tracking-tight uppercase leading-none mb-6">
+                            SAIKUMAR <span className="text-white/30 italic">PASUMARTHI</span>
+                        </Typography>
+                        <Typography className="text-[11px] md:text-sm text-[#AAAAAA] max-w-lg mx-auto font-medium leading-[1.7] opacity-80 mb-8 italic">
+                            &quot;Atom was built to bridge the gap between high-end engineering and cinematic storytelling. It&apos;s a platform for those who refuse to settle for the average.&quot;
+                        </Typography>
+                        <Link href="https://saikumar.is-a.dev/" target="_blank">
+                            <Button variant="outline" className="rounded-xl px-10 h-12 text-[9px] font-black uppercase tracking-[0.3em] border-white/10 hover:bg-[#C6A969] hover:text-black transition-all hover:border-[#C6A969]">
+                                EXPLORE PROFILE
+                            </Button>
+                        </Link>
+                    </motion.div>
+                </div>
+            </section>
+
             {/* TECH STACKS - MODERN MINIMALIST */}
             <section className="relative h-screen min-h-[750px] flex flex-col items-center px-8 snap-start border-t border-white/5 bg-black pt-20 pb-10">
                 {/* Subtle Refined Grid */}
@@ -363,9 +390,11 @@ export function AtomLanding() {
                                 <BrandLogo size={16} className="text-[#C6A969]" />
                                 <Typography className="text-[10px] font-black text-white uppercase tracking-tight">ATOM ECOSYSTEM</Typography>
                             </div>
-                            <Typography className="text-[10px] font-outfit font-bold text-white/40 uppercase tracking-tight">
-                                ARCHITECTED BY <span className="text-white">SAIKUMAR PASUMARTHI</span>
-                            </Typography>
+                            <Link href="https://saikumar.is-a.dev/" target="_blank">
+                                <Typography className="text-[10px] font-outfit font-bold text-white/40 uppercase tracking-tight hover:text-[#C6A969] transition-colors">
+                                    ARCHITECTED BY <span className="text-white">SAIKUMAR PASUMARTHI</span>
+                                </Typography>
+                            </Link>
                         </div>
                         <Typography className="text-[8px] text-white/20 font-medium uppercase tracking-tight">© 2026 ANTHRIX • ALL RIGHTS RESERVED.</Typography>
                     </footer>
