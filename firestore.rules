@@ -86,8 +86,7 @@ service cloud.firestore {
     // User-specific messages/inquiries
     match /users/{userId}/messages/{messageId} {
       allow create: if isValidMessage(request.resource.data);
-      allow read, delete: if isOwner(userId) || isAdmin();
-      allow update: if isAdmin();
+      allow read, delete, update: if isOwner(userId) || isAdmin();
     }
 
     // Global Messages/Inquiries
