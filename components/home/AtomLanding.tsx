@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { motion } from "framer-motion";
 import {
@@ -396,10 +396,12 @@ export function AtomLanding() {
                                 </Typography>
                             </Link>
                         </div>
-                        <Typography className="text-[8px] text-white/20 font-medium uppercase tracking-tight">© 2026 ANTHRIX • ALL RIGHTS RESERVED.</Typography>
+                        <Typography className="text-[8px] text-white/20 font-medium uppercase tracking-tight">(c) 2026 ANTHRIX | ALL RIGHTS RESERVED.</Typography>
                     </footer>
                 </div>
             </section>
         </div>
     );
 }
+
+

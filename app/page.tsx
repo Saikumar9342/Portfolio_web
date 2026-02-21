@@ -2,11 +2,18 @@
 
 import { AtomLanding } from "@/components/home/AtomLanding";
 import { Navbar } from "@/components/layout/Navbar";
-import { usePortfolio } from "@/hooks/usePortfolio";
-import { LoadingScreen } from "@/components/ui/LoadingScreen";
-import { Footer } from "@/components/layout/Footer";
+import { ContactData } from "@/types";
 
 export default function Home() {
+    const landingContact: ContactData = {
+        title: "",
+        description: "",
+        email: "",
+        personalEmail: "",
+        cta: "",
+        secondaryCta: "",
+    };
+
     // The root page is explicitly hijacked to be the Brand Landing Page (Atom).
     // Subdomains and custom domains are handled by middleware.ts to rewrite to /p/[userId].
     return (
@@ -22,7 +29,7 @@ export default function Home() {
                     ctaText: "Get Atom",
                     ctaHref: "#mobile"
                 }}
-                contact={{ email: "saikumar.p9342@gmail.com" } as any}
+                contact={landingContact}
             />
 
             <AtomLanding />

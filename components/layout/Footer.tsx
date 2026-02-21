@@ -147,11 +147,12 @@ export function Footer({ contact, about, navbar, name, targetUserId }: FooterPro
                 }
 
                 if (notifyTarget) {
+                    const internalSecret = process.env.NEXT_PUBLIC_INTERNAL_NOTIFY_SECRET;
                     await fetch("/api/notify", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
-                            "x-internal-secret": "change-me" // Should match INTERNAL_NOTIFY_SECRET
+                            ...(internalSecret ? { "x-internal-secret": internalSecret } : {})
                         },
                         body: JSON.stringify({
                             targetUserId: notifyTarget,

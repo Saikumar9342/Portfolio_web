@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
-import { collection, onSnapshot, doc, query, where, getDocs, getDoc, DocumentSnapshot, QuerySnapshot, updateDoc, increment, setDoc } from "firebase/firestore";
+import { collection, onSnapshot, doc, query, where, getDocs, getDoc, DocumentSnapshot, QuerySnapshot } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Project, HeroData, AboutData, ExpertiseData, SkillsData, ContactData, NavbarData, SocialLink, ProjectsPageData } from "@/types";
 import { portfolioData } from "@/lib/data";
@@ -379,7 +379,6 @@ export function usePortfolio(userId?: string) {
         const defContentRef = uid ? collection(db, "users", uid, "content") : collection(db, "content");
         const defProjectsRef = uid ? collection(db, "users", uid, "projects") : collection(db, "projects");
 
-        const isDefault = currentLanguage.isDefault;
         const locContentRef = !isDefaultLanguage ? (uid
             ? collection(db, "users", uid, "languages", languageCode, "content")
             : collection(db, "languages", languageCode, "content")
@@ -396,13 +395,19 @@ export function usePortfolio(userId?: string) {
 
         // 1. Default Content
         unsubs.push(onSnapshot(defContentRef as any, (snap: QuerySnapshot) => {
-            snap.forEach(d => rawDefaultContent[d.id] = d.data());
+            const nextDefaultContent: Record<string, any> = {};
+            snap.forEach(d => {
+                nextDefaultContent[d.id] = d.data();
+            });
+            Object.keys(rawDefaultContent).forEach((key) => delete rawDefaultContent[key]);
+            Object.assign(rawDefaultContent, nextDefaultContent);
             setContentLoaded(true);
             syncAllSubsystems();
         }, (err: any) => { console.error("Def Content Err:", err); setContentLoaded(true); }));
 
         // 2. Default Projects
         unsubs.push(onSnapshot(defProjectsRef as any, (snap: QuerySnapshot) => {
+            rawDefaultProjects.clear();
             snap.docs.forEach(d => rawDefaultProjects.set(d.id, mapProject(d)));
             setProjectsLoaded(true);
             syncAllSubsystems();
@@ -411,7 +416,12 @@ export function usePortfolio(userId?: string) {
         // 3. Localized Content (Optional)
         if (locContentRef) {
             unsubs.push(onSnapshot(locContentRef as any, (snap: QuerySnapshot) => {
-                snap.forEach(d => rawLocalizedContent[d.id] = d.data());
+                const nextLocalizedContent: Record<string, any> = {};
+                snap.forEach(d => {
+                    nextLocalizedContent[d.id] = d.data();
+                });
+                Object.keys(rawLocalizedContent).forEach((key) => delete rawLocalizedContent[key]);
+                Object.assign(rawLocalizedContent, nextLocalizedContent);
                 syncAllSubsystems();
             }));
         }
@@ -419,6 +429,7 @@ export function usePortfolio(userId?: string) {
         // 4. Localized Projects (Optional)
         if (locProjectsRef) {
             unsubs.push(onSnapshot(locProjectsRef as any, (snap: QuerySnapshot) => {
+                rawLocalizedProjects.clear();
                 snap.docs.forEach(d => rawLocalizedProjects.set(d.id, mapProject(d)));
                 syncAllSubsystems();
             }));
