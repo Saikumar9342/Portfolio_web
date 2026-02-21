@@ -177,7 +177,7 @@ export function Footer({ contact, about, navbar, name, targetUserId }: FooterPro
     };
 
     return (
-        <footer id="contact" className="min-h-screen flex flex-col justify-center relative overflow-hidden bg-[#050505]">
+        <footer id="contact" className="min-h-[80vh] md:min-h-screen flex flex-col justify-center relative overflow-hidden bg-[#050505]">
             {/* Deep Cinematic Background Layers */}
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(var(--accent-rgb),0.05)_0%,transparent_70%)]" />
 
@@ -358,7 +358,7 @@ export function Footer({ contact, about, navbar, name, targetUserId }: FooterPro
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 mt-32 relative">
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 lg:gap-12 mt-12 md:mt-32 relative">
                     {/* Glass Footer Panel */}
                     <div className="absolute inset-0 -inset-x-8 bg-white/[0.02] backdrop-blur-3xl rounded-[3rem] border border-white/[0.05] -z-10" />
 
@@ -373,7 +373,7 @@ export function Footer({ contact, about, navbar, name, targetUserId }: FooterPro
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.1 }}
-                        className="md:col-span-5 space-y-8 p-8 md:p-12"
+                        className="md:col-span-5 space-y-4 md:space-y-6 p-4 md:p-12"
                     >
                         <Link href={targetUserId ? `/p/${targetUserId}` : "/"} className="flex items-center gap-3 group">
                             <motion.div
@@ -414,7 +414,7 @@ export function Footer({ contact, about, navbar, name, targetUserId }: FooterPro
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.2 }}
-                        className="md:col-span-3 space-y-8 p-8 md:p-12 md:border-l border-white/[0.05]"
+                        className="md:col-span-3 space-y-4 md:space-y-6 p-4 md:p-12 md:border-l border-white/[0.05]"
                     >
                         <Typography className="text-[10px] font-bold uppercase tracking-widest text-accent">Links</Typography>
                         <ul className="space-y-3">
@@ -450,7 +450,7 @@ export function Footer({ contact, about, navbar, name, targetUserId }: FooterPro
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.3 }}
-                        className="md:col-span-4 space-y-8 p-8 md:p-12 md:border-l border-white/[0.05]"
+                        className="md:col-span-4 space-y-4 md:space-y-6 p-4 md:p-12 md:border-l border-white/[0.05]"
                     >
                         <Typography className="text-[10px] font-bold uppercase tracking-widest text-accent">Contact</Typography>
                         <div className="space-y-4">
@@ -460,7 +460,7 @@ export function Footer({ contact, about, navbar, name, targetUserId }: FooterPro
                                 title="Click to copy email"
                             >
                                 <div className="space-y-1">
-                                    <span className="block text-base font-bold text-foreground group-hover:text-accent transition-colors tracking-tight">
+                                    <span className="block text-base font-bold text-foreground group-hover:text-accent transition-colors tracking-tight break-all">
                                         {contact.email}
                                     </span>
                                     {isCopied && <motion.span initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="text-[10px] text-accent font-bold uppercase tracking-wider block">Copied to clipboard!</motion.span>}

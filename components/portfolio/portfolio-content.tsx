@@ -40,7 +40,7 @@ export const PortfolioContent = ({ data, userId }: { data: PortfolioDataType; us
                 return (
                     <Section key="skills" id="skills" className="min-h-screen py-24 relative overflow-hidden">
 
-                        <div className="flex flex-col lg:flex-row gap-16 relative z-10">
+                        <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 relative z-10">
                             {/* Skill Context Panel */}
                             <div className="lg:w-1/3 space-y-8 flex flex-col items-start text-left">
                                 <div className="space-y-4">
