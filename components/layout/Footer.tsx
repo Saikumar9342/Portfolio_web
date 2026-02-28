@@ -20,9 +20,10 @@ interface FooterProps {
     navbar: NavbarData;
     name: string;
     targetUserId?: string;
+    isPremium?: boolean;
 }
 
-export function Footer({ contact, about, navbar, name, targetUserId }: FooterProps) {
+export function Footer({ contact, about, navbar, name, targetUserId, isPremium = false }: FooterProps) {
     const [isDownloadingResume, setIsDownloadingResume] = useState(false);
     const [isCopied, setIsCopied] = useState(false);
     const { push } = useToast();
@@ -488,8 +489,12 @@ export function Footer({ contact, about, navbar, name, targetUserId }: FooterPro
 
                     <div className="flex flex-col md:flex-row items-center gap-2 md:gap-4">
                         <span>(c) {new Date().getFullYear()} All Rights Reserved.</span>
-                        <span className="hidden md:block opacity-20">|</span>
-                        <span className="text-accent/60">Powered by Anthrix</span>
+                        {!isPremium && (
+                            <>
+                                <span className="hidden md:block opacity-20">|</span>
+                                <span className="text-accent/60">Powered by Anthrix</span>
+                            </>
+                        )}
                     </div>
                     <div className="flex gap-6">
                         <span className="hover:text-foreground cursor-pointer transition-colors hover:translate-y-[-2px]">Privacy</span>

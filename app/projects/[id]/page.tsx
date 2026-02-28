@@ -263,7 +263,13 @@ export default function ProjectDetailPage() {
                         </div>
                     </Section>
 
-                    <Footer contact={data.contact} about={data.about} navbar={data.navbar} name={data.name} />
+                    <Footer
+                        contact={data.contact}
+                        about={data.about}
+                        navbar={data.navbar}
+                        name={data.name}
+                        isPremium={data.isPremium}
+                    />
                 </>
             )}
         </main>

@@ -101,6 +101,12 @@ service cloud.firestore {
       allow read, write: if isOwner(userId) || isAdmin();
     }
 
+    // Billing & Subscription state (source of truth for premium access)
+    match /users/{userId}/billing/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
     // Helper for message validation
     function isValidMessage(data) {
       return data.name is string && data.name.size() > 0 && data.name.size() < 100

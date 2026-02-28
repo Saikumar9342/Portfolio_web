@@ -70,7 +70,13 @@ export default function ProjectsPage() {
                 </section>
 
                 {/* COMBINED CONTACT & FOOTER */}
-                <Footer contact={contact} about={about} navbar={data.navbar} name={name} />
+                <Footer
+                    contact={contact}
+                    about={about}
+                    navbar={data.navbar}
+                    name={name}
+                    isPremium={data.isPremium}
+                />
             </div>
         </main>
     );

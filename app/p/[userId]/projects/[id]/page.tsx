@@ -265,7 +265,14 @@ export default function UserProjectDetailPage() {
                         </div>
                     </Section>
 
-                    <Footer contact={data.contact} about={data.about} navbar={data.navbar} name={data.name} targetUserId={userId} />
+                    <Footer
+                        contact={data.contact}
+                        about={data.about}
+                        navbar={data.navbar}
+                        name={data.name}
+                        targetUserId={userId}
+                        isPremium={data.isPremium}
+                    />
                 </>
             )}
         </main>

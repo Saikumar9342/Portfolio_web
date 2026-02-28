@@ -313,7 +313,14 @@ export const PortfolioContent = ({ data, userId }: { data: PortfolioDataType; us
 
 
                 {/* FOOTER */}
-                <Footer contact={contact} about={about} navbar={data.navbar} name={name} targetUserId={userId} />
+                <Footer
+                    contact={contact}
+                    about={about}
+                    navbar={data.navbar}
+                    name={name}
+                    targetUserId={userId}
+                    isPremium={data.isPremium}
+                />
             </div>
         </main>
     );

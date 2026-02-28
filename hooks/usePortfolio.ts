@@ -21,7 +21,14 @@ export interface PortfolioContent {
     layoutOrder?: string[];
     theme?: string;
     showHeroImage?: boolean;
+    isPremium?: boolean;
 }
+
+const isPremiumFromPlanStatus = (plan?: any, status?: any): boolean => {
+    const p = String(plan ?? "").toLowerCase();
+    const s = String(status ?? "").toLowerCase();
+    return p === "premium" && (s === "active" || s === "trialing");
+};
 
 const allowedPlatforms = new Set<SocialLink["platform"]>([
     "linkedin",
@@ -114,7 +121,8 @@ const getInitialData = (isMainSite: boolean): PortfolioContent => {
             },
             projects: portfolioData.projects as Project[],
             name: portfolioData.name,
-            role: portfolioData.role
+            role: portfolioData.role,
+            isPremium: false,
         };
     }
 
@@ -128,7 +136,8 @@ const getInitialData = (isMainSite: boolean): PortfolioContent => {
         projectsPage: { title: "Projects", titleHighlight: "", label: "Portfolio", description: "" },
         projects: [],
         name: "User Portfolio",
-        role: "Professional"
+        role: "Professional",
+        isPremium: false,
     };
 };
 
@@ -291,6 +300,8 @@ export function usePortfolio(userId?: string) {
         const rawDefaultProjects: Map<string, Project> = new Map();
         const rawLocalizedProjects: Map<string, Project> = new Map();
         let rawSettings: any = null;
+        let profilePremium = false;
+        let billingPremium = false;
 
         const syncAllSubsystems = () => {
             const newContentConfigs: any = {};
@@ -369,6 +380,7 @@ export function usePortfolio(userId?: string) {
                 layoutOrder: rawSettings?.layoutOrder || baseData.layoutOrder,
                 theme: rawSettings?.theme || baseData.theme,
                 showHeroImage: rawSettings?.showHeroImage ?? true,
+                isPremium: profilePremium || billingPremium,
             }));
         };
 
@@ -389,6 +401,7 @@ export function usePortfolio(userId?: string) {
         ) : null;
 
         const settingsRef = uid ? doc(db, "users", uid, "settings", "design") : doc(db, "settings", "design");
+        const billingRef = uid ? doc(db, "users", uid, "billing", "subscription") : null;
 
         // LISTENERS
         const unsubs: (() => void)[] = [];
@@ -440,13 +453,19 @@ export function usePortfolio(userId?: string) {
             unsubs.push(onSnapshot(profileRef, (docSnap: DocumentSnapshot) => {
                 if (docSnap.exists()) {
                     const profileData = docSnap.data();
+                    profilePremium = isPremiumFromPlanStatus(
+                        profileData?.plan,
+                        profileData?.status
+                    ) || profileData?.isPremium === true;
                     const displayName = profileData.displayName || profileData.username;
                     if (displayName) {
                         setData(prev => {
                             const isDefaultName = prev.name === "User Portfolio" || prev.name === "New Portfolio";
-                            if (isDefaultName) return { ...prev, name: displayName };
+                            if (isDefaultName) return { ...prev, name: displayName, isPremium: profilePremium || billingPremium };
                             return prev;
                         });
+                    } else {
+                        setData(prev => ({ ...prev, isPremium: profilePremium || billingPremium }));
                     }
                 }
             }));
@@ -459,6 +478,17 @@ export function usePortfolio(userId?: string) {
                     rawSettings = docSnap.data();
                     syncAllSubsystems();
                 }
+            }));
+        }
+
+        if (billingRef) {
+            unsubs.push(onSnapshot(billingRef, (docSnap: DocumentSnapshot) => {
+                const billingData = docSnap.exists() ? docSnap.data() : null;
+                billingPremium = isPremiumFromPlanStatus(
+                    billingData?.plan,
+                    billingData?.status
+                );
+                setData(prev => ({ ...prev, isPremium: profilePremium || billingPremium }));
             }));
         }
 
