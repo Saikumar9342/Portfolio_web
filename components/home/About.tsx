@@ -177,7 +177,7 @@ export function About({ about, expertise, contact }: AboutProps) {
                                 className="relative p-8 rounded-3xl bg-white/[0.02] border border-white/5 text-center group/stat overflow-hidden"
                             >
 
-                                <Typography className="text-3xl md:text-4xl font-bold text-white mb-1 group-hover/stat:text-accent transition-colors duration-500">
+                                <Typography className="text-2xl md:text-3xl font-bold text-white mb-1 leading-tight break-words group-hover/stat:text-accent transition-colors duration-500">
                                     {stat.value}
                                 </Typography>
                                 <Typography className="text-[9px] font-bold text-muted-foreground uppercase tracking-[0.2em] group-hover/stat:text-white transition-colors duration-500">
@@ -193,3 +193,4 @@ export function About({ about, expertise, contact }: AboutProps) {
         </Section>
     );
 }
+
