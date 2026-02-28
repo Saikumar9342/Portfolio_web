@@ -301,7 +301,6 @@ export function usePortfolio(userId?: string) {
         const rawLocalizedProjects: Map<string, Project> = new Map();
         let rawSettings: any = null;
         let profilePremium = false;
-        let billingPremium = false;
 
         const syncAllSubsystems = () => {
             const newContentConfigs: any = {};
@@ -380,7 +379,7 @@ export function usePortfolio(userId?: string) {
                 layoutOrder: rawSettings?.layoutOrder || baseData.layoutOrder,
                 theme: rawSettings?.theme || baseData.theme,
                 showHeroImage: rawSettings?.showHeroImage ?? true,
-                isPremium: profilePremium || billingPremium,
+                isPremium: profilePremium,
             }));
         };
 
@@ -401,7 +400,6 @@ export function usePortfolio(userId?: string) {
         ) : null;
 
         const settingsRef = uid ? doc(db, "users", uid, "settings", "design") : doc(db, "settings", "design");
-        const billingRef = uid ? doc(db, "users", uid, "billing", "subscription") : null;
 
         // LISTENERS
         const unsubs: (() => void)[] = [];
@@ -461,11 +459,11 @@ export function usePortfolio(userId?: string) {
                     if (displayName) {
                         setData(prev => {
                             const isDefaultName = prev.name === "User Portfolio" || prev.name === "New Portfolio";
-                            if (isDefaultName) return { ...prev, name: displayName, isPremium: profilePremium || billingPremium };
+                            if (isDefaultName) return { ...prev, name: displayName, isPremium: profilePremium };
                             return prev;
                         });
                     } else {
-                        setData(prev => ({ ...prev, isPremium: profilePremium || billingPremium }));
+                        setData(prev => ({ ...prev, isPremium: profilePremium }));
                     }
                 }
             }));
@@ -481,16 +479,6 @@ export function usePortfolio(userId?: string) {
             }));
         }
 
-        if (billingRef) {
-            unsubs.push(onSnapshot(billingRef, (docSnap: DocumentSnapshot) => {
-                const billingData = docSnap.exists() ? docSnap.data() : null;
-                billingPremium = isPremiumFromPlanStatus(
-                    billingData?.plan,
-                    billingData?.status
-                );
-                setData(prev => ({ ...prev, isPremium: profilePremium || billingPremium }));
-            }));
-        }
 
         return () => unsubs.forEach(u => u());
     }, [resolvedUid, isResolving, languageCode, isDefaultLanguage, baseData, fetchFromRoot]);
