@@ -6,11 +6,6 @@ const serviceAccount = {
     privateKey: process.env.FIREBASE_ADMIN_PRIVATE_KEY?.replace(/\\n/g, "\n"),
 };
 
-console.log("--- FIREBASE ADMIN CONFIG ---");
-console.log("Proj ID:", serviceAccount.projectId);
-console.log("Client Email:", serviceAccount.clientEmail);
-console.log("Private Key Length:", serviceAccount.privateKey ? serviceAccount.privateKey.length : "MISSING");
-
 if (!admin.apps.length) {
     try {
         if (serviceAccount.clientEmail && serviceAccount.privateKey) {
@@ -18,12 +13,11 @@ if (!admin.apps.length) {
                 credential: admin.credential.cert(serviceAccount),
                 projectId: serviceAccount.projectId
             });
-            console.log("--- FIREBASE ADMIN INIT SUCCESS ---");
         } else {
-            console.warn("--- FIREBASE ADMIN: Missing Email or Key. Skipping Init (Build safe) ---");
+            // Missing envs is allowed in some local/build contexts.
         }
     } catch (e) {
-        console.error("--- FIREBASE ADMIN INIT ERROR (Non-fatal) ---", e);
+        // Non-fatal for routes that do not require admin SDK.
     }
 }
 
@@ -37,7 +31,7 @@ try {
         messaging = admin.messaging();
     }
 } catch (e) {
-    console.error("Firebase services initialization failed:", e);
+    // Non-fatal for routes that do not require admin SDK.
 }
 
 // @ts-ignore

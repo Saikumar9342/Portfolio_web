@@ -30,6 +30,7 @@ import { Button } from "../ui/button";
 import { Section, Typography, GlassCard } from "../ui/layout";
 import { BrandLogo } from "../ui/BrandLogo";
 import Link from "next/link";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 const fadeInUp = {
@@ -318,9 +319,11 @@ export function AtomLanding() {
                 <div className="max-w-7xl mx-auto w-full relative z-10 flex flex-col items-center text-center">
                     <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
                         <div className="w-24 h-24 rounded-full border border-[#C6A969]/20 p-1 mb-8 mx-auto group overflow-hidden">
-                            <img
+                            <Image
                                 src="/pfp.jpeg"
                                 alt="Saikumar Pasumarthi"
+                                width={96}
+                                height={96}
                                 className="w-full h-full rounded-full object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-110"
                             />
                         </div>
