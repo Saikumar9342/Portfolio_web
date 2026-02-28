@@ -1,15 +1,15 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { motion, useScroll, useMotionValueEvent } from "framer-motion";
+import dynamic from "next/dynamic";
+import { motion } from "framer-motion";
 import { Section, Typography, GlassCard } from "@/components/ui/layout";
-import * as Icons from "lucide-react";
+import { Cpu, Smartphone, Terminal } from "lucide-react";
 import { Hero } from "@/components/home/Hero";
 import { About } from "@/components/home/About";
 import { Navbar } from "@/components/layout/Navbar";
 import { type PortfolioContent as PortfolioDataType } from "@/hooks/usePortfolio";
-import { Footer } from "@/components/layout/Footer";
 import { useDynamicColor } from "@/hooks/useDynamicColor";
+const Footer = dynamic(() => import("@/components/layout/Footer").then((m) => m.Footer), { ssr: false });
 
 export const PortfolioContent = ({ data, userId }: { data: PortfolioDataType; userId?: string }) => {
     const { contact, hero, about, expertise, skills, name } = data;
@@ -17,19 +17,7 @@ export const PortfolioContent = ({ data, userId }: { data: PortfolioDataType; us
     // Extract theme color from hero image or default profile
     useDynamicColor(hero?.imageUrl || "", { theme: data.theme });
 
-    const containerRef = useRef<HTMLDivElement>(null);
-    const { scrollYProgress } = useScroll({
-        target: containerRef,
-        offset: ["start start", "end end"],
-        layoutEffect: false
-    });
-
-    const [, setCurrentProgress] = useState(0);
-
-    useMotionValueEvent(scrollYProgress, "change", (latest: number) => {
-        setCurrentProgress(latest);
-    });
-
+    
     const renderSection = (section: string) => {
         switch (section) {
             case 'hero':
@@ -131,7 +119,7 @@ export const PortfolioContent = ({ data, userId }: { data: PortfolioDataType; us
                                                     <div className="w-1.5 h-1.5 rounded-full bg-accent" />
                                                     {skills.mobileTitle || "Mobile Development"}
                                                 </Typography>
-                                                <Icons.Smartphone className="w-4 h-4 text-accent/40" />
+                                                <Smartphone className="w-4 h-4 text-accent/40" />
                                             </div>
                                             <div className="flex flex-wrap gap-2">
                                                 {skills.mobile?.map((m: string | { name: string }) => {
@@ -163,7 +151,7 @@ export const PortfolioContent = ({ data, userId }: { data: PortfolioDataType; us
                                                     <div className="w-1.5 h-1.5 rounded-full bg-accent" />
                                                     {skills.backendTitle || "Cloud & Backend"}
                                                 </Typography>
-                                                <Icons.Cpu className="w-4 h-4 text-accent/40" />
+                                                <Cpu className="w-4 h-4 text-accent/40" />
                                             </div>
                                             <div className="flex flex-wrap gap-2">
                                                 {skills.backend?.map((b: string | { name: string }) => {
@@ -195,7 +183,7 @@ export const PortfolioContent = ({ data, userId }: { data: PortfolioDataType; us
                                                     <div className="w-1.5 h-1.5 rounded-full bg-accent" />
                                                     {skills.toolsTitle || "Workflow & Tools"}
                                                 </Typography>
-                                                <Icons.Terminal className="w-4 h-4 text-accent/40" />
+                                                <Terminal className="w-4 h-4 text-accent/40" />
                                             </div>
                                             <div className="text-[9px] text-muted-foreground/60 leading-relaxed">
                                                 {skills.tools?.map((t: string | { name: string }) => typeof t === 'string' ? t : t.name).join(" | ")}
@@ -299,7 +287,7 @@ export const PortfolioContent = ({ data, userId }: { data: PortfolioDataType; us
     };
 
     return (
-        <main ref={containerRef} className={`relative min-h-screen theme-${data.theme || "dark"}`}>
+        <main className={`relative min-h-screen theme-${data.theme || "dark"}`}>
             <div className="relative z-10 bg-background text-foreground transition-colors duration-500">
                 <Navbar name={name} data={data.navbar} contact={contact} loading={false} userId={userId} />
 
@@ -325,3 +313,4 @@ export const PortfolioContent = ({ data, userId }: { data: PortfolioDataType; us
         </main>
     );
 };
+

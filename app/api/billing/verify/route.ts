@@ -6,6 +6,9 @@ const PLAN_META: Record<string, { amountInr: number; planName: string }> = {
   yearly: { amountInr: 500, planName: 'premium_yearly' },
 };
 
+const RATE_WINDOW_MS = 5 * 60 * 1000;
+const RATE_MAX_ATTEMPTS = 8;
+
 type VerifyBody = {
   paymentId?: string;
   planType?: string;
@@ -23,10 +26,49 @@ function getBearerToken(req: Request): string | null {
   return authHeader.slice(7).trim();
 }
 
+function getClientIp(req: Request): string {
+  const xff = req.headers.get('x-forwarded-for') || '';
+  if (xff.includes(',')) return xff.split(',')[0].trim();
+  if (xff.trim()) return xff.trim();
+  return req.headers.get('x-real-ip')?.trim() || 'unknown';
+}
+
 function addMonths(date: Date, months: number): Date {
   const d = new Date(date.getTime());
   d.setMonth(d.getMonth() + months);
   return d;
+}
+
+async function enforceRateLimit(uid: string, ip: string) {
+  if (!db || !admin?.apps?.length) return;
+
+  const bucket = Math.floor(Date.now() / RATE_WINDOW_MS);
+  const key = `billing_verify_${uid}_${bucket}`;
+  const ref = db.collection('security_rate_limits').doc(key);
+
+  await db.runTransaction(async (tx) => {
+    const snap = await tx.get(ref);
+    const current = Number(snap.data()?.count || 0);
+
+    if (current >= RATE_MAX_ATTEMPTS) {
+      throw new Error('RATE_LIMITED');
+    }
+
+    tx.set(
+      ref,
+      {
+        uid,
+        ip,
+        count: current + 1,
+        bucket,
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+        createdAt: snap.exists
+          ? (snap.data()?.createdAt ?? admin.firestore.FieldValue.serverTimestamp())
+          : admin.firestore.FieldValue.serverTimestamp(),
+      },
+      { merge: true }
+    );
+  });
 }
 
 export async function POST(req: Request) {
@@ -49,11 +91,14 @@ export async function POST(req: Request) {
     const decoded = await admin.auth().verifyIdToken(token);
     const uid = decoded.uid;
 
+    const clientIp = getClientIp(req);
+    await enforceRateLimit(uid, clientIp);
+
     const body = (await req.json()) as VerifyBody;
     const paymentId = (body.paymentId || '').trim();
     const planType = (body.planType || '').trim().toLowerCase();
 
-    if (!paymentId || !PLAN_META[planType]) {
+    if (!paymentId || !paymentId.startsWith('pay_') || !PLAN_META[planType]) {
       return NextResponse.json(
         { success: false, error: 'Invalid payment verification payload.' },
         { status: 400 }
@@ -127,7 +172,7 @@ export async function POST(req: Request) {
     const notesUserUid = (razorpayPayment.notes?.user_uid || '').trim();
     const notesPlanType = (razorpayPayment.notes?.plan_type || '').trim().toLowerCase();
 
-    const isStatusValid = status === 'captured' || status === 'authorized';
+    const isStatusValid = status === 'captured' && razorpayPayment.captured === true;
     const isAmountValid = Number(razorpayPayment.amount || 0) === expectedPaisa;
     const isCurrencyValid = (razorpayPayment.currency || '').toUpperCase() === 'INR';
     const isPaymentIdValid = (razorpayPayment.id || '') === paymentId;
@@ -212,7 +257,7 @@ export async function POST(req: Request) {
         { merge: true }
       );
 
-      // Public premium marker for web rendering without exposing billing docs.
+      // Public premium marker for website rendering.
       tx.set(
         publicUserRef,
         {
@@ -240,6 +285,13 @@ export async function POST(req: Request) {
       return NextResponse.json(
         { success: false, error: 'This payment has already been used.' },
         { status: 409 }
+      );
+    }
+
+    if (error instanceof Error && error.message === 'RATE_LIMITED') {
+      return NextResponse.json(
+        { success: false, error: 'Too many verification attempts. Try again in a few minutes.' },
+        { status: 429 }
       );
     }
 
