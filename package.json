@@ -1,41 +1,41 @@
 {
-    "name": "portfolio-web",
-    "version": "0.1.0",
-    "private": true,
-    "scripts": {
-        "predev": "node -e \"try { require('fs').rmSync('.next', { recursive: true, force: true }); } catch (e) {}\"",
-        "dev": "next dev",
-        "build": "next build",
-        "start": "next start",
-        "lint": "next lint",
-        "clean": "node -e \"try { require('fs').rmSync('.next', { recursive: true, force: true }); } catch (e) {}\""
-    },
-    "dependencies": {
-        "@react-three/drei": "^9.96.1",
-        "@react-three/fiber": "^8.15.12",
-        "class-variance-authority": "^0.7.1",
-        "cloudinary": "^1.41.0",
-        "clsx": "^2.1.0",
-        "firebase": "^10.7.1",
-        "firebase-admin": "^12.7.0",
-        "framer-motion": "^10.16.4",
-        "lucide-react": "^0.303.0",
-        "next": "^14.2.0",
-        "react": "^18.2.0",
-        "react-dom": "^18.2.0",
-        "sharp": "^0.34.5",
-        "tailwind-merge": "^2.2.0",
-        "three": "^0.160.0"
-    },
-    "devDependencies": {
-        "@types/node": "^20",
-        "@types/react": "^18",
-        "@types/react-dom": "^18",
-        "autoprefixer": "^10.4.16",
-        "eslint": "^8",
-        "eslint-config-next": "14.2.0",
-        "postcss": "^8.4.32",
-        "tailwindcss": "^3.4.0",
-        "typescript": "^5"
-    }
+    "name":  "portfolio-web",
+    "version":  "0.1.0",
+    "private":  true,
+    "scripts":  {
+                    "predev":  "node -e \"try { require(\u0027fs\u0027).rmSync(\u0027.next\u0027, { recursive: true, force: true }); } catch (e) {}\"",
+                    "dev":  "next dev",
+                    "build":  "npm run clean \u0026\u0026 next build",
+                    "start":  "next start",
+                    "lint":  "next lint",
+                    "clean":  "node -e \"try { require(\u0027fs\u0027).rmSync(\u0027.next\u0027, { recursive: true, force: true }); } catch (e) {}\""
+                },
+    "dependencies":  {
+                         "@react-three/drei":  "^9.96.1",
+                         "@react-three/fiber":  "^8.15.12",
+                         "class-variance-authority":  "^0.7.1",
+                         "cloudinary":  "^1.41.0",
+                         "clsx":  "^2.1.0",
+                         "firebase":  "^10.7.1",
+                         "firebase-admin":  "^12.7.0",
+                         "framer-motion":  "^10.16.4",
+                         "lucide-react":  "^0.303.0",
+                         "next":  "^14.2.0",
+                         "react":  "^18.2.0",
+                         "react-dom":  "^18.2.0",
+                         "sharp":  "^0.34.5",
+                         "tailwind-merge":  "^2.2.0",
+                         "three":  "^0.160.0"
+                     },
+    "devDependencies":  {
+                            "@types/node":  "^20",
+                            "@types/react":  "^18",
+                            "@types/react-dom":  "^18",
+                            "autoprefixer":  "^10.4.16",
+                            "eslint":  "^8",
+                            "eslint-config-next":  "14.2.0",
+                            "postcss":  "^8.4.32",
+                            "tailwindcss":  "^3.4.0",
+                            "typescript":  "^5"
+                        }
 }
