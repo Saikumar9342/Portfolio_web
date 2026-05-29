@@ -76,7 +76,7 @@ export default function TermsOfService() {
                 <section className="space-y-4">
                     <h2 className="text-2xl font-semibold text-white">5. Disclaimer</h2>
                     <p>
-                        The materials on our App/Website are provided on an 'as is' basis. We make no warranties, expressed or implied, and hereby disclaim and negate all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights.
+                        The materials on our App/Website are provided on an &apos;as is&apos; basis. We make no warranties, expressed or implied, and hereby disclaim and negate all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights.
                     </p>
                 </section>
 
