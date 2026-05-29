@@ -55,14 +55,22 @@ export async function middleware(request: NextRequest) {
         .toLowerCase();
     const localHosts = new Set(["localhost", "127.0.0.1", "::1"]);
 
-    // 1. Handle Brand Domain, Localhost, or Product Subdomains (e.g., atom.anithix.com)
-    const isSystemProduct = host === `atom.${primaryDomain}` || host === `www.${primaryDomain}`;
+    // 1. Redirect bare company domain to the Atom product subdomain.
+    //    anithix.com is a separate company site — this app only owns atom.anithix.com.
+    //    Once the company site is live, update NEXT_PUBLIC_COMPANY_URL and remove this redirect.
+    const companyHosts = new Set([primaryDomain, `www.${primaryDomain}`]);
+    if (companyHosts.has(host)) {
+        const companyUrl = process.env.NEXT_PUBLIC_COMPANY_URL || `https://atom.${primaryDomain}`;
+        return NextResponse.redirect(companyUrl, { status: 301 });
+    }
 
-    if (host === primaryDomain || localHosts.has(host) || isSystemProduct) {
+    // 2. Allow the Atom product subdomain and localhost through.
+    const isAtomHost = host === `atom.${primaryDomain}` || localHosts.has(host);
+    if (isAtomHost) {
         return NextResponse.next();
     }
 
-    // 2. Handle External Custom Domains (e.g., deus.com)
+    // 3. Handle External Custom Domains (e.g., deus.com)
     let userId = await resolveUserIdFromDomain(host);
     if (!userId && host.startsWith("www.")) {
         userId = await resolveUserIdFromDomain(host.replace(/^www\./, ""));
